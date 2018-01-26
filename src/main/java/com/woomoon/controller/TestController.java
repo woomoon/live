@@ -25,6 +25,8 @@ public class TestController {
 
     //success
 
+    //wxx
+
     @RequestMapping("testDao")
     public void testDao () {
         System.out.println(dao.query());
