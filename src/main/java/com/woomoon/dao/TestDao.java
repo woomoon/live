@@ -15,6 +15,7 @@ public interface TestDao {
 
     public void addStu(StuEntity stuEntity);
 
+    public void updateStu(StuEntity stuEntity);
 
 
 }
