@@ -20,24 +20,11 @@ public class TestController {
     @Autowired
     TestDao dao;
 
-    //hzf88888888
-
-    //zwl_____66677777777
-    //zwl_____6669999
-
-
-
-
-    //6666666666666666666666666777777777777777777777777777777423423423432423
-
-    //666666666666666666666666677777777777778888
-    //success
-
-    //wxx666666666
-
     @RequestMapping("testDao")
-    public void testDao () {
-        System.out.println(dao.query());
+    @ResponseBody
+    public List<Map<String, Object>> testDao () {
+        List<Map<String, Object>> query = dao.query();
+        return query;
     }
 
     @RequestMapping("queryForList")
