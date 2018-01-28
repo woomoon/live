@@ -20,6 +20,8 @@ public class TestController {
     @Autowired
     TestDao dao;
 
+    //huhuhu
+
     @RequestMapping("testDao")
     @ResponseBody
     public List<Map<String, Object>> testDao () {
@@ -48,9 +50,9 @@ public class TestController {
         return "index";
     }
 
-    @RequestMapping("href_index")
+    @RequestMapping("href_user")
     public String href_user () {
-        return "index";
+        return "user";
     }
 
 
