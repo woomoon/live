@@ -1,0 +1,85 @@
+@white: #FFFFFF;
+@black: #000000;
+@table-border-color : #ddd;
+.border-bottom(@color_ : @table-border-color) {
+    border-bottom: 1px solid @color_;
+}
+
+.border-left(@color_ : @table-border-color) {
+    border-left: 1px solid @color_;
+}
+
+.border-top(@color_ : @table-border-color) {
+    border-top: 1px solid @color_;
+}
+
+.border-right(@color_ : @table-border-color) {
+    border-right: 1px solid @color_;
+}
+
+.border(@color_ : @table-border-color) {
+    border: 1px solid @color_;
+}
+
+.table_ {
+    font-size: 14px;
+    border-collapse: collapse !important;
+    border-spacing: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 100%;
+    tr {
+        .border-bottom(@table-border-color);
+        background-color: @white;
+        td {
+            padding: 5px 10px;
+        }
+    }
+    tr:first-child {
+        font-weight: bold;
+        td {
+            padding: 10px;
+        }
+    }
+    tr:last-child {
+        border-bottom: none;
+    }
+}
+
+.table_.center {
+    td,
+    th {
+        text-align: center;
+    }
+    tr:last-child td {
+        text-align: left;
+    }
+}
+
+.table_.table_borderd {
+    .border(@table-border-color);
+    tr {
+        td {
+            .border-right(@table-border-color)
+        }
+        td:last-child {
+            border-right: none;
+        }
+    }
+}
+
+.table_.table_hover {
+    tr:first-child:hover {
+        background-color: @white;
+    }
+    tr:hover {
+        background-color: darken(@white, 5%);
+    }
+}
+
+.table_.has-page {
+    tr:last-child:hover {
+        background-color: @white;
+    }
+}

@@ -16,8 +16,8 @@
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
         <!--基本配置-->
         <property name="username" value="root"/>
-        <property name="password" value="qwe"/>
-        <property name="url" value="jdbc:mysql://localhost/test"/>
+        <property name="password" value="1234"/>
+        <property name="url" value="jdbc:mysql://localhost/wxx"/>
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 
         <!--初始连接-->

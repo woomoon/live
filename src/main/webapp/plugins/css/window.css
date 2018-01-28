@@ -1,0 +1,14 @@
+@CHARSET "UTF-8";
+._window {
+	padding: 10px;
+	box-shadow: 0px 0px 10px 0px #000000;
+	background-color: #ffffff;
+	position: absolute;
+	z-index: 3333;
+	min-width: 300px;
+	display: none;
+}
+
+._window.open {
+	display: block;
+}

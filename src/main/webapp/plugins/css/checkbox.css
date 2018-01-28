@@ -1,0 +1,80 @@
+.ckbox{
+	display: table;
+	user-select : none;
+}
+
+.ckbox .ckline{
+	height: 24px;
+	cursor: pointer;
+}
+
+.ckbox .ckline >*{
+	float: left;
+}
+
+.ckbox .ckline .ckicon{
+	background: white;
+	border: 1px solid #ddd;
+	width: 18px;
+	height: 18px;
+	display: table;
+	margin: 2px;
+	border-radius: 3px;
+}
+
+.ckbox .ckline .ckicon>*{
+	display: none;
+}
+
+.ckbox .ckline:hover .ckicon{
+	box-shadow: 0px 0px 2px #0CB95F;
+}
+
+.ckbox .ckline:hover .linetext{
+	/*text-shadow: 0px 0px 1px #000000;*/
+}
+
+.ckbox.checked .ckline .ckicon>*:first-child,
+.ckbox.checked50 .ckline .ckicon>*:first-child{
+	display: table;
+	width: 14px;
+	height: 14px;
+	margin: 2px;
+}
+
+.ckbox.checked .ckline .ckicon>*:first-child{
+	background: url(img/checkbox.png);
+}
+.ckbox.checked50 .ckline .ckicon>*:first-child{
+	border-radius: 2px;
+	background: #0CB95F;
+}
+
+.ckbox .ckline .linetext{
+	padding: 0 5px;
+	line-height: 24px;
+}
+
+.ckbox-box .ckbox-box{
+	padding-left: 34px;
+	display: none;
+}
+
+.ckbox-box.open .ckbox-box{
+	display: block;
+}
+
+.tree-icon{
+	margin: 4px;
+	float: left;
+	cursor: pointer;
+	display: table;
+	height: 16px;
+	width: 16px;
+	background-repeat: no-repeat;
+	background: url(img/tree-close.png);
+}
+
+.ckbox-box.open .tree-icon{
+	background: url(img/tree-open.png);
+}

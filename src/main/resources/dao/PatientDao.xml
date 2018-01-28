@@ -5,19 +5,19 @@
 
 <mapper namespace="com.woomoon.dao.PatientDao">
 
-    <select id="queryAll_patient" resultType="java.util.Map">
+    <select id="queryAllPatient" resultType="java.util.Map">
         select * from tb_patient
     </select>
 
-    <select id="queryOne_patient" parameterType="int" resultType="java.util.Map">
+    <select id="queryOnePatient" parameterType="int" resultType="java.util.Map">
         select * from tb_patient where pat_num = #{pat_num}
     </select>
 
-    <insert id="add_patient" parameterType="com.woomoon.entitys.PatientEntity">
+    <insert id="addPatient" parameterType="com.woomoon.entitys.PatientEntity">
         insert into tb_patient(pat_name,pat_birthday,pat_sex,pat_time,pat_address,pat_tel,pat_occupaction) values(#{pat_name},#{pat_birthday},#{pat_sex},#{pat_time},#{pat_address},#{pat_tel},#{pat_occupaction})
     </insert>
 
-    <update id="update_patient" parameterType="com.woomoon.entitys.PatientEntity">
+    <update id="updatePatient" parameterType="com.woomoon.entitys.PatientEntity">
         update tb_patient set pat_name=#{pat_name},pat_birthday=#{pat_birthday},pat_sex=#{pat_sex},pat_time=#{pat_time},pat_address=#{pat_address},pat_tel=#{pat_tel},pat_occupaction=#{pat_occupaction} where pat_num = #{pat_num}
     </update>
 

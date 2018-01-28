@@ -15,23 +15,24 @@ public class PatientServiceImpl implements PatientService {
     @Autowired
     PatientDao patientDao;
 
+
     @Override
-    public List<Map<String, Object>> queryAll_patient() {
-        return patientDao.queryAll_patient();
+    public List<Map<String, Object>> queryAllPatient() {
+        return patientDao.queryAllPatient();
     }
 
     @Override
-    public Map<String, Object> queryOne_patient() {
-        return patientDao.queryOne_patient();
+    public Map<String, Object> queryOnePatient() {
+        return patientDao.queryOnePatient();
     }
 
     @Override
-    public void add_patient(PatientEntity patientEntity) {
-        patientDao.add_patient(patientEntity);
+    public void addPatient(PatientEntity patientEntity) {
+        patientDao.addPatient(patientEntity);
     }
 
     @Override
-    public void update_patient(PatientEntity patientEntity) {
-        patientDao.update_patient(patientEntity);
+    public void updatePatient(PatientEntity patientEntity) {
+        patientDao.updatePatient(patientEntity);
     }
 }

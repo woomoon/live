@@ -10,15 +10,15 @@ import java.util.Map;
 public interface PatientDao {
 
     //查询所有病人
-    public List<Map<String,Object>> queryAll_patient();
+    public List<Map<String,Object>> queryAllPatient();
 
     //模糊查询病人
-    public Map<String,Object> queryOne_patient();
+    public Map<String,Object> queryOnePatient();
 
     //增加病人
-    public void add_patient(PatientEntity patientEntity);
+    public void addPatient(PatientEntity patientEntity);
 
     //修改病人
-    public void update_patient(PatientEntity patientEntity);
+    public void updatePatient(PatientEntity patientEntity);
 
 }

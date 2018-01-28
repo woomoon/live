@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link href="../../plugins/plugs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../plugins/css/page.css" rel="stylesheet">
+<link href="../../plugins/css/btn.css" rel="stylesheet">
+<link href="../../plugins/css/table.css" rel="stylesheet">
+<link href="../../plugins/css/admin-default.css" rel="stylesheet">
+<style>
+    li{
+        width: 100px;
+        font: 18px 隶书;
+        list-style: none;
+        float: left;
+    }
+    hr{
+        list-style:" #d81cad";
+    }
+    th{
+        width: 100px;
+        text-align: center;
+    }
+    tr{
+        text-align: center;
+    }
+</style>
+<body style="background-color: rgba(165,65,108,0.05)" id="patient_list">
+    <div>
+        <div>
+            <div style="margin-left: 30px;margin-top: 10px">
+                患者编号：<input width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                患者姓名：<input width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                性&nbsp;别：<select name="sex" >
+                        <option value="">请选择性别</option>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                     </select> <br><br>
+                出身日期：<input type="text" class="demo-input" placeholder="请选择日期" id="test1"> &nbsp;&nbsp;&nbsp;&nbsp;
+                住院时间：<input type="text" class="demo-input" placeholder="请选择日期" id="test2"> &nbsp;&nbsp;&nbsp;&nbsp;
+                电话号码：<input width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" style="width: 100px">查询</button>
+            </div>
+
+        </div><br>
+        <hr>
+        <div>
+            <div class="btn-group btn-group-justified" style="width: 100px; margin-left: 30px" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                    <button type="button"  class="btn btn-default">增加</button>
+                </div>
+            </div><br>
+           <div style="margin-left: 30px">
+               <table border="1">
+                   <tr>
+                       <th>患者编号</th>
+                       <th>患者姓名</th>
+                       <th>性别</th>
+                       <th>出身日期</th>
+                       <th>住院时间</th>
+                       <th>家庭住址</th>
+                       <th>职业</th>
+                       <th>电话号码</th>
+                   </tr>
+                   <tr v-for="patient in patient_tr">
+                       <td>{{patient.pat_num}}</td>
+                       <td>{{patient.pat_name}}</td>
+                       <td>{{patient.pat_sex}}</td>
+                       <td>{{patient.pat_birthday}}</td>
+                       <td>{{patient.pat_time}}</td>
+                       <td>{{patient.pat_address}}</td>
+                       <td>{{patient.pat_tel}}</td>
+                       <td>{{patient.pat_occupaction}}</td>
+                   </tr>
+               </table>
+           </div>
+        <hr>
+            <div style="margin-left: 30px">
+              <!--  共<a>1232</a>&nbsp; 条记录 &nbsp;
+                第<a>1</a>/<a>7</a>页&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button >首页</button>&nbsp;
+                <button >上一页</button>&nbsp;
+                <button >下一页</button>&nbsp;
+                <button >尾页</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                每页<input style="width: 30px; text-align: center ";  value="10">条<button>设置</button>-->
+
+
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button"  class="btn btn-default">&laquo;</button>
+                    <button type="button"  class="btn btn-default">&lt;</button>
+                    <button type="button"  class="btn btn-default">1</button>
+                    <button type="button"  class="btn btn-default">2</button>
+                    <select class="btn btn-default" style="height: 34px"><option>1</option><option>1</option><option>1</option><option>1</option><option>1</option></select>
+                    <button type="button"  class="btn btn-default">3</button>
+                    <button type="button"  class="btn btn-default">4</button>
+                    <button type="button"  class="btn btn-default">&gt;</button>
+                    <button type="button"  class="btn btn-default">&raquo;</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<script src="../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../plugins/plugs/js/vue.min.js"></script>
+<script src="../../plugins/laydate/laydate.js"></script>
+<script>
+    laydate.render({
+        elem:'#test1'
+    })
+    laydate.render({
+        elem:'#test2'
+    })
+
+    var patient_list=new Vue({
+        el:"#patient_list",
+        data:{
+            patient_tr:[],
+        },
+    })
+
+    $(function () {
+        $.ajax({
+            url:'../queryAllPatient.action',
+            dataType:'JSON',
+            success:function (data) {
+                console.log(data);
+                patient_list._data.patient_tr=data;
+                console.log(patient_list._data.patient_tr);
+            }
+        })
+    })
+
+</script>
+</body>
+</html>
