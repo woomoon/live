@@ -9,6 +9,22 @@
     <select id="queryAllDoctorarea" resultType="java.util.Map">
         select * from tb_doctorarea
     </select>
+
+    <select id="queryOneDoctorarea" parameterType="int" resultType="java.util.Map">
+        select * from tb_doctorarea where area_id=#{area_id}
+    </select>
+
+    <insert id="addDoctorarea" parameterType="com.woomoon.entitys.DoctorareaEntity">
+        insert into tb_doctorarea(area_name,area_money) values(#{area_name},#{area_money})
+    </insert>
+
+    <delete id="delDoctorarea" parameterType="int">
+        delete from tb_doctorarea where area_id=#{area_id}
+    </delete>
+
+    <update id="updDoctorarea" parameterType="com.woomoon.entitys.DoctorareaEntity">
+        update tb_doctorarea set area_name=#{area_name},area_money=#{area_money} where area_id=#{area_id}
+    </update>
     
 
 

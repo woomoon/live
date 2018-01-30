@@ -1,5 +1,6 @@
 package com.woomoon.controller;
 
+import com.woomoon.entitys.DoctorareaEntity;
 import com.woomoon.dao.DoctorareaDao;
 import com.woomoon.service.DoctorareaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +15,63 @@ import java.util.Map;
 public class DoctorareaController {
 
     @Autowired
-    DoctorareaService service;
+    DoctorareaService doctorareaService;
 
     @Autowired
-    DoctorareaDao dao;
+    DoctorareaDao doctorareaDao;
 
+    @RequestMapping("href_doctorarea")
+    public String href_doctorarea(){
+        return "doctorarea";
+    }
 
-    @RequestMapping("doctorareaDao")
+    /**
+     * 查询所有病区
+     */
+    @RequestMapping("queryAllDoctorarea")
     @ResponseBody
-    public List<Map<String, Object>> doctorareaDao () {
-        List<Map<String, Object>> query = dao.queryAllDoctorarea();
+    public List<Map<String, Object>> queryAllDoctorarea () {
+        List<Map<String, Object>> query = doctorareaDao.queryAllDoctorarea();
         return query;
+    }
+
+    /*
+    * 查询单个病区
+    * */
+    @RequestMapping("queryOneDoctorarea")
+    @ResponseBody
+    public Map<String,Object> queryOneDoctorarea(int area_id){
+        return doctorareaService.queryOneDoctorarea(area_id);
+    }
+
+
+    /*
+    * 增加病区
+    * */
+    @RequestMapping("addDoctorarea")
+    @ResponseBody
+    public void addDoctorarea(DoctorareaEntity doctorareaEntity){
+        doctorareaService.addDoctorarea(doctorareaEntity);
+    }
+
+
+    /*
+    * 删除病区
+    * */
+    @RequestMapping("delDoctorarea")
+    @ResponseBody
+    public void delDoctorarea(int area_id){
+        doctorareaService.delDoctorarea(area_id);
+    }
+
+
+    /*
+    * 修改病区
+    * */
+    @RequestMapping("updDoctorarea")
+    @ResponseBody
+    public void updDoctorarea(DoctorareaEntity doctorareaEntity){
+        doctorareaService.updDoctorarea(doctorareaEntity);
     }
 
 }
