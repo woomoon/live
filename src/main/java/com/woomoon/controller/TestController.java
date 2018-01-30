@@ -20,7 +20,12 @@ public class TestController {
     @Autowired
     TestDao dao;
 
-    //huhuhu
+    //命名规则：
+    //添加： addDept
+    //删除： delEntity
+    //修改： updEntity
+    //查询所有： queryAllEntity
+    //查询单个： queryOneEntity
 
     @RequestMapping("testDao")
     @ResponseBody
