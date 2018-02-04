@@ -1,13 +1,12 @@
-package com.woomoon.dao;
+package com.woomoon.service;
 
 import com.woomoon.entitys.NexusEntity;
-import org.springframework.stereotype.Repository;
+import com.woomoon.entitys.PatientEntity;
 
 import java.util.List;
 import java.util.Map;
 
-@Repository
-public interface NexusDao {
+public interface NexusService {
 
     //查询所有社会关系
     public List<Map<String,Object>> queryAllNexus(NexusEntity nexusEntity);
@@ -23,4 +22,5 @@ public interface NexusDao {
 
     //删除社会关系
     public void deleteNexus(int nexus_id);
+
 }
