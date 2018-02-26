@@ -9,7 +9,21 @@ public class PowerEntity {
 	private String power_size;
 	private String power_url;
 	private String power_remark;
+	private String icon;
+	private String open;
 
+	public String getOpen() {
+		return open;
+	}
+	public void setOpen(String open) {
+		this.open = open;
+	}
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
 	public Integer getPower_id() {
 		return power_id;
 	}
@@ -53,5 +67,17 @@ public class PowerEntity {
 		this.power_remark = power_remark;
 	}
 
-
+	@Override
+	public String toString() {
+		return "PowerEntity{" +
+				"power_id=" + power_id +
+				", power_pid=" + power_pid +
+				", power_name='" + power_name + '\'' +
+				", isParent='" + isParent + '\'' +
+				", power_size='" + power_size + '\'' +
+				", power_url='" + power_url + '\'' +
+				", power_remark='" + power_remark + '\'' +
+				", icon='" + icon + '\'' +
+				'}';
+	}
 }

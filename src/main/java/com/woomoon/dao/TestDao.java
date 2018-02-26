@@ -1,5 +1,6 @@
 package com.woomoon.dao;
 
+import com.woomoon.entitys.PowerEntity;
 import com.woomoon.entitys.StuEntity;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,8 @@ public interface TestDao {
     public void addStu(StuEntity stuEntity);
 
     public void updateStu(StuEntity stuEntity);
+
+    public PowerEntity testButton ();
 
 
 }

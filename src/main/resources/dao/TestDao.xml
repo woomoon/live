@@ -13,6 +13,10 @@
         select * from tb_stu where stu_id = #{stu_id}
     </select>
 
+    <select id="testButton" resultType="com.woomoon.entitys.PowerEntity">
+        select * from tb_power where power_id = 4
+    </select>
+
     <insert id="addStu" parameterType="com.woomoon.entitys.StuEntity">
         insert into tb_stu(stu_name,stu_sex) values(#{stu_name},#{stu_sex})
     </insert>

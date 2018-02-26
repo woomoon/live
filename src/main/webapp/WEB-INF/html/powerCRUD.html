@@ -3,10 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="../../plugins/zTree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="../../plugins/plugs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/EasyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/EasyUI/themes/icon.css">
+    <style>
+        .firstSpan {
+            float: left;
+            margin-top: 5px;
+            font-weight:bold;
+            font-size: 16px;
+        }
+
+        .msge {
+            float: left;
+            margin-top: 14px;
+            font-weight:bold;
+            font-size: 16px;
+        }
+
+        .inp {
+            width: 200px;
+            height: 30px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h2>zwl</h2>
+
+<div style="width:auto;margin-left: 18px;height: auto;">
+    <h3 style="font-weight: 800">权限管理</h3>
+</div>
+
+<div style="float: left;width: 360px;height:1200px; margin-top:10px;margin-left:10px;">
+    <ul id="pTree" class="ztree"></ul>
+</div>
+
+<div class="btn-group" role="group" aria-label="...">
+    <button type="button" class="btn btn-default">添加</button>
+    <button type="button" class="btn btn-default">删除</button>
+    <button type="button" class="btn btn-default">编辑</button>
+    <button id="msgbtn" type="button" class="btn btn-default">查看详情</button>
+</div>
+
+<div style="margin-top: 10px;">
     <br/>
-    <h2>hzf</h2>
+    <div>
+        每个页面级的菜单节点用柱状图图标（8号图标）<br/>
+        按钮使用的设置样式的图标（9号图标）<br/>
+        点击一个节点即可查看详情
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    模态框（Modal）标题
+                </h4>
+            </div>
+            <div class="modal-body">
+                在这里添加一些文本
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
 </body>
+<script src="../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../plugins/zTree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../plugins/EasyUI/js/jquery.easyui.min.js"></script>
+<script>
+
+    var treeID = "";
+
+    $(function () {
+        $.fn.zTree.init($("#pTree"), settings);
+        $("#delButton").click(function () {
+            alert("test");
+        })
+
+        $("#updBtn").click(function () {
+            console.log(treeID)
+            if (treeID != null && treeID != "") {
+                $.ajax({
+                    url: "../../queryOnePower.action",
+                    type: "post",
+                    data: "treeId=" + treeID,
+                    success: function (d) {
+                        console.log(d)
+                    }
+                })
+            }
+            else {
+                alert("请先选择一个节点 !");
+            }
+        });
+
+        $("#msgbtn").click(function () {
+            $('#myModal').modal('show')
+        });
+    })
+
+    var settings = {
+        async: {
+            enable: true,
+            type: "post",
+            url: "../../queryAllPower.action"
+        },
+        data: {
+            key: {
+                name: "power_name"
+            },
+            simpleData: {
+                enable: true,
+                idKey: "power_id",
+                pIdKey: "power_pid",
+                rootPId: 0
+            }
+        },
+        callback: {
+            onClick: function (event, treeId, treeNode) {   //单击事件
+                console.log(treeNode.power_id)
+                treeID = treeNode.power_id;
+            }
+        }
+    }
+    //settings ----end
+
+    /*
+    <div id="test"></div>
+    $.ajax({
+        url:"../../testButton.action",
+        success:function (d) {
+            $("#test").html(JSON.parse(d).power_url);
+        }
+    });
+    */
+</script>
 </html>

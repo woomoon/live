@@ -1,6 +1,7 @@
 package com.woomoon.controller;
 
 import com.woomoon.dao.TestDao;
+import com.woomoon.entitys.PowerEntity;
 import com.woomoon.entitys.StuEntity;
 import com.woomoon.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,12 @@ public class TestController {
     @Autowired
     TestDao dao;
 
+
+    //    AOP 日志记录   nginx
+
+    //热加载     自动生成类
+
+
     //命名规则：
     //添加： addDept
     //删除： delEntity
@@ -32,6 +39,13 @@ public class TestController {
     public List<Map<String, Object>> testDao () {
         List<Map<String, Object>> query = dao.query();
         return query;
+    }
+
+    @RequestMapping(value = "testButton")
+    @ResponseBody
+    public PowerEntity testButton() {
+        PowerEntity powerEntity = dao.testButton();
+        return powerEntity;
     }
 
     @RequestMapping("queryForList")
