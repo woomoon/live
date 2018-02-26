@@ -26,8 +26,12 @@ public class PatientController {
      */
     @RequestMapping("queryAllPatient")
     @ResponseBody
-    public List<Map<String,Object>> queryAllPatient(){
-        return patientService.queryAllPatient();
+    public List<Map<String,Object>> queryAllPatient(PatientEntity patientEntity){
+        System.out.println(patientEntity);
+
+        List<Map<String, Object>> maps = patientService.queryAllPatient(patientEntity);
+        System.out.println(maps);
+        return maps;
     }
 
     /**

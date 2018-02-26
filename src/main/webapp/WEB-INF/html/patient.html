@@ -31,17 +31,17 @@
     <div id="patient_list" >
         <div>
             <div style="margin-left: 30px;margin-top: 10px">
-                患者编号：<input width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
-                患者姓名：<input width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
-                性&nbsp;别：<select name="sex" >
+                患者编号：<input id="pid" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                患者姓名：<input id="name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                患者性别：<select id="sex" name="sex" >
                         <option value="">请选择性别</option>
-                        <option value="男">男</option>
-                        <option value="女">女</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
                      </select> <br><br>
                 出身日期：<input type="text" class="demo-input" placeholder="请选择日期" id="test1"> &nbsp;&nbsp;&nbsp;&nbsp;
                 住院时间：<input type="text" class="demo-input" placeholder="请选择日期" id="test2"> &nbsp;&nbsp;&nbsp;&nbsp;
-                电话号码：<input width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="button" style="width: 100px">查询</button>
+                电话号码：<input id="phone" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
             </div>
 
         </div><br>
@@ -78,15 +78,6 @@
            </div>
         <hr>
             <div style="margin-left: 30px">
-              <!--  共<a>1232</a>&nbsp; 条记录 &nbsp;
-                第<a>1</a>/<a>7</a>页&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button >首页</button>&nbsp;
-                <button >上一页</button>&nbsp;
-                <button >下一页</button>&nbsp;
-                <button >尾页</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                每页<input style="width: 30px; text-align: center ";  value="10">条<button>设置</button>-->
-
-
                 <div class="btn-group" role="group" aria-label="...">
                     <button type="button"  class="btn btn-default">&laquo;</button>
                     <button type="button"  class="btn btn-default">&lt;</button>
@@ -118,11 +109,19 @@
     var patient_list=new Vue({
         el:"#patient_list",
         data:{
-            patient_tr:[],
+            patient_tr:[]
         },
-    })
+        methods:{
+
+        }
+    });
 
     $(function () {
+       queryAll();
+    });
+
+    //查询所有病人
+    function queryAll(){
         $.ajax({
             url:'../queryAllPatient.action',
             dataType:'JSON',
@@ -132,8 +131,28 @@
                 console.log(patient_list._data.patient_tr);
             }
         })
-    })
-
+    };
+    
+    //模糊查询
+    function dimquery() {
+        var pat_num=$("#pid").val();
+        var pat_name=$("#name").val();
+        var pat_sex=$("#sex").val();
+        var pat_birthday=$("#test1").val();
+        var pat_time=$("#test2").val();
+        var pat_tel=$("#phone").val();
+        $.ajax({
+            url:'../queryAllPatient.action',
+            dataType:'JSON',
+            type:'post',
+            data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel,
+            success:function (data) {
+                console.log(data);
+                patient_list._data.patient_tr=data;
+                console.log(patient_list._data.patient_tr);
+            }
+        })
+    }
 </script>
 </body>
 </html>

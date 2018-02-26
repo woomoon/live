@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.NexusDao">
+
+    <select id="queryAllNexus" parameterType="com.woomoon.entitys.NexusEntity" resultType="java.util.Map">
+        select * from tb_nexus where 1=1
+        <if test="nexus_id !=null and nexus_id !=''">
+            AND nexus_id = #{nexus_id}
+        </if>
+        <if test="pat_num !=null and pat_num !=''">
+             AND pat_num=#{pat_num}
+        </if>
+        <if test="nexus_type !=null and nexus_type !=''">
+             AND  nexus_type=#{nexus_type}
+        </if>
+        <if test="nexus_nickname !=null and nexus_nickname !=''">
+             AND nexus_nickname=#{nexus_nickname}
+        </if>
+        <if test="nexus_tel !=null and nexus_tel !=''">
+            AND nexus_tel=#{nexus_tel}
+        </if>
+        <if test="pat_tel !=null and pat_tel !=''">
+            AND nexus_remark=#{nexus_remark}
+        </if>
+    </select>
+
+    <select id="queryOneNexus" parameterType="int" resultType="java.util.Map">
+        select * from tb_nexus where nexus_id = #{nexus_id}
+    </select>
+
+    <insert id="addNexus" parameterType="com.woomoon.entitys.NexusEntity">
+        insert into tb_nexus(pat_num,nexus_type,nexus_nickname,nexus_tel,nexus_remark) values(#{pat_num},#{nexus_type},#{nexus_nickname},#{nexus_tel},#{nexus_remark})
+    </insert>
+
+    <update id="updateNexus" parameterType="com.woomoon.entitys.NexusEntity">
+        update tb_nexus set pat_num=#{pat_num},nexus_type=#{nexus_type},nexus_nickname=#{nexus_nickname},nexus_tel=#{nexus_tel},nexus_remark=#{nexus_remark} where nexus_id = #{nexus_id}
+    </update>
+
+    <delete id="deleteNexus" parameterType="int">
+        delete from tb_nexus where nexus_id=#{nexus_id}
+    </delete>
+
+</mapper>

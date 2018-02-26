@@ -17,8 +17,8 @@ public class PatientServiceImpl implements PatientService {
 
 
     @Override
-    public List<Map<String, Object>> queryAllPatient() {
-        return patientDao.queryAllPatient();
+    public List<Map<String, Object>> queryAllPatient(PatientEntity patientEntity) {
+        return patientDao.queryAllPatient(patientEntity);
     }
 
     @Override

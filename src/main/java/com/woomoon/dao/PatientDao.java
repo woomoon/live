@@ -10,7 +10,7 @@ import java.util.Map;
 public interface PatientDao {
 
     //查询所有病人
-    public List<Map<String,Object>> queryAllPatient();
+    public List<Map<String,Object>> queryAllPatient(PatientEntity patientEntity);
 
     //模糊查询病人
     public Map<String,Object> queryOnePatient();
