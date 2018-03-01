@@ -60,5 +60,17 @@ public class PatientEntity {
 		this.pat_occupaction = pat_occupaction;
 	}
 
-
+	@Override
+	public String toString() {
+		return "PatientEntity{" +
+				"pat_num='" + pat_num + '\'' +
+				", pat_name='" + pat_name + '\'' +
+				", pat_birthday='" + pat_birthday + '\'' +
+				", pat_sex=" + pat_sex +
+				", pat_time='" + pat_time + '\'' +
+				", pat_address='" + pat_address + '\'' +
+				", pat_tel='" + pat_tel + '\'' +
+				", pat_occupaction='" + pat_occupaction + '\'' +
+				'}';
+	}
 }

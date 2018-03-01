@@ -7,11 +7,17 @@ import java.util.Map;
 
 public interface PatientService {
 
-    //查询所有病人
-    public List<Map<String,Object>> queryAllPatient(PatientEntity patientEntity);
+    //查询所有+模糊查询病人
+    public List<Map<String,Object>> queryAllPatient(PatientEntity patientEntity,int begin,int end);
 
-    //模糊查询病人
-    public Map<String,Object> queryOnePatient();
+    //查询最后一个病人的ID
+    public String  queryOnePatient();
+
+    //根据ID查询病人
+    public PatientEntity queryOnePatient_ID(String pat_num);
+
+    //查询病人的总数
+    public int PatientSum(PatientEntity patientEntity);
 
     //增加病人
     public void addPatient(PatientEntity patientEntity);

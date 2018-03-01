@@ -17,13 +17,23 @@ public class PatientServiceImpl implements PatientService {
 
 
     @Override
-    public List<Map<String, Object>> queryAllPatient(PatientEntity patientEntity) {
-        return patientDao.queryAllPatient(patientEntity);
+    public List<Map<String, Object>> queryAllPatient(PatientEntity patientEntity,int begin,int end) {
+        return patientDao.queryAllPatient(patientEntity,begin,end);
     }
 
     @Override
-    public Map<String, Object> queryOnePatient() {
+    public String queryOnePatient() {
         return patientDao.queryOnePatient();
+    }
+
+    @Override
+    public PatientEntity queryOnePatient_ID(String pat_num) {
+        return patientDao.queryOnePatient_ID(pat_num);
+    }
+
+    @Override
+    public int PatientSum(PatientEntity patientEntity) {
+        return patientDao.PatientSum(patientEntity);
     }
 
     @Override
