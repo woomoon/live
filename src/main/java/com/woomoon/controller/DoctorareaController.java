@@ -17,8 +17,6 @@ public class DoctorareaController {
     @Autowired
     DoctorareaService doctorareaService;
 
-    @Autowired
-    DoctorareaDao doctorareaDao;
 
     @RequestMapping("href_doctorarea")
     public String href_doctorarea(){
@@ -31,7 +29,7 @@ public class DoctorareaController {
     @RequestMapping("queryAllDoctorarea")
     @ResponseBody
     public List<Map<String, Object>> queryAllDoctorarea () {
-        List<Map<String, Object>> query = doctorareaDao.queryAllDoctorarea();
+        List<Map<String, Object>> query = doctorareaService.queryAllDoctorarea();
         return query;
     }
 
