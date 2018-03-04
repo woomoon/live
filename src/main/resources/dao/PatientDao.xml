@@ -5,19 +5,50 @@
 
 <mapper namespace="com.woomoon.dao.PatientDao">
 
-    <select id="queryAllPatient" parameterType="com.woomoon.entitys.PatientEntity" resultType="java.util.Map">
+    <select id="queryAllPatient" resultType="java.util.Map">
         select * from tb_patient where 1=1
+        <if test="p_entity.pat_num !=null and p_entity.pat_num !=''">
+            AND pat_num=#{p_entity.pat_num}
+        </if>
+        <if test="p_entity.pat_name !=null and p_entity.pat_name !=''">
+             AND pat_name like '%${p_entity.pat_name}%'
+        </if>
+        <if test="p_entity.pat_birthday !=null and p_entity.pat_birthday !=''">
+             AND  pat_birthday=#{p_entity.pat_birthday}
+        </if>
+        <if test="p_entity.pat_sex !=null and p_entity.pat_sex !=''">
+             AND pat_sex=#{p_entity.pat_sex}
+        </if>
+        <if test="p_entity.pat_time !=null and p_entity.pat_time !=''">
+            AND pat_time=#{p_entity.pat_time}
+        </if>
+        <if test="p_entity.pat_tel !=null and p_entity.pat_tel !=''">
+            AND pat_tel=#{p_entity.pat_tel}
+        </if>
+                     limit #{begin},#{end}
+    </select>
+
+    <select id="queryOnePatient" resultType="String">
+        SELECT * from tb_patient  order   by   pat_num   desc   limit   1
+    </select>
+
+    <select id="queryOnePatient_ID" parameterType="String" resultType="com.woomoon.entitys.PatientEntity">
+        SELECT * from tb_patient where pat_num=#{pat_num}
+    </select>
+
+    <select id="PatientSum" resultType="int">
+        select COUNT(*) from tb_patient where 1=1
         <if test="pat_num !=null and pat_num !=''">
-            AND pat_num = #{pat_num}
+            AND pat_num=#{pat_num}
         </if>
         <if test="pat_name !=null and pat_name !=''">
-             AND pat_name=#{pat_name}
+            AND pat_name like '%${pat_name}%'
         </if>
         <if test="pat_birthday !=null and pat_birthday !=''">
-             AND  pat_birthday=#{pat_birthday}
+            AND  pat_birthday=#{pat_birthday}
         </if>
         <if test="pat_sex !=null and pat_sex !=''">
-             AND pat_sex=#{pat_sex}
+            AND pat_sex=#{pat_sex}
         </if>
         <if test="pat_time !=null and pat_time !=''">
             AND pat_time=#{pat_time}
@@ -27,12 +58,8 @@
         </if>
     </select>
 
-    <select id="queryOnePatient" parameterType="int" resultType="java.util.Map">
-        select * from tb_patient where pat_num = #{pat_num}
-    </select>
-
     <insert id="addPatient" parameterType="com.woomoon.entitys.PatientEntity">
-        insert into tb_patient(pat_name,pat_birthday,pat_sex,pat_time,pat_address,pat_tel,pat_occupaction) values(#{pat_name},#{pat_birthday},#{pat_sex},#{pat_time},#{pat_address},#{pat_tel},#{pat_occupaction})
+        insert into tb_patient(pat_num,pat_name,pat_birthday,pat_sex,pat_time,pat_address,pat_tel,pat_occupaction) values(#{pat_num},#{pat_name},#{pat_birthday},#{pat_sex},#{pat_time},#{pat_address},#{pat_tel},#{pat_occupaction})
     </insert>
 
     <update id="updatePatient" parameterType="com.woomoon.entitys.PatientEntity">

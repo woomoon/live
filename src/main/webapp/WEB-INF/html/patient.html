@@ -9,6 +9,7 @@
 <link href="../../plugins/css/btn.css" rel="stylesheet">
 <link href="../../plugins/css/table.css" rel="stylesheet">
 <link href="../../plugins/css/admin-default.css" rel="stylesheet">
+<link href="../../plugins/css/window.css" rel="stylesheet">
 <style>
     li{
         width: 100px;
@@ -49,7 +50,7 @@
         <div>
             <div class="btn-group btn-group-justified" style="width: 100px; margin-left: 30px" role="group" aria-label="...">
                 <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default">增加</button>
+                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
                 </div>
             </div><br>
            <div style="margin-left: 30px">
@@ -63,33 +64,150 @@
                        <th>家庭住址</th>
                        <th>职业</th>
                        <th>电话号码</th>
+                       <th>操作</th>
                    </tr>
                    <tr v-for="patient in patient_tr">
                        <td>{{patient.pat_num}}</td>
                        <td>{{patient.pat_name}}</td>
-                       <td>{{patient.pat_sex}}</td>
-                       <td>{{patient.pat_birthday}}</td>
-                       <td>{{patient.pat_time}}</td>
+                       <td>{{patient.pat_sex==1?'男':'女'}}</td>
+                       <td>{{new Date(patient.pat_birthday).toLocaleDateString()}}</td>
+                       <td>{{new Date(patient.pat_time).toLocaleDateString()}}</td>
                        <td>{{patient.pat_address}}</td>
                        <td>{{patient.pat_tel}}</td>
                        <td>{{patient.pat_occupaction}}</td>
+                       <td><button v-on:click="updateID(patient.pat_num)">修改</button></td>
                    </tr>
                </table>
            </div>
         <hr>
             <div style="margin-left: 30px">
                 <div class="btn-group" role="group" aria-label="...">
-                    <button type="button"  class="btn btn-default">&laquo;</button>
-                    <button type="button"  class="btn btn-default">&lt;</button>
-                    <button type="button"  class="btn btn-default">1</button>
-                    <button type="button"  class="btn btn-default">2</button>
-                    <select class="btn btn-default" style="height: 34px"><option>1</option><option>1</option><option>1</option><option>1</option><option>1</option></select>
-                    <button type="button"  class="btn btn-default">3</button>
-                    <button type="button"  class="btn btn-default">4</button>
-                    <button type="button"  class="btn btn-default">&gt;</button>
-                    <button type="button"  class="btn btn-default">&raquo;</button>
+                    <select id="page_number"  class="btn btn-default" style="height: 34px" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+                    <button type="button"  class="btn btn-default paging" id="home_page">《《</button>
+                    <button type="button"  class="btn btn-default paging" id="previous_page">《</button>
+                    <button  class="btn btn-default" disabled="disabled">{{currentIndex}}/{{sum}}</button>
+                    <button type="button"  class="btn btn-default paging" id="next_page">》</button>
+                    <button type="button"  class="btn btn-default paging" id="last">》》</button>
                 </div>
 
+            </div>
+        </div>
+
+        <!--  增加患者   -->
+        <div class="modal fade" id="add_patient" tabindex="-1" role="dialog"
+             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">增加患者</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!--disabled="disabled" 隐藏文本框-->
+                            <div class="form-group">
+                                <label  class="control-label">姓名:</label>
+                                <input type="text" class="form-control ordersId_update" id="add_name">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">性别:</label>
+                                <select id="add_sex"  class="form-control">
+                                    <option value="">请选择性别</option>
+                                    <option value="1">男</option>
+                                    <option value="2">女</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">出身日期：</label>
+                                <input type="text" class="demo-input form-control" placeholder="请选择日期" id="add_birthday">
+                            </div>
+                            <div>
+                                <label class="control-label">入院日期：</label>
+                                <input type="text" class="demo-input form-control" placeholder="请选择日期" id="add_test">
+                            </div>
+                            <div>
+                                <label class="control-label">家庭住址：</label>
+                                <input class="form-control" id="add_address">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">职业：</label>
+                                <input type="text" class="form-control ordersPrice_update"  id="add_tel">
+                                <span id="OpriceValue" style="color: red;"></span></div>
+                            <div class="form-group">
+                                <label  class="control-label"> 电话号码：</label>
+                                <input type="text" class="form-control" id="add_occupaction">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addPatient()">提交增加</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  修改患者   -->
+        <div class="modal fade" id="update_patient" tabindex="-1" role="dialog"
+             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" >修改患者</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!--disabled="disabled" 隐藏文本框-->
+                            <div class="form-group">
+                                <label class="control-label">编号：</label>
+                                <input type="text" class="form-control" id="update_pid" disabled="disabled" v-model="update.pat_num">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">姓名:</label>
+                                <input type="text" class="form-control ordersId_update" id="update_name" v-model="update.pat_name">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">性别:</label>
+                                <select id="update_sex"  class="form-control" v-model="update.pat_sex">
+                                    <option value="">请选择性别</option>
+                                    <option value="1">男</option>
+                                    <option value='2'>女</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">出身日期：</label>
+                                <input type="text" class="demo-input form-control" placeholder="请选择日期" id="update_birthday" v-model="update.pat_birthday">
+                            </div>
+                            <div>
+                                <label class="control-label">入院日期：</label>
+                                <input type="text" class="demo-input form-control" placeholder="请选择日期" id="update_test" v-model="update.pat_time">
+                            </div>
+                            <div>
+                                <label class="control-label">家庭住址：</label>
+                                <input class="form-control" id="update_address" v-model="update.pat_address">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">职业：</label>
+                                <input type="text" class="form-control ordersPrice_update"  id="update_tel" v-model="update.pat_tel">
+                                <span style="color: red;"></span></div>
+                            <div class="form-group">
+                                <label  class="control-label"> 电话号码：</label>
+                                <input type="text" class="form-control" id="update_occupaction" v-model="update.pat_occupaction">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="updatePatient()">提交修改</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消修改</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -101,30 +219,108 @@
 <script>
     laydate.render({
         elem:'#test1'
-    })
+    });
     laydate.render({
         elem:'#test2'
-    })
+    });
 
+    var pageindex=1;
     var patient_list=new Vue({
         el:"#patient_list",
         data:{
-            patient_tr:[]
+            patient_tr:[],
+            update:{},     //修改的数据
+            page_num:1,  //当前每页多少条
+            currentIndex:1, //当前在第几页
+            sum:'', //最大页码
         },
         methods:{
+            //增加
+            add:function () {
+                $("#add_patient").modal("show");
+            },
 
+            addPatient:function () {
+                var pat_name=$("#add_name").val();
+                var pat_sex=$("#add_sex").val();
+                var pat_birthday=$("#add_birthday").val();
+                var pat_time=$("#add_test").val();
+                var pat_address=$("#add_address").val();
+                var pat_tel=$("#add_tel").val();
+                var pat_occupaction=$("#add_occupaction").val();
+                $.ajax({
+                    url:'../addPatient.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'pat_name='+pat_name+'&pat_sex='+pat_sex+'&pat_birthday='+pat_birthday+'&pat_time='+pat_time+'&pat_address='+pat_address+'&pat_tel='+pat_tel+'&pat_occupaction='+pat_occupaction,
+                    success:function (data) {
+                       if(data){
+                           alert("增加成功！");
+                       }
+//                       else{
+//                           alert("增加失败！");
+//                       }
+                        $("#add_patient").find(".close").click();
+                        queryAll();
+                    }
+                })
+            },
+
+            //修改
+            updateID:function (pat_num) {
+              $.ajax({
+                  url:'../queryOnePatient_ID.action',
+                  dataType:'JSON',
+                  type:'post',
+                  data:'pat_num='+pat_num,
+                  success:function (data) {
+                      patient_list._data.update=data;
+                  }
+              })
+                $("#update_patient").modal("show");
+            },
+
+
+            updatePatient:function () {
+                var pat_num=$("#update_pid").val();
+                var pat_name=$("#update_name").val();
+                var pat_sex=$("#update_sex").val();
+                var pat_birthday=$("#update_birthday").val();
+                var pat_time=$("#update_test").val();
+                var pat_address=$("#update_address").val();
+                var pat_tel=$("#update_tel").val();
+                var pat_occupaction=$("#update_occupaction").val();
+                $.ajax({
+                    url:'../updatePatient.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_sex='+pat_sex+'&pat_birthday='+pat_birthday+'&pat_time='+pat_time+'&pat_address='+pat_address+'&pat_tel='+pat_tel+'&pat_occupaction='+pat_occupaction,
+                    success:function (data) {
+                        if(data){
+                            alert("修改成功！");
+                        }
+                        $("#update_patient").find(".close").click();
+                        PatientSum();
+                        queryAll();
+                    }
+                })
+            }
         }
     });
 
     $(function () {
        queryAll();
+       PatientSum();
     });
 
     //查询所有病人
     function queryAll(){
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../queryAllPatient.action',
             dataType:'JSON',
+            type:'post',
+            data:'current_sum='+current_sum,
             success:function (data) {
                 console.log(data);
                 patient_list._data.patient_tr=data;
@@ -132,9 +328,13 @@
             }
         })
     };
-    
+
+
+
+
     //模糊查询
     function dimquery() {
+        patient_list._data.page_num=1;
         var pat_num=$("#pid").val();
         var pat_name=$("#name").val();
         var pat_sex=$("#sex").val();
@@ -147,12 +347,100 @@
             type:'post',
             data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel,
             success:function (data) {
-                console.log(data);
                 patient_list._data.patient_tr=data;
-                console.log(patient_list._data.patient_tr);
+                patient_list._data.currentIndex=1;
+                PatientSum();
             }
         })
     }
+
+    //查询总页码
+    function PatientSum() {
+        var pat_num=$("#pid").val();
+        var pat_name=$("#name").val();
+        var pat_sex=$("#sex").val();
+        var pat_birthday=$("#test1").val();
+        var pat_time=$("#test2").val();
+        var pat_tel=$("#phone").val();
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../PatientSum.action',
+            dataType:'JSON',
+            type:'post',
+            data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+"&current_sum="+current_sum,
+            success:function (data) {
+                patient_list._data.sum=data;
+            }
+        })
+    }
+
+    //分页1
+    $(function () {
+
+        //下拉事件5
+        $("select#page_number").change(function () {
+            var pat_num=$("#pid").val();
+            var pat_name=$("#name").val();
+            var pat_sex=$("#sex").val();
+            var pat_birthday=$("#test1").val();
+            var pat_time=$("#test2").val();
+            var pat_tel=$("#phone").val();
+            var val=$(this).val();
+            $.ajax({
+                url:'../queryAllPatient.action',
+                dataType:'JSON',
+                type:'post',
+                data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+'&current_sum='+val,
+                success:function (data) {
+                    patient_list._data.patient_tr=data;
+                    PatientSum();
+                }
+            })
+
+        });
+
+        //翻页
+        $(".paging").click(function () {
+            var pat_num=$("#pid").val();
+            var pat_name=$("#name").val();
+            var pat_sex=$("#sex").val();
+            var pat_birthday=$("#test1").val();
+            var pat_time=$("#test2").val();
+            var pat_tel=$("#phone").val();
+            var pageName=$(this).text();
+            var sum=patient_list._data.sum;
+            var page_number=$("#page_number").val();
+            var current_sum=$("#page_number").val();
+            if(pageName=="《《"){
+                pageindex=1;
+            }
+            if(pageName=="《"){
+                if(pageindex!=1) {
+                    pageindex=pageindex-1;
+                }
+            }
+            if(pageName=="》"){
+                if(pageindex!=sum){
+                    pageindex=pageindex+1;
+                }
+            }
+            if(pageName=="》》"){
+                pageindex=sum;
+            }
+            patient_list._data.currentIndex=pageindex;
+            $.ajax({
+                url:'../queryAllPatient.action',
+                dataType:'JSON',
+                type:'post',
+                data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+'&pageIndex='+pageindex+"&current_sum="+current_sum,
+                success:function (data) {
+                    patient_list._data.patient_tr=data;
+                }
+            })
+        })
+    })
+
+
 </script>
 </body>
 </html>
