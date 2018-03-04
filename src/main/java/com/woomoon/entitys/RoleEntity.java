@@ -9,7 +9,21 @@ public class RoleEntity {
 	private String role_size;
 	private String role_url;
 	private String role_remark;
+	private String icon;
+	private String open;
 
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+	public String getOpen() {
+		return open;
+	}
+	public void setOpen(String open) {
+		this.open = open;
+	}
 	public Integer getRole_id() {
 		return role_id;
 	}
