@@ -45,4 +45,6 @@ public class PatientServiceImpl implements PatientService {
     public void updatePatient(PatientEntity patientEntity) {
         patientDao.updatePatient(patientEntity);
     }
+
+
 }

@@ -10,6 +10,9 @@ import java.util.Map;
 @Repository
 public interface PatientDao {
 
+    //测试查询
+    public List<Map<String,Object>> testQuery (@Param("p_entity") PatientEntity patientEntity,@Param("begin") int begin,@Param("end") int end);
+
     //查询所有+模糊查询病人
     public List<Map<String,Object>> queryAllPatient(@Param("p_entity") PatientEntity patientEntity,@Param("begin") int begin,@Param("end") int end);
 
@@ -27,5 +30,6 @@ public interface PatientDao {
 
     //修改病人
     public void updatePatient(PatientEntity patientEntity);
+
 
 }

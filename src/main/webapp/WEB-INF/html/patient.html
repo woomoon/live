@@ -69,7 +69,7 @@
                    <tr v-for="patient in patient_tr">
                        <td>{{patient.pat_num}}</td>
                        <td>{{patient.pat_name}}</td>
-                       <td>{{patient.pat_sex}}</td>
+                       <td>{{patient.pat_sex==1?'男':'女'}}</td>
                        <td>{{new Date(patient.pat_birthday).toLocaleDateString()}}</td>
                        <td>{{new Date(patient.pat_time).toLocaleDateString()}}</td>
                        <td>{{patient.pat_address}}</td>
@@ -82,7 +82,7 @@
         <hr>
             <div style="margin-left: 30px">
                 <div class="btn-group" role="group" aria-label="...">
-                    <select id="page_number"  class="btn btn-default paging" style="height: 34px"><option>05</option><option>10</option><option>15</option><option>20</option><option>30</option><lect></lect></select>
+                    <select id="page_number"  class="btn btn-default" style="height: 34px" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
                     <button type="button"  class="btn btn-default paging" id="home_page">《《</button>
                     <button type="button"  class="btn btn-default paging" id="previous_page">《</button>
                     <button  class="btn btn-default" disabled="disabled">{{currentIndex}}/{{sum}}</button>
@@ -230,9 +230,10 @@
         el:"#patient_list",
         data:{
             patient_tr:[],
-            update:{},
-            currentIndex:1,
-            sum:'',
+            update:{},     //修改的数据
+            page_num:1,  //当前每页多少条
+            currentIndex:1, //当前在第几页
+            sum:'', //最大页码
         },
         methods:{
             //增加
@@ -300,6 +301,7 @@
                             alert("修改成功！");
                         }
                         $("#update_patient").find(".close").click();
+                        PatientSum();
                         queryAll();
                     }
                 })
@@ -314,17 +316,24 @@
 
     //查询所有病人
     function queryAll(){
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../queryAllPatient.action',
             dataType:'JSON',
+            type:'post',
+            data:'current_sum='+current_sum,
             success:function (data) {
                 patient_list._data.patient_tr=data;
             }
         })
     };
-    
+
+
+
+
     //模糊查询
     function dimquery() {
+        patient_list._data.page_num=1;
         var pat_num=$("#pid").val();
         var pat_name=$("#name").val();
         var pat_sex=$("#sex").val();
@@ -338,15 +347,26 @@
             data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel,
             success:function (data) {
                 patient_list._data.patient_tr=data;
+                patient_list._data.currentIndex=1;
+                PatientSum();
             }
         })
     }
 
-    //查询病人的总数
+    //查询总页码
     function PatientSum() {
+        var pat_num=$("#pid").val();
+        var pat_name=$("#name").val();
+        var pat_sex=$("#sex").val();
+        var pat_birthday=$("#test1").val();
+        var pat_time=$("#test2").val();
+        var pat_tel=$("#phone").val();
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../PatientSum.action',
             dataType:'JSON',
+            type:'post',
+            data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+"&current_sum="+current_sum,
             success:function (data) {
                 patient_list._data.sum=data;
             }
@@ -356,11 +376,40 @@
     //分页
     $(function () {
 
+        //下拉事件
+        $("select#page_number").change(function () {
+            var pat_num=$("#pid").val();
+            var pat_name=$("#name").val();
+            var pat_sex=$("#sex").val();
+            var pat_birthday=$("#test1").val();
+            var pat_time=$("#test2").val();
+            var pat_tel=$("#phone").val();
+            var val=$(this).val();
+            $.ajax({
+                url:'../queryAllPatient.action',
+                dataType:'JSON',
+                type:'post',
+                data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+'&current_sum='+val,
+                success:function (data) {
+                    patient_list._data.patient_tr=data;
+                    PatientSum();
+                }
+            })
+
+        });
+
+        //翻页
         $(".paging").click(function () {
+            var pat_num=$("#pid").val();
+            var pat_name=$("#name").val();
+            var pat_sex=$("#sex").val();
+            var pat_birthday=$("#test1").val();
+            var pat_time=$("#test2").val();
+            var pat_tel=$("#phone").val();
             var pageName=$(this).text();
             var sum=patient_list._data.sum;
             var page_number=$("#page_number").val();
-            alert(page_number);
+            var current_sum=$("#page_number").val();
             if(pageName=="《《"){
                 pageindex=1;
             }
@@ -377,15 +426,14 @@
             if(pageName=="》》"){
                 pageindex=sum;
             }
-
             patient_list._data.currentIndex=pageindex;
             $.ajax({
                 url:'../queryAllPatient.action',
                 dataType:'JSON',
                 type:'post',
-                data:'pageIndex='+pageindex,
+                data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+'&pageIndex='+pageindex+"&current_sum="+current_sum,
                 success:function (data) {
-
+                    patient_list._data.patient_tr=data;
                 }
             })
         })
