@@ -216,7 +216,6 @@
 <script src="../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
 <script src="../../plugins/plugs/js/vue.min.js"></script>
 <script src="../../plugins/laydate/laydate.js"></script>
-<script src="../../plugins/js/window.js" type="text/javascript"></script>
 <script>
     laydate.render({
         elem:'#test1'
@@ -240,7 +239,7 @@
             add:function () {
                 $("#add_patient").modal("show");
             },
-            
+
             addPatient:function () {
                 var pat_name=$("#add_name").val();
                 var pat_sex=$("#add_sex").val();
@@ -323,7 +322,9 @@
             type:'post',
             data:'current_sum='+current_sum,
             success:function (data) {
+                console.log(data);
                 patient_list._data.patient_tr=data;
+                console.log(patient_list._data.patient_tr);
             }
         })
     };
@@ -372,7 +373,7 @@
             }
         })
     }
-    
+
     //分页
     $(function () {
 
