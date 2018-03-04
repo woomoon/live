@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link href="../../plugins/plugs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../plugins/css/page.css" rel="stylesheet">
+<link href="../../plugins/css/btn.css" rel="stylesheet">
+<link href="../../plugins/css/table.css" rel="stylesheet">
+<link href="../../plugins/css/admin-default.css" rel="stylesheet">
+<link href="../../plugins/css/window.css" rel="stylesheet">
+<style>
+    li{
+        width: 100px;
+        font: 18px 隶书;
+        list-style: none;
+        float: left;
+    }
+    hr{
+        list-style:" #d81cad";
+    }
+    th{
+        width: 100px;
+        text-align: center;
+    }
+    tr{
+        text-align: center;
+    }
+</style>
+<body style="background-color: rgba(165,65,108,0.05)" >
+    <div id="nexus_list" >
+        <div>
+            <div style="margin-left: 30px;margin-top: 10px">
+                患者编号：<input id="pid" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                关系类型：<input type="text" class="demo-input" id="relation"> &nbsp;&nbsp;&nbsp;&nbsp;
+                姓名：<input id="name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                电话号码：<input id="phone" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
+            </div>
+
+        </div><br>
+        <hr>
+        <div>
+            <div class="btn-group btn-group-justified" style="width: 100px; margin-left: 30px" role="group" aria-label="...">
+                <div class="btn-group" role="group">
+                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
+                </div>
+            </div><br>
+           <div style="margin-left: 30px">
+               <table border="1">
+                   <tr>
+                       <th>记录ID</th>
+                       <th>患者编号</th>
+                       <th>关系类型</th>
+                       <th>姓名</th>
+                       <th>电话号码</th>
+                       <th>备注</th>
+                       <th>操作</th>
+                   </tr>
+                   <tr v-for="nexus in nexus_tr">
+                       <td>{{nexus.nexus_id}}</td>
+                       <td>{{nexus.pat_num}}</td>
+                       <td>{{nexus.nexus_type}}</td>
+                       <td>{{nexus.nexus_nickname}}</td>
+                       <td>{{nexus.nexus_tel}}</td>
+                       <td>{{nexus.nexus_remark}}</td>
+                       <td><button v-on:click="updateID(nexus.nexus_id)">修改</button></td>
+                   </tr>
+               </table>
+           </div>
+        <hr>
+            <div style="margin-left: 30px">
+                <div class="btn-group" role="group" aria-label="...">
+                    <select id="page_number"  class="btn btn-default" style="height: 34px" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+                    <button type="button"  class="btn btn-default paging" id="home_page">《《</button>
+                    <button type="button"  class="btn btn-default paging" id="previous_page">《</button>
+                    <button  class="btn btn-default" disabled="disabled">{{currentIndex}}/{{sum}}</button>
+                    <button type="button"  class="btn btn-default paging" id="next_page">》</button>
+                    <button type="button"  class="btn btn-default paging" id="last">》》</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!--  增加社会关系   -->
+        <div class="modal fade" id="add_nexus" tabindex="-1" role="dialog"
+             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">增加患者</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!--disabled="disabled" 隐藏文本框-->
+                            <div class="form-group">
+                                <label  class="control-label">姓名:</label>
+                                <input type="text" class="form-control ordersId_update" id="add_name">
+                            </div>
+                            <div>
+                                <label class="control-label">患者编号：</label>
+                                <input type="text" class="demo-input form-control" id="add_num">
+                            </div>
+                            <div>
+                                <label class="control-label">关系类型：</label>
+                                <input type="text" class="demo-input form-control" id="add_type">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label"> 电话号码：</label>
+                                <input type="text" class="form-control" id="add_tel">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">备注：</label>
+                                <input type="text" style="width: 500px;height: 500px"  class="form-control ordersPrice_update"  id="add_remark">
+                                <span style="color: red;"></span></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addNexus()">提交增加</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  修改患者   -->
+        <div class="modal fade" id="update_nexus" tabindex="-1" role="dialog"
+             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" >修改患者</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!--disabled="disabled" 隐藏文本框-->
+                            <div class="form-group">
+                                <label class="control-label">记录ID：</label>
+                                <input type="text" class="form-control" id="update_pid" disabled="disabled" v-model="update.nexus_id">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">患者编号:</label>
+                                <input type="text" class="form-control ordersId_update" id="update_num" v-model="update.pat_num">
+                            </div>
+                            <div>
+                                <label class="control-label">关系类型：</label>
+                                <input type="text" class="demo-input form-control"  id="update_type" v-model="update.nexus_type">
+                            </div>
+                            <div>
+                                <label class="control-label">姓名：</label>
+                                <input type="text" class="demo-input form-control" id="upate_name" v-model="update.nexus_nickname">
+                            </div>
+                            <div>
+                                <label class="control-label">电话号码：</label>
+                                <input class="form-control" id="update_tel" v-model="update.nexus_tel">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">备注：</label>
+                                <input type="text" style="width: 500px;height: 500px"  class="form-control ordersPrice_update"  id="update_remark" v-model="update.nexus_remark">
+                                <span style="color: red;"></span></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="updateNexus()">提交修改</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../plugins/plugs/js/vue.min.js"></script>
+<script src="../../plugins/laydate/laydate.js"></script>
+<script>
+    laydate.render({
+        elem:'#test1'
+    });
+    laydate.render({
+        elem:'#test2'
+    });
+
+    var pageindex=1;
+    var nexus_list=new Vue({
+        el:"#nexus_list",
+        data:{
+            nexus_tr:[],
+            update:{},     //修改的数据
+            page_num:1,  //当前每页多少条
+            currentIndex:1, //当前在第几页
+            sum:'', //最大页码
+        },
+        methods:{
+            //增加
+            add:function () {
+                $("#add_nexus").modal("show");
+            },
+
+            addNexus:function () {
+                var nexus_nickname=$("#add_name").val();
+                var pat_num=$("#add_num").val();
+                var nexus_type=$("#add_type").val();
+                var nexus_tel=$("#add_tel").val();
+                var nexus_remark=$("#add_remark").val();
+                $.ajax({
+                    url:'../addNexus.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'nexus_nickname='+nexus_nickname+'&pat_num='+pat_num+'&nexus_type='+nexus_type+'&nexus_tel='+nexus_tel+'&nexus_remark='+nexus_remark,
+                    success:function (data) {
+                       if(data){
+                           alert("增加成功！");
+                       }
+//                       else{
+//                           alert("增加失败！");
+//                       }
+                        $("#add_nexus").find(".close").click();
+                        PatientSum();
+                        queryAll();
+                    }
+                })
+            },
+
+            //修改
+            updateID:function (nexus_id) {
+              $.ajax({
+                  url:'../queryOneNexus_ID.action',
+                  dataType:'JSON',
+                  type:'post',
+                  data:'nexus_id='+nexus_id,
+                  success:function (data) {
+                      nexus_list._data.update=data;
+                  }
+              })
+                $("#update_nexus").modal("show");
+            },
+
+
+            updateNexus:function () {
+                var nexus_id=$("#update_pid").val();
+                var nexus_nickname=$("#upate_name").val();
+                var pat_num=$("#update_num").val();
+                var nexus_type=$("#update_type").val();
+                var nexus_tel=$("#update_tel").val();
+                var nexus_remark=$("#update_remark").val();
+                $.ajax({
+                    url:'../updateNexus.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'nexus_id='+nexus_id+'&nexus_nickname='+nexus_nickname+'&pat_num='+pat_num+'&nexus_type='+nexus_type+'&nexus_tel='+nexus_tel+'&nexus_remark='+nexus_remark,
+                    success:function (data) {
+                        if(data){
+                            alert("修改成功！");
+                        }
+                        $("#update_nexus").find(".close").click();
+                        PatientSum();
+                        queryAll();
+                    }
+                })
+            }
+        }
+    });
+
+    $(function () {
+       queryAll();
+       PatientSum();
+    });
+
+    //查询所有病人
+    function queryAll(){
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../queryAllNexus.action',
+            dataType:'JSON',
+            type:'post',
+            data:'current_sum='+current_sum,
+            success:function (data) {
+                console.log(data);
+                nexus_list._data.nexus_tr=data;
+                console.log(nexus_list._data.nexus_tr);
+            }
+        })
+    };
+
+
+
+
+    //模糊查询
+    function dimquery() {
+        nexus_list._data.page_num=1;
+        var pat_num=$("#pid").val();
+        var nexus_nickname=$("#name").val();
+        var nexus_type=$("#relation").val();
+        var nexus_tel=$("#phone").val();
+        $.ajax({
+            url:'../queryAllNexus.action',
+            dataType:'JSON',
+            type:'post',
+            data:'pat_num='+pat_num+'&nexus_nickname='+nexus_nickname+'&nexus_type='+nexus_type+'&nexus_tel='+nexus_tel,
+            success:function (data) {
+                nexus_list._data.nexus_tr=data;
+                nexus_list._data.currentIndex=1;
+                PatientSum();
+            }
+        })
+    }
+
+    //查询总页码
+    function PatientSum() {
+        var pat_num=$("#pid").val();
+        var nexus_nickname=$("#name").val();
+        var nexus_type=$("#relation").val();
+        var nexus_tel=$("#phone").val();
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../NexusSum.action',
+            dataType:'JSON',
+            type:'post',
+            data:'pat_num='+pat_num+'&nexus_nickname='+nexus_nickname+'&nexus_type='+nexus_type+'&nexus_tel='+nexus_tel+"&current_sum="+current_sum,
+            success:function (data) {
+                nexus_list._data.sum=data;
+            }
+        })
+    }
+
+    //分页1
+    $(function () {
+
+        //下拉事件5
+        $("select#page_number").change(function () {
+            var pat_num=$("#pid").val();
+            var nexus_nickname=$("#name").val();
+            var nexus_type=$("#relation").val();
+            var nexus_tel=$("#phone").val();
+            var val=$(this).val();
+            $.ajax({
+                url:'../queryAllNexus.action',
+                dataType:'JSON',
+                type:'post',
+                data:'pat_num='+pat_num+'&nexus_nickname='+nexus_nickname+'&nexus_type='+nexus_type+'&nexus_tel='+nexus_tel+'&current_sum='+val,
+                success:function (data) {
+                    nexus_list._data.nexus_tr=data;
+                    nexus_list._data.currentIndex=1;
+                    PatientSum();
+                }
+            })
+
+        });
+
+        //翻页
+        $(".paging").click(function () {
+            var pat_num=$("#pid").val();
+            var nexus_nickname=$("#name").val();
+            var nexus_type=$("#relation").val();
+            var nexus_tel=$("#phone").val();
+            var pageName=$(this).text();
+            var sum=nexus_list._data.sum;
+            var current_sum=$("#page_number").val();
+            if(pageName=="《《"){
+                pageindex=1;
+            }
+            if(pageName=="《"){
+                if(pageindex!=1) {
+                    pageindex=pageindex-1;
+                }
+            }
+            if(pageName=="》"){
+                if(pageindex!=sum){
+                    pageindex=pageindex+1;
+                }
+            }
+            if(pageName=="》》"){
+                pageindex=sum;
+            }
+            nexus_list._data.currentIndex=pageindex;
+            $.ajax({
+                url:'../queryAllNexus.action',
+                dataType:'JSON',
+                type:'post',
+                data:'pat_num='+pat_num+'&nexus_nickname='+nexus_nickname+'&nexus_type='+nexus_type+'&nexus_tel='+nexus_tel+'&pageIndex='+pageindex+"&current_sum="+current_sum,
+                success:function (data) {
+                    nexus_list._data.nexus_tr=data;
+                }
+            })
+        })
+    })
+
+
+</script>
+</body>
+</html>
