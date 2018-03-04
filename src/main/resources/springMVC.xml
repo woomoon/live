@@ -13,13 +13,10 @@
     <context:component-scan base-package="com.woomoon.controller"/>
 
 
-
-
-
     <!--json 转换器hzf-->
     <mvc:annotation-driven>
         <mvc:message-converters>
-            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+            <bean  class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
                         <value>text/html;charset=UTF-8</value>
