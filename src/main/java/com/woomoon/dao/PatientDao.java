@@ -10,7 +10,7 @@ import java.util.Map;
 @Repository
 public interface PatientDao {
 
-    //测试查询
+    //测试查询1
     public List<Map<String,Object>> testQuery (@Param("p_entity") PatientEntity patientEntity,@Param("begin") int begin,@Param("end") int end);
 
     //查询所有+模糊查询病人

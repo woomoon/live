@@ -43,7 +43,7 @@ public class PatientController {
 
 
     /**
-     * 查询所有+模糊查询病人
+     * 查询所有+模糊查询病人1
      * String pat_num,String pat_name,String pat_birthday,Integer pat_sex,String pat_time,String pat_address,String pat_tel,String pat_occupaction
      *      PatientEntity patientEntity=new PatientEntity();
              patientEntity.setPat_num(pat_num);
