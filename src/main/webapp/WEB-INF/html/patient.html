@@ -73,8 +73,8 @@
                        <td>{{new Date(patient.pat_birthday).toLocaleDateString()}}</td>
                        <td>{{new Date(patient.pat_time).toLocaleDateString()}}</td>
                        <td>{{patient.pat_address}}</td>
-                       <td>{{patient.pat_tel}}</td>
                        <td>{{patient.pat_occupaction}}</td>
+                       <td>{{patient.pat_tel}}</td>
                        <td><button v-on:click="updateID(patient.pat_num)">修改</button></td>
                    </tr>
                </table>
@@ -261,6 +261,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_patient").find(".close").click();
+
                         queryAll();
                     }
                 })
@@ -393,6 +394,7 @@
                 data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+'&current_sum='+val,
                 success:function (data) {
                     patient_list._data.patient_tr=data;
+                    patient_list._data.currentIndex=1;
                     PatientSum();
                 }
             })
@@ -409,7 +411,6 @@
             var pat_tel=$("#phone").val();
             var pageName=$(this).text();
             var sum=patient_list._data.sum;
-            var page_number=$("#page_number").val();
             var current_sum=$("#page_number").val();
             if(pageName=="《《"){
                 pageindex=1;
