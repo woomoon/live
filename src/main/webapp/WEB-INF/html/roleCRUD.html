@@ -37,7 +37,7 @@
 <body>
 
 <div style="width:auto;margin-left: 18px;height: auto;">
-    <h3 style="font-weight: 800">权限管理</h3>
+    <h3 style="font-weight: 800">角色管理</h3>
 </div>
 
 <div style="float: left;width: 360px;height:1200px; margin-top:10px;margin-left:10px;">
@@ -62,14 +62,12 @@
     </div>
 </div>
 
-<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
-     data-backdrop="false">
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     data-backdrop="true">
     <div style="width: 330px;margin-top: 120px;" class="modal-dialog"><!--设置modal 的width -->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">
                     修改
                 </h4>
@@ -88,27 +86,17 @@
 </div>
 
 
-<div class="modal" id="addPowerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
-     data-backdrop="false">
+<div class="modal" id="addPowerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     data-backdrop="true">
     <div style="width: 330px;margin-top: 120px;" class="modal-dialog"><!--设置modal 的width -->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">添加节点</h4>
             </div>
-            <div style="height: 90px;" class="modal-body">
-                节点名称：<input id="power_name" type="text" style="width: 220px;float:right;margin-top: -5px"
+            <div style="height:60px;" class="modal-body">
+                节点名称：<input id="role_name" type="text" style="width: 220px;float:right;margin-top: -5px"
                             class="form-control">
-                <div style="width: 230px;height: 30px;margin-top: 20px">
-                    选择图标：
-                    <input class="ImgC" type="radio" name="p_icon" checked value="8">
-                    <img class="ImgC" src="../../plugins/zTree/css/diy/9.png"/>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <input class="ImgC" type="radio" name="p_icon" value="9">
-                    <img class="ImgC" src="../../plugins/zTree/css/diy/8.png"/>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -138,7 +126,7 @@
             var p_name = $("#p_name").val();
             var p_id = $("#p_id").html();
             $.ajax({
-                url: "../../updPower.action",
+                url: "../../updRole.action",
                 type: "post",
                 data: "p_name=" + p_name + "&p_id=" + p_id,
                 success: function (d) {
@@ -161,12 +149,11 @@
         });
 
         $("#addPower_submit").click(function () {
-            var rad = $("input[type='radio']:checked").val();
-            var p_name = $("#power_name").val();
+            var p_name = $("#role_name").val();
             $.ajax({
-                url: "../../addPower.action",
+                url: "../../addRole.action",
                 type: "post",
-                data: "power_pid=" + treeID + "&power_name=" + p_name + "&icon=" + rad,
+                data: "role_pid=" + treeID + "&role_name=" + p_name,
                 success: function (msg) {
                     if (msg == "false") {
                         alert("失败");
@@ -181,10 +168,13 @@
             if (window.confirm("确认删除吗?")) {
                 if (treeID != null && treeID != "") {
                     $.ajax({
-                        url: "../../delPower.action",
+                        url: "../../delRole.action",
                         type: "post",
                         data: "p_id=" + treeID,
                         success: function (msg) {
+                            if (msg == "false") {
+                                alert("失败！");
+                            }
                         }
                     })
                 }
@@ -198,12 +188,12 @@
         $("#updBtn").click(function () {
             if (treeID != null && treeID != "") {
                 $.ajax({
-                    url: "../../queryOnePower.action",
+                    url: "../../queryOneRole.action",
                     type: "post",
                     data: "treeId=" + treeID,
-                    success: function (d) {
-                        $("#p_name").val(JSON.parse(d).power_name);
-                        $("#p_id").html(JSON.parse(d).power_id);
+                    success: function (msg) {
+                        $("#p_name").val(JSON.parse(msg).role_name);
+                        $("#p_id").html(JSON.parse(msg).role_id);
                     }
                 })
                 $('#myModal').modal('show');
@@ -226,35 +216,25 @@
         async: {
             enable: true,
             type: "post",
-            url: "../../queryAllPower.action"
+            url: "../../queryAllRole.action"
         },
         data: {
             key: {
-                name: "power_name"
+                name: "role_name"
             },
             simpleData: {
                 enable: true,
-                idKey: "power_id",
-                pIdKey: "power_pid",
+                idKey: "role_id",
+                pIdKey: "role_pid",
                 rootPId: 0
             }
         },
         callback: {
             onClick: function (event, treeId, treeNode) {   //单击事件
-                treeID = treeNode.power_id;
+                treeID = treeNode.role_id;
             }
         }
     }
 
-    //settings ----end
-    /*
-    <div id="test"></div>
-    $.ajax({
-        url:"../../testButton.action",
-        success:function (d) {
-            $("#test").html(JSON.parse(d).power_url);
-        }
-    });
-    */
 </script>
 </html>

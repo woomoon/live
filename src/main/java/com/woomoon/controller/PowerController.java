@@ -56,14 +56,15 @@ public class PowerController {
 
     //添加节点
     @RequestMapping("addPower")
-    public String addPower(PowerEntity entity) {
+    @ResponseBody
+    public boolean addPower(PowerEntity entity) {
         try {
             if ("8".equals(entity.getIcon())) {//8 按钮   0 按钮
                 entity.setIsParent("false");
                 entity.setPower_size("0");
                 entity.setPower_url("test");
                 entity.setIcon("../../plugins/zTree/css/diy/9.png");
-            }else {
+            } else {
                 entity.setIsParent("true");
                 entity.setPower_size("1");
                 entity.setPower_url("test");
@@ -71,19 +72,20 @@ public class PowerController {
             }
             powerMapper.addPower(entity);
         } catch (Exception e) {
-            return "false";
+            return false;
         }
-        return "true";
+        return true;
     }
 
     @RequestMapping("delPower")
-    public String delPower (int p_id) {
+    @ResponseBody
+    public boolean delPower(int p_id) {
         try {
             powerMapper.delPower(p_id);
         } catch (Exception e) {
-            return "false";
+            return false;
         }
-        return "true";
+        return true;
     }
 
 
