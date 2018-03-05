@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface PatientService {
 
-    //查询所有+模糊查询病人
+    //查询所有+模糊查询病人1
     public List<Map<String,Object>> queryAllPatient(PatientEntity patientEntity,int begin,int end);
 
     //查询最后一个病人的ID

@@ -4,13 +4,11 @@ import com.woomoon.dao.PatientDao;
 import com.woomoon.entitys.PatientEntity;
 import com.woomoon.service.PatientService;
 import com.woomoon.utils.Generate;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +41,7 @@ public class PatientController {
 
 
     /**
-     * 查询所有+模糊查询病人1
+     * 查询所有+模糊查询病人
      * String pat_num,String pat_name,String pat_birthday,Integer pat_sex,String pat_time,String pat_address,String pat_tel,String pat_occupaction
      *      PatientEntity patientEntity=new PatientEntity();
              patientEntity.setPat_num(pat_num);

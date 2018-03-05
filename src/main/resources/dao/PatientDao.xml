@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.woomoon.dao.PatientDao">
-<!--1-->
+
     <select id="queryAllPatient" resultType="java.util.Map">
         select * from tb_patient where 1=1
         <if test="p_entity.pat_num !=null and p_entity.pat_num !=''">
@@ -25,7 +25,7 @@
         <if test="p_entity.pat_tel !=null and p_entity.pat_tel !=''">
             AND pat_tel=#{p_entity.pat_tel}
         </if>
-                     limit #{begin},#{end}
+              limit #{begin},#{end}
     </select>
 
     <select id="queryOnePatient" resultType="String">

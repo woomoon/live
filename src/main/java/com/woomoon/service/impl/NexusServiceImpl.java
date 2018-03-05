@@ -16,13 +16,18 @@ public class NexusServiceImpl implements NexusService {
     NexusDao nexusDao;
 
     @Override
-    public List<Map<String, Object>> queryAllNexus(NexusEntity nexusEntity) {
-        return nexusDao.queryAllNexus(nexusEntity);
+    public List<Map<String, Object>> queryAllNexus(NexusEntity nexusEntity, int begin, int end) {
+        return nexusDao.queryAllNexus(nexusEntity,begin,end);
     }
 
     @Override
-    public Map<String, Object> queryOneNexus() {
-        return nexusDao.queryOneNexus();
+    public NexusEntity queryOneNexus_ID(Integer nexus_id) {
+        return nexusDao.queryOneNexus_ID(nexus_id);
+    }
+
+    @Override
+    public int NexusSum(NexusEntity nexusEntity) {
+        return nexusDao.NexusSum(nexusEntity);
     }
 
     @Override
@@ -34,13 +39,6 @@ public class NexusServiceImpl implements NexusService {
     public void updateNexus(NexusEntity nexusEntity) {
         nexusDao.updateNexus(nexusEntity);
     }
-
-    @Override
-    public void deleteNexus(int nexus_id) {
-        nexusDao.deleteNexus(nexus_id);
-    }
-
-
 
 
 }
