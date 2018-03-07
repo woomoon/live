@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.DeptDao">
+
+    <select id="queryAllDept" resultType="java.util.Map">
+        select * from tb_dept where 1=1
+        <if test="d_entity.dept_name !=null and d_entity.dept_name !=''">
+             AND dept_name like '%${d_entity.dept_name}%'
+        </if>
+         limit #{begin},#{end}
+    </select>
+
+    <select id="queryOneDept_ID" parameterType="Integer" resultType="com.woomoon.entitys.DeptEntity">
+        select * from tb_dept where dept_id = #{dept_id}
+    </select>
+
+    <select id="DeptSum" parameterType="com.woomoon.entitys.DeptEntity" resultType="int">
+        select COUNT(*) from tb_dept where 1=1
+        <if test="dept_name !=null and dept_name !=''">
+            AND dept_name  like '%${dept_name}%'
+        </if>
+    </select>
+
+    <insert id="addDept" parameterType="com.woomoon.entitys.DeptEntity">
+        insert into tb_dept(dept_name,isParent,dept_pid,dept_remark) values(#{dept_name},#{isParent},#{dept_pid},#{dept_remark})
+    </insert>
+
+    <update id="updateDept" parameterType="com.woomoon.entitys.DeptEntity">
+        update tb_dept set dept_name=#{dept_name},isParent=#{isParent},dept_pid=#{dept_pid},dept_remark=#{dept_remark} where dept_id = #{dept_id}
+    </update>
+
+    <delete id="deleteDept" parameterType="Integer">
+        delete from tb_dept where dept_id= #{dept_id}
+    </delete>
+
+</mapper>

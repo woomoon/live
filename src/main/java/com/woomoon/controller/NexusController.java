@@ -17,9 +17,9 @@ public class NexusController {
     @Autowired
     NexusService nexusService;
 
-    @RequestMapping("holl")
+    @RequestMapping("hool")
     private String hool(){
-        return "nexus";
+        return "demo\\nexus";
     }
 
     /**
