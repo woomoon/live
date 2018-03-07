@@ -13,6 +13,14 @@
          limit #{begin},#{end}
     </select>
 
+    <select id="queryAllDept_isPatent" resultType="java.util.Map">
+        select * from tb_dept where isParent="是"
+    </select>
+
+    <select id="queryAllDept_isPatent_ID" parameterType="Integer" resultType="int">
+        select count(*) from tb_dept where dept_pid=#{dept_id}
+    </select>
+
     <select id="queryOneDept_ID" parameterType="Integer" resultType="com.woomoon.entitys.DeptEntity">
         select * from tb_dept where dept_id = #{dept_id}
     </select>

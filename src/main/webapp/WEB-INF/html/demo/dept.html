@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <!--  增加社会关系   -->
+        <!--  增加科室   -->
         <div class="modal fade" id="add_dept" tabindex="-1" role="dialog"
              aria-labelledby="exampleOrdersLabel" data-backdrop="false">
             <div class="modal-dialog" role="document">
@@ -85,11 +85,15 @@
                             </div>
                             <div>
                                 <label class="control-label">是否为父目录：</label>
-                                <input type="text" class="demo-input form-control" id="add_isParent">
+                                是：<input name="add_isParent" type="radio" value="是">&nbsp;&nbsp;
+                                否：<input name="add_isParent" type="radio" value="否" checked="checked">
                             </div>
                             <div>
                                 <label class="control-label">科室父ID：</label>
-                                <input type="text" class="demo-input form-control" id="add_pid">
+                                <select id="add_pid">
+                                    <option value="0">无父ID</option>
+                                    <option v-for=" add_tr in isparent_tr" :value="add_tr.dept_id">{{add_tr.dept_name}}</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label  class="control-label">备注：</label>
@@ -105,7 +109,7 @@
             </div>
         </div>
 
-        <!--  修改社会关系   -->
+        <!--  修改科室   -->
         <div class="modal fade" id="update_dept" tabindex="-1" role="dialog"
              aria-labelledby="exampleOrdersLabel" data-backdrop="false">
             <div class="modal-dialog" role="document">
@@ -130,11 +134,15 @@
                             </div>
                             <div>
                                 <label class="control-label">是否为父目录：</label>
-                                <input type="text" class="demo-input form-control"  id="update_isParent" v-model="update.isParent">
+                                是：<input name="update_isParent" type="radio" value="是" v-model="update.isParent">&nbsp;&nbsp;
+                                否：<input name="update_isParent" type="radio" value="否" v-model="update.isParent">
                             </div>
                             <div>
                                 <label class="control-label">科室父ID：</label>
-                                <input type="text" class="demo-input form-control" id="update_pid" v-model="update.dept_pid">
+                                <select id="update_pid" v-model="update.dept_pid">
+                                    <option value="0">无父ID</option>
+                                    <option v-for=" add_tr in isparent_tr" :value="add_tr.dept_id">{{add_tr.dept_name}}</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label  class="control-label">备注：</label>
@@ -167,18 +175,22 @@
             page_num:1,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
+            isparent_tr:{},
+            dept_info:'',
         },
         methods:{
             //增加
             add:function () {
                 $("#add_dept").modal("show");
+                query();
             },
 
             addDept:function () {
                 var dept_name=$("#add_name").val();
-                var isParent=$("#add_isParent").val();
+                var isParent=$("input[name='add_isParent']:checked").val();
                 var dept_pid=$("#add_pid").val();
                 var dept_remark=$("#add_remark").val();
+                alert(dept_pid);
                 $.ajax({
                     url:'../../addDept.action',
                     dataType:'JSON',
@@ -210,30 +222,36 @@
                     }
                 })
                 $("#update_dept").modal("show");
+                query();
             },
 
 
             updateDept:function () {
                 var dept_id=$("#update_id").val();
                 var dept_name=$("#update_name").val();
-                var isParent=$("#update_isParent").val();
+                var isParent=$("input[name='update_isParent']:checked").val();
                 var dept_pid=$("#update_pid").val();
                 var dept_remark=$("#update_remark").val();
                 alert(isParent);
-                $.ajax({
-                    url:'../../updateDept.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'dept_id='+dept_id+'&dept_name='+dept_name+'&isParent='+isParent+'&dept_pid='+dept_pid+'&dept_remark='+dept_remark,
-                    success:function (data) {
-                        if(data){
-                            alert("修改成功！");
+                info(dept_id);
+                if(dept_list._data.dept_info!=0){
+                    $.ajax({
+                        url:'../../updateDept.action',
+                        dataType:'JSON',
+                        type:'post',
+                        data:'dept_id='+dept_id+'&dept_name='+dept_name+'&isParent='+isParent+'&dept_pid='+dept_pid+'&dept_remark='+dept_remark,
+                        success:function (data) {
+                            if(data){
+                                alert("修改成功！");
+                            }
                         }
-                        $("#update_dept").find(".close").click();
-                        DeptSum();
-                        queryAll();
-                    }
-                })
+                    })
+                }else{
+                    alert("该父类下有子类，不能进行修改！")
+                }
+                $("#update_dept").find(".close").click();
+                DeptSum();
+                queryAll();
             }
         }
     });
@@ -243,7 +261,19 @@
         DeptSum();
     });
 
-    //查询所有病人
+
+    //查询所有
+    function query() {
+        $.ajax({
+            url:'../../queryAllDept_isPatent.action',
+            dataType:'JSON',
+            success:function (data) {
+                dept_list._data.isparent_tr=data;
+            }
+        })
+    };
+
+    //查询所有+分页
     function queryAll(){
         var current_sum=$("#page_number").val();
         $.ajax({
@@ -259,7 +289,18 @@
         })
     };
 
-
+    //查询父类下有没有子类
+    function info(dept_id) {
+        $.ajax({
+            url:'../../queryAllDept_isPatent_ID.action',
+            dataType:'JSON',
+            type:'post',
+            data:'dept_id='+dept_id,
+            success:function (data) {
+                dept_list._data.dept_info=data;
+            }
+        })
+    }
 
 
     //模糊查询
