@@ -314,8 +314,6 @@
     };
 
 
-
-
     //模糊查询
     function dimquery() {
         patient_list._data.page_num=1;
@@ -326,7 +324,7 @@
         var pat_time=$("#test2").val();
         var pat_tel=$("#phone").val();
         $.ajax({
-            url:'../../queryAllPatient.action',
+            url:'../../../queryAllPatient.action',
             dataType:'JSON',
             type:'post',
             data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel,

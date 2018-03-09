@@ -5,8 +5,6 @@
     <title>Title</title>
     <link rel="stylesheet" href="../../plugins/zTree/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" href="../../plugins/plugs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../plugins/EasyUI/themes/default/easyui.css">
-    <link rel="stylesheet" href="../../plugins/EasyUI/themes/icon.css">
     <style>
         .firstSpan {
             float: left;
@@ -48,6 +46,7 @@
     <button id="addBtn" type="button" class="btn btn-default">添加</button>
     <button id="delBtn" type="button" class="btn btn-default">删除</button>
     <button id="updBtn" type="button" class="btn btn-default">修改</button>
+    <button id="refBtn" type="button" class="btn btn-default">刷新</button>
 </div>
 
 <div style="margin-top: 10px;">
@@ -123,7 +122,6 @@
 <script src="../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
 <script src="../../plugins/zTree/js/jquery.ztree.core.js"></script>
 <script src="../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
-<script src="../../plugins/EasyUI/js/jquery.easyui.min.js"></script>
 <script>
 
     var treeID = "";
@@ -212,6 +210,10 @@
                 alert("请先选择一个节点 !");
             }
         });
+
+        $("#refBtn").click(function () {
+            refLoad();
+        })
     })
 
     //init end

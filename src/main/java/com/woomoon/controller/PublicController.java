@@ -37,5 +37,14 @@ public class PublicController {
         return "demo\\table";
     }
 
+    @RequestMapping("href_back")
+    public String href_back () {
+        return "demo\\background";
+    }
+
+    @RequestMapping("href_userGrant")
+    public String href_userGrant() {
+        return "demo\\userGrant";
+    }
 
 }

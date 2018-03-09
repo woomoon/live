@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../../plugins/plugs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../plugins/UI/style/style.css">
+    <link rel="stylesheet" href="../../../plugins/zTree/css/zTreeStyle/zTreeStyle.css">
+</head>
+<style type="text/css">
+    .divL {
+        float: left;
+        width: 260px;
+    }
+
+    .divR {
+        float: left;
+        width: 260px;
+    }
+
+    .divC {
+        float: right;
+        width: 280px;
+    }
+
+    h3 {
+        margin-top: 10px;
+        margin-left: 18px;
+        font-weight: bold;
+    }
+
+    .tree_left {
+        margin-left: 15px;
+    }
+
+    .btn {
+        margin-top: 40px;
+    }
+
+    .btnFontSi {
+        font-size: 15px;
+    }
+
+    .msgDiv {
+        font-size: 16px;
+    }
+</style>
+<body>
+
+<!--两棵树，角色与权限，进行数据的绑定-->
+<div style="width: 800px; margin-top: -40px;">
+    <div class="divL">
+        <h3>角色选择：</h3>
+        <div class="tree_left">
+            <ul id="rTree" class="ztree"></ul>
+        </div>
+    </div>
+    <div class="divR">
+        <h3>权限选择：</h3>
+        <div class="tree_left">
+            <ul id="pTree" class="ztree"></ul>
+        </div>
+    </div>
+    <div class="divC">
+        <div class="btn-group btn-group-lg">
+            <button id="addBtn" type="button" class="btn btn-default"><span class="btnFontSi">保存</span></button>
+            <button id="delBtn" type="button" class="btn btn-default"><span class="btnFontSi">删除</span></button>
+            <button id="refBtn" type="button" class="btn btn-default"><span class="btnFontSi">刷新</span></button>
+        </div>
+        <br/>
+        <br/>
+        <div class="msgDiv">
+            查看角色所对应的权限，只要点击一个角色节点，权限树自动勾选对应的树节点。<br/><br/>
+            点击一个角色节点，勾选对象的权限节点，点击保存，会将选择的角色与其对应的权限保存到数据库中。<br/><br/>
+            选择一个角色节点，再点击删除按钮，将会把这个角色所对应的权限删除掉。<br/><br/>
+            <img src="../../../plugins/zTree/css/diy/8.png" height="16" width="16"/>&nbsp;是菜单级别的节点。<br/><br/>
+            <img src="../../../plugins/zTree/css/diy/9.png" height="16" width="16"/>&nbsp;是按钮级别的节点。<br/><br/>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../../plugins/zTree/js/jquery.ztree.core.js"></script>
+<script src="../../../plugins/zTree/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript">
+
+    var treeID;
+
+    $(function () {
+        // init ztree
+        $.fn.zTree.init($("#pTree"), settings);
+
+        $.fn.zTree.init($("#rTree"), rsettings);
+
+        $("#refBtn").click(function () {
+            refreshPower();
+            refreshRole();
+        })
+
+        $("#delBtn").click(function () {
+            $.ajax({
+                url: "../../delRoleCoPower.action",
+                type: "post",
+                data: "treeId=" + treeID,
+                success: function (msg) {
+                    if (msg == "false") {
+                        alert("失败！");
+                    }
+                    else {
+                        closeAllTreeNode();
+                    }
+                }
+            })
+        })
+
+        $("#addBtn").click(function () {
+            var ids = ",";
+            if (treeID != null) {
+                var treeObj = $.fn.zTree.getZTreeObj("pTree");
+                var nodes = treeObj.getCheckedNodes(true);
+                $.each(nodes, function (k, v) {
+                    if (v.power_pid != 0) {
+                        ids += v.power_id + ",";
+                    }
+                })
+                $.ajax({
+                    url: "../../addRoleCoPower.action",
+                    type: "post",
+                    data: "rid=" + treeID + "&ids=" + ids,
+                    success: function (msg) {
+                        if (msg == "false") {
+                            alert("失败！");
+                        }
+                    }
+                })
+            }
+        })
+    })
+
+    var settings = {
+        async: {
+            enable: true,
+            type: "post",
+            url: "../../../queryAllPower.action"
+        },
+        data: {
+            key: {
+                name: "power_name"
+            },
+            simpleData: {
+                enable: true,
+                idKey: "power_id",
+                pIdKey: "power_pid",
+                rootPId: 0
+            }
+        },
+        check: {
+            enable: true,
+            chkStyle: "checkbox"
+        }
+    }
+
+    var rsettings = {
+        async: {
+            enable: true,
+            type: "post",
+            url: "../../../queryAllRole.action"
+        },
+        data: {
+            key: {
+                name: "role_name"
+            },
+            simpleData: {
+                enable: true,
+                idKey: "role_id",
+                pIdKey: "role_pid",
+                rootPId: 0
+            }
+        },
+        callback: {
+            onClick: function (event, treeId, treeNode) {   //单击事件
+                treeID = treeNode.role_id;
+                checkNodes(treeID);
+            }
+        }
+    }
+
+    function checkNodes(treeID) {
+        closeAllTreeNode();
+        var strIds = "";
+        $.ajax({
+            url: "../../queryRoleCoPower.action",
+            type: "post",
+            data: "treeId=" + treeID,
+            success: function (msg) {
+                var ids = JSON.parse(msg);
+                $.each(ids, function (k, v) {
+                    strIds += v.power_id + "$";
+                })
+                checkTreeNode(strIds);
+            }
+        })
+    }
+
+    function checkTreeNode(ids) {
+        var idsArr = ids.split("$");
+        var treeObj = $.fn.zTree.getZTreeObj("pTree");
+        var nodes = treeObj.transformToArray(treeObj.getNodes());
+        $.each(nodes, function (k, v) {
+            $.each(idsArr, function (ki, vi) {
+                if (vi == v.power_id) {
+                    if (!v.isParent) {
+                        treeObj.checkNode(v, true, true, true);
+                    }
+                }
+            })
+        })
+    }
+
+
+    function closeAllTreeNode() {						    //关闭所有的节点
+        var treeObj = $.fn.zTree.getZTreeObj("pTree");
+        var nodes = treeObj.getNodes();
+        $.each(nodes, function (k, v) {						//遍历所有的父节点
+            treeObj.checkNode(v, false, true, true); 	    //取消所有被勾选的节点
+        })
+    };
+
+    function refreshPower() {
+        var treeObj = $.fn.zTree.getZTreeObj("pTree");
+        treeObj.reAsyncChildNodes(null, "refresh");
+    }
+
+    function refreshRole() {
+        var treeObj = $.fn.zTree.getZTreeObj("rTree");
+        treeObj.reAsyncChildNodes(null, "refresh");
+    }
+
+</script>
+</html>
