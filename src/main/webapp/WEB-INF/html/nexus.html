@@ -343,6 +343,7 @@
             var nexus_type=$("#relation").val();
             var nexus_tel=$("#phone").val();
             var val=$(this).val();
+            pageindex=1;
             $.ajax({
                 url:'../queryAllNexus.action',
                 dataType:'JSON',
@@ -366,6 +367,7 @@
             var pageName=$(this).text();
             var sum=nexus_list._data.sum;
             var current_sum=$("#page_number").val();
+
             if(pageName=="《《"){
                 pageindex=1;
             }

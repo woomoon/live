@@ -69,10 +69,7 @@ public class TestController {
         return "index";
     }
 
-    @RequestMapping("href_user")
-    public String href_user () {
-        return "user";
-    }
+
 
 
 

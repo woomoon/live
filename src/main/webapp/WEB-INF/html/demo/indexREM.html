@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../../plugins/plugs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../plugins/UI/style/font-awesome.css">
+    <link rel="stylesheet" href="../../../plugins/UI/style/style.css">
+    <link rel="stylesheet" href="../../../plugins/zTree/css/zTreeStyle/zTreeStyle.css">
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top bs-docs-nav" role="banner">
+
+    <div class="conjtainer" style="height: 60px;">
+        <!-- Navigation starts 最上面的搜索框及退出 -->
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+
+            <ul class="nav navbar-nav">
+
+                <!-- Upload to server link. Class "dropdown-big" creates big dropdown -->
+                <li class="dropdown dropdown-big">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-success">
+                        <i class="icon-cloud-upload"></i></span> 上传到云服务器</a>
+                    <!-- Dropdown -->
+                    <ul class="dropdown-menu">
+                        <li>
+                            <!-- Progress bar -->
+                            <p>图片上传进度</p>
+                            <!-- Bootstrap progress bar -->
+                            <div class="progress progress-striped active">
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40"
+                                     aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                    <span class="sr-only">完成40%</span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <!-- Dropdown menu footer -->
+                            <div class="drop-foot">
+                                <a href="#">查看所有</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Search form -->
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group" style="width: 220px;">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+            </form>
+            <!-- Links -->
+            <ul class="nav navbar-nav pull-right">
+                <li class="dropdown pull-right">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <i class="icon-user"></i> 管理员 <b class="caret"></b>
+                    </a>
+
+                    <!-- Dropdown menu -->
+
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><i class="icon-user"></i> 资料</a></li>
+                        <li><a href="#"><i class="icon-cogs"></i> 设置</a></li>
+                        <li><a href="login.html"><i class="icon-off"></i> 退出</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+
+<!-- Header ends -->
+
+<!-- Main content starts -->
+
+<div class="content">
+    <!-- Sidebar -->
+    <div style="height: 800px;" class="sidebar">
+        <br/>
+        <div style="float: left;width: 360px;height:700px; margin-top:10px;margin-left:10px;">
+            <ul id="pTree" class="ztree"></ul>
+        </div>
+    </div>
+
+    <div class="mainbar"><!--内容中间的展示-->
+        <br/>
+        <div class="col-md-11" style="background-color: #F0F3F4; height: 777px; width: 1122px;">
+            <!--中间-->
+            <!-- Nav tabs -->
+            <ul id="tabTitle" class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a>
+                </li>
+            </ul>
+            <div id="tabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <iframe src="../../../href_homePage.action" width="1092px" height="736px;" frameborder="no"
+                            border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+                </div>
+            </div>
+            <!--中间-->
+        </div>
+    </div>
+</div>
+
+<!--底部信息@@@-->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Copyright info -->
+                <p class="copy">Copyright &copy; 2012 | <a href="#">Your Site</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- JS -->
+<script src="../../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../../plugins/zTree/js/jquery.ztree.core.js"></script>
+<script src="../../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
+
+
+<script type="text/javascript">
+    $(function () {
+        $.fn.zTree.init($("#pTree"), settings);
+    })
+
+    var settings = {
+        async: {
+            enable: true,
+            type: "post",
+            url: "../../../pubQueryPower.action"
+        },
+        data: {
+            key: {
+                name: "power_name"
+            },
+            simpleData: {
+                enable: true,
+                idKey: "power_id",
+                pIdKey: "power_pid",
+                rootPId: 0
+            }
+        },
+        callback: {
+            onClick: addTab,
+        }
+    }
+
+
+    function addTab(event, treeId, treeNode) {
+        console.log(treeNode);
+        if (treeNode.isParent == false) {
+            $("#tabTitle").append("<li role='presentation'><a href='#" + treeNode.power_url + "' aria-controls='" + treeNode.power_url + "' role='tab' data-toggle='tab'>" + treeNode.power_name + "</a></li>");
+            $("#tabContent").append("<div role='tabpanel' class='tab-pane' id='" + treeNode.power_url + "'><iframe src='../../../" + treeNode.power_url + ".action' width='1092px' height='736px;' frameborder='no' border='0' marginwidth='0' marginheight='0' scrolling='no' allowtransparency='yes'></iframe></div>");
+            $('#tabTitle a[href="#' + treeNode.power_url + '"]').tab('show');
+        }
+    }
+
+</script>
+
+</body>
+</html>

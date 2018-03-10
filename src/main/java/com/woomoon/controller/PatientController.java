@@ -23,7 +23,7 @@ public class PatientController {
 
     @RequestMapping("href_patient")
     public String href_patient(){
-        return "patient";
+        return "demo\\patient";
     }
 
     //测试查询

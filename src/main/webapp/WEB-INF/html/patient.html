@@ -134,11 +134,11 @@
                             </div>
                             <div class="form-group">
                                 <label  class="control-label">职业：</label>
-                                <input type="text" class="form-control ordersPrice_update"  id="add_tel">
+                                <input type="text" class="form-control ordersPrice_update"  id="add_occupaction">
                                 <span id="OpriceValue" style="color: red;"></span></div>
                             <div class="form-group">
                                 <label  class="control-label"> 电话号码：</label>
-                                <input type="text" class="form-control" id="add_occupaction">
+                                <input type="text" class="form-control" id="add_tel">
                             </div>
                         </form>
                     </div>
@@ -195,11 +195,11 @@
                             </div>
                             <div class="form-group">
                                 <label  class="control-label">职业：</label>
-                                <input type="text" class="form-control ordersPrice_update"  id="update_tel" v-model="update.pat_tel">
+                                <input type="text" class="form-control ordersPrice_update"  id="update_occupaction" v-model="update.pat_occupaction">
                                 <span style="color: red;"></span></div>
                             <div class="form-group">
                                 <label  class="control-label"> 电话号码：</label>
-                                <input type="text" class="form-control" id="update_occupaction" v-model="update.pat_occupaction">
+                                <input type="text" class="form-control" id="update_tel" v-model="update.pat_tel">
                             </div>
                         </form>
                     </div>
@@ -261,7 +261,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_patient").find(".close").click();
-
+                        PatientSum();
                         queryAll();
                     }
                 })
@@ -378,6 +378,7 @@
     //分页1
     $(function () {
 
+
         //下拉事件5
         $("select#page_number").change(function () {
             var pat_num=$("#pid").val();
@@ -387,6 +388,8 @@
             var pat_time=$("#test2").val();
             var pat_tel=$("#phone").val();
             var val=$(this).val();
+            patient_list._data.currentIndex=1;
+            pageindex=1;
             $.ajax({
                 url:'../queryAllPatient.action',
                 dataType:'JSON',
@@ -394,7 +397,6 @@
                 data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+'&current_sum='+val,
                 success:function (data) {
                     patient_list._data.patient_tr=data;
-                    patient_list._data.currentIndex=1;
                     PatientSum();
                 }
             })
@@ -428,6 +430,7 @@
             if(pageName=="》》"){
                 pageindex=sum;
             }
+            alert(pageindex);
             patient_list._data.currentIndex=pageindex;
             $.ajax({
                 url:'../queryAllPatient.action',

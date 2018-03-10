@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.RoleMapper">
+
+    <select id="queryAllRole" parameterType="int" resultType="com.woomoon.entitys.RoleEntity">
+        select role_id,role_pid,role_name,role_url,icon,open from tb_role WHERE role_size != #{psize}
+    </select>
+
+    <select id="queryOneRole" parameterType="String" resultType="com.woomoon.entitys.RoleEntity">
+        select role_id,role_name from tb_role where role_id = #{treeId}
+    </select>
+
+    <update id="updRole">
+        update tb_role set role_name = #{p_name,jdbcType=VARCHAR} where role_id = #{p_id,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="addRole" parameterType="com.woomoon.entitys.RoleEntity">
+        INSERT INTO tb_role (role_pid,role_name,isParent,role_size,role_url) VALUES (#{role_pid},#{role_name},#{isParent},#{role_size},#{role_url})
+    </insert>
+
+    <delete id="delRole" parameterType="int">
+        delete from tb_role where role_id = #{role_id}
+    </delete>
+
+</mapper>

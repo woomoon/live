@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../plugins/zTree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="../../plugins/plugs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/EasyUI/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/EasyUI/themes/icon.css">
+    <style>
+        .firstSpan {
+            float: left;
+            margin-top: 5px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .msge {
+            float: left;
+            margin-top: 14px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .inp {
+            width: 200px;
+            height: 30px;
+            margin-top: 10px;
+        }
+
+        .ImgC {
+            margin-left: 0px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div style="width:auto;margin-left: 18px;height: auto;">
+    <h3 style="font-weight: 800">角色管理</h3>
+</div>
+
+<div style="float: left;width: 360px;height:1200px; margin-top:10px;margin-left:10px;">
+    <ul id="pTree" class="ztree"></ul>
+</div>
+
+<div class="btn-group" role="group" aria-label="...">
+    <button id="addBtn" type="button" class="btn btn-default">添加</button>
+    <button id="delBtn" type="button" class="btn btn-default">删除</button>
+    <button id="updBtn" type="button" class="btn btn-default">修改</button>
+</div>
+
+<div style="margin-top: 10px;">
+    <br/>
+    <div>
+        每个页面级的菜单节点用柱状图图标（8号图标）<br/>
+        按钮使用的设置样式的图标（9号图标）<br/>
+        点击一个节点即可查看详情<br/>
+        添加节点，先选中一个节点，在选中节点之后添加子节点<br/>
+        修改节点，需要先选中需要被修改的节点<br/>
+        删除节点，需要先选中需要被删除的节点<br/>
+    </div>
+</div>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     data-backdrop="true">
+    <div style="width: 330px;margin-top: 120px;" class="modal-dialog"><!--设置modal 的width -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改
+                </h4>
+            </div>
+            <div style="height: 60px;" class="modal-body">
+                节点名称：<input id="p_name" type="text" style="width: 220px;float:right;margin-top: -5px"
+                            class="form-control">
+                <div id="p_id"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="p_submit" type="button" class="btn btn-primary">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<div class="modal" id="addPowerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     data-backdrop="true">
+    <div style="width: 330px;margin-top: 120px;" class="modal-dialog"><!--设置modal 的width -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加节点</h4>
+            </div>
+            <div style="height:60px;" class="modal-body">
+                节点名称：<input id="role_name" type="text" style="width: 220px;float:right;margin-top: -5px"
+                            class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="addPower_submit" type="button" class="btn btn-primary">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+</body>
+<script src="../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../plugins/zTree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../plugins/EasyUI/js/jquery.easyui.min.js"></script>
+<script>
+
+    var treeID = "";
+
+
+    $(function () {
+        // init ztree
+        $.fn.zTree.init($("#pTree"), settings);
+
+        // upd submit btn
+        $("#p_submit").click(function () {
+            var p_name = $("#p_name").val();
+            var p_id = $("#p_id").html();
+            $.ajax({
+                url: "../../updRole.action",
+                type: "post",
+                data: "p_name=" + p_name + "&p_id=" + p_id,
+                success: function (d) {
+                    if (d == "false") {
+                        alert("失败");
+                    }
+                }
+            })
+            $('#myModal').modal('hide');
+            refLoad();
+        })
+
+        $("#addBtn").click(function () {
+            if (treeID != null && treeID != "") {
+                $('#addPowerModal').modal('show');
+            }
+            else {
+                alert("请先选择一个节点 !");
+            }
+        });
+
+        $("#addPower_submit").click(function () {
+            var p_name = $("#role_name").val();
+            $.ajax({
+                url: "../../addRole.action",
+                type: "post",
+                data: "role_pid=" + treeID + "&role_name=" + p_name,
+                success: function (msg) {
+                    if (msg == "false") {
+                        alert("失败");
+                    }
+                }
+            })
+            $('#addPowerModal').modal('hide');
+            refLoad();
+        });
+
+        $("#delBtn").click(function () {
+            if (window.confirm("确认删除吗?")) {
+                if (treeID != null && treeID != "") {
+                    $.ajax({
+                        url: "../../delRole.action",
+                        type: "post",
+                        data: "p_id=" + treeID,
+                        success: function (msg) {
+                            if (msg == "false") {
+                                alert("失败！");
+                            }
+                        }
+                    })
+                }
+                else {
+                    alert("请先选择一个节点 !");
+                }
+            }
+            refLoad();
+        });
+
+        $("#updBtn").click(function () {
+            if (treeID != null && treeID != "") {
+                $.ajax({
+                    url: "../../queryOneRole.action",
+                    type: "post",
+                    data: "treeId=" + treeID,
+                    success: function (msg) {
+                        $("#p_name").val(JSON.parse(msg).role_name);
+                        $("#p_id").html(JSON.parse(msg).role_id);
+                    }
+                })
+                $('#myModal').modal('show');
+            }
+            else {
+                alert("请先选择一个节点 !");
+            }
+        });
+    })
+
+    //init end
+
+    function refLoad() {
+        var treeObj = $.fn.zTree.getZTreeObj("pTree");
+        treeObj.reAsyncChildNodes(null, "refresh");
+    }
+
+
+    var settings = {
+        async: {
+            enable: true,
+            type: "post",
+            url: "../../queryAllRole.action"
+        },
+        data: {
+            key: {
+                name: "role_name"
+            },
+            simpleData: {
+                enable: true,
+                idKey: "role_id",
+                pIdKey: "role_pid",
+                rootPId: 0
+            }
+        },
+        callback: {
+            onClick: function (event, treeId, treeNode) {   //单击事件
+                treeID = treeNode.role_id;
+            }
+        }
+    }
+
+</script>
+</html>
