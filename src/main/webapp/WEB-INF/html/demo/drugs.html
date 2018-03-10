@@ -11,13 +11,16 @@
 <body>
 
 <!--控制出现位置-->
-<div id="dept_list" style="margin-top: -40px" class="col-md-12">
+<div id="drugs_list" style="margin-top: -40px" class="col-md-12">
     <!--背景-->
     <div class="widget" style="">
         <!--数据表 上边框 搜索框-->
         <div style="height: 60px;" class="widget-head">
             <div style="margin-left: 30px;margin-top: 10px">
-                科室名称：<input id="name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                药品名称：<input id="name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                是否是处方药：&nbsp;是：<input name="is" type="radio" value="是">&nbsp;
+                            否：<input name="is" type="radio" value="否">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                药品类型：<input id="type" width="200px">
                 <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
             </div>
         </div>
@@ -27,23 +30,23 @@
             <table class="table table-striped table-bordered table-hover">
                 <!--字段名-->
                 <thead >
-                    <th>科室ID</th>
-                    <th>科室名称</th>
-                    <th>是否为父目录</th>
-                    <th>科室父ID</th>
-                    <th>备注</th>
+                    <th>药品ID</th>
+                    <th>药品名称</th>
+                    <th>是否为处方药</th>
+                    <th>药品类型</th>
+                    <th>单价</th>
                     <th>操作</th>
                 </thead>
                 <!--数据行-->
                 <tbody>
-                <tr v-for="dept in dept_tr">
-                    <td>{{dept.dept_id}}</td>
-                    <td>{{dept.dept_name}}</td>
-                    <td>{{dept.isParent}}</td>
-                    <td>{{dept.dept_pid}}</td>
-                    <td>{{dept.dept_remark}}</td>
-                    <td><button v-on:click="updateID(dept.dept_id)">修改</button>
-                        <button v-on:click="deleteID(dept.dept_id)">删除</button></td>
+                <tr v-for="drugs in drugs_tr">
+                    <td>{{drugs.drugs_id}}</td>
+                    <td>{{drugs.drugs_name}}</td>
+                    <td>{{drugs.drugs_is}}</td>
+                    <td>{{drugs.drugs_type}}</td>
+                    <td>{{drugs.drugs_money_one}}</td>
+                    <td><button v-on:click="updateID(drugs.drugs_id)">修改</button>
+                        <button v-on:click="deleteID(drugs.drugs_id)">删除</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -65,7 +68,7 @@
         </div>
 
         <!--删除科室-->
-        <div class="modal fade" id="delete_dept" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+        <div class="modal fade" id="delete_drugs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -76,7 +79,7 @@
                         <h3>确定要删除吗？</h3>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger "  v-on:click="deleteDept()">确认删除</button>
+                        <button type="button" class="btn btn-danger "  v-on:click="deleteDrugs()">确认删除</button>
                         <button type="button" class="btn btn-success" data-dismiss="modal">取消删除</button>
                     </div>
                 </div>
@@ -84,7 +87,7 @@
         </div>
 
         <!--  增加科室   -->
-        <div class="modal fade" id="add_dept" tabindex="-1" role="dialog"
+        <div class="modal fade" id="add_drugs" tabindex="-1" role="dialog"
              aria-labelledby="exampleOrdersLabel" data-backdrop="false">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -93,35 +96,32 @@
                                 aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title">增加科室</h4>
+                        <h4 class="modal-title">增加药品</h4>
                     </div>
                     <div class="modal-body">
                         <form>
                             <!--disabled="disabled" 隐藏文本框-->
                             <div class="form-group">
-                                <label  class="control-label">科室名称:</label>
+                                <label  class="control-label">药品名称:</label>
                                 <input type="text" class="form-control ordersId_update" id="add_name">
                             </div>
                             <div>
-                                <label class="control-label">是否为父目录：</label>
-                                是：<input name="add_isParent" type="radio" value="是">&nbsp;&nbsp;
-                                否：<input name="add_isParent" type="radio" value="否" checked="checked">
+                                <label class="control-label">是否为处方药：</label>
+                                是：<input name="add_is" type="radio" value="是">&nbsp;&nbsp;
+                                否：<input name="add_is" type="radio" value="否" checked="checked">
                             </div>
                             <div>
-                                <label class="control-label">科室父ID：</label>
-                                <select id="add_pid">
-                                    <option value="0">无父ID</option>
-                                    <option v-for=" add_tr in isparent_tr" :value="add_tr.dept_id">{{add_tr.dept_name}}</option>
-                                </select>
+                                <label class="control-label">药品类型：</label>
+                                <input id="add_type" type="text" class="form-control ordersId_update">
                             </div>
                             <div class="form-group">
-                                <label  class="control-label">备注：</label>
-                                <input type="text" style="height: 100px"  class="form-control ordersPrice_update"  id="add_remark">
+                                <label  class="control-label">单价：</label>
+                                <input type="text" class="form-control ordersPrice_update"  id="add_money_one">
                                 <span style="color: red;"></span></div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addDept()">提交增加</button>
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addDrugs()">提交增加</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
         </div>
 
         <!--  修改科室   -->
-        <div class="modal fade" id="update_dept" tabindex="-1" role="dialog"
+        <div class="modal fade" id="update_drugs" tabindex="-1" role="dialog"
              aria-labelledby="exampleOrdersLabel" data-backdrop="false">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -138,39 +138,36 @@
                                 aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" >修改科室</h4>
+                        <h4 class="modal-title" >修改药品</h4>
                     </div>
                     <div class="modal-body">
                         <form>
                             <!--disabled="disabled" 隐藏文本框-->
                             <div class="form-group">
                                 <label class="control-label" >科室ID：</label>
-                                <input type="text" class="form-control" id="update_id" disabled="disabled" v-model="update.dept_id">
+                                <input type="text" class="form-control" id="update_id" disabled="disabled" v-model="update.drugs_id">
                             </div>
                             <div class="form-group">
                                 <label  class="control-label">科室名称:</label>
-                                <input type="text" class="form-control ordersId_update" id="update_name" v-model="update.dept_name">
+                                <input type="text" class="form-control ordersId_update" id="update_name" v-model="update.drugs_name">
                             </div>
                             <div>
-                                <label class="control-label">是否为父目录：</label>
-                                是：<input name="update_isParent" type="radio" value="是" v-model="update.isParent">&nbsp;&nbsp;
-                                否：<input name="update_isParent" type="radio" value="否" v-model="update.isParent">
+                                <label class="control-label">是否为处方药：</label>
+                                是：<input name="update_is" type="radio" value="是" v-model="update.drugs_is">&nbsp;&nbsp;
+                                否：<input name="update_is" type="radio" value="否" v-model="update.drugs_is">
                             </div>
                             <div>
-                                <label class="control-label">科室父ID：</label>
-                                <select id="update_pid" v-model="update.dept_pid">
-                                    <option value="0">无父ID</option>
-                                    <option v-for=" add_tr in isparent_tr" :value="add_tr.dept_id">{{add_tr.dept_name}}</option>
-                                </select>
+                                <label class="control-label">药品类型：</label>
+                                <input id="update_type" type="text" class="form-control ordersId_update" v-model="update.drugs_type">
                             </div>
                             <div class="form-group">
-                                <label  class="control-label">备注：</label>
-                                <input type="text" style="height: 100px"  class="form-control ordersPrice_update"  id="update_remark" v-model="update.dept_remark">
+                                <label  class="control-label">单价：</label>
+                                <input type="text" class="form-control ordersPrice_update"  id="update_money_one" v-model="update.drugs_money_one">
                                 <span style="color: red;"></span></div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="updateDept()">提交修改</button>
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="updateDrugs()">提交修改</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消修改</button>
                     </div>
                 </div>
@@ -187,67 +184,57 @@
 
 <script>
     var pageindex=1;
-    var dept_list=new Vue({
-        el:"#dept_list",
+    var drugs_list=new Vue({
+        el:"#drugs_list",
         data:{
-            dept_tr:[],
+            drugs_tr:[],
             update:{},     //修改的数据
             page_num:1,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
-            isparent_tr:{},
-            dept_info:0,
+            drugs_info:0,
             delete_id:'',
         },
         methods:{
             //删除
-            deleteID:function (dept_id) {
-                $("#delete_dept").modal("show");
-                dept_list._data.delete_id=dept_id;
+            deleteID:function (drugs_id) {
+                $("#delete_drugs").modal("show");
+                drugs_list._data.delete_id=drugs_id;
             },
 
-            deleteDept:function () {
-                var dept_id=dept_list._data.delete_id;
-                alert(dept_id);
-                info(dept_id);
-                  if(dept_list._data.dept_info!=0){
-                      $.ajax({
-                          url:'../../deleteDept.action',
-                          dataType:'JSON',
-                          type:'post',
-                          data:'dept_id='+dept_id,
-                          success:function (data) {
-                            if(data){
-                                alert("删除成功！");
-                            }
-                          }
-                      })
-                  }
-                  else{
-                      alert("该父类下有子类，不能进行删除！");
-                  }
-              $("#delete_dept").find(".close").click();
-                drugs_list._data.currentIndex=1;
-              DeptSum();
-              queryAll();
+            deleteDrugs:function () {
+                var drugs_id=drugs_list._data.delete_id;
+                $.ajax({
+                    url:'../../deleteDrugs.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'drugs_id='+drugs_id,
+                    success:function (data) {
+                        if(data){
+                            alert("删除成功！");
+                        }
+                        $("#delete_drugs").find(".close").click();
+                        drugs_list._data.currentIndex=1;
+                        DeptSum();
+                        queryAll();
+                    }
+                })
             },
 
             //增加
             add:function () {
-                $("#add_dept").modal("show");
-                query();
+                $("#add_drugs").modal("show");
             },
 
-            addDept:function () {
-                var dept_name=$("#add_name").val();
-                var isParent=$("input[name='add_isParent']:checked").val();
-                var dept_pid=$("#add_pid").val();
-                var dept_remark=$("#add_remark").val();
+            addDrugs:function () {
+                var drugs_name=$("#add_name").val();
+                var drugs_is=$("input[name='add_is']:checked").val();
+                var drugs_money_one=$("#add_money_one").val();
                 $.ajax({
-                    url:'../../addDept.action',
+                    url:'../../addDrugs.action',
                     dataType:'JSON',
                     type:'post',
-                    data:'dept_name='+dept_name+'&isParent='+isParent+'&dept_pid='+dept_pid+'&dept_remark='+dept_remark,
+                    data:'drugs_name='+drugs_name+'&drugs_is='+drugs_is+'&drugs_type='+drugs_type+'&drugs_money_one='+drugs_money_one,
                     success:function (data) {
                         if(data){
                             alert("增加成功！");
@@ -255,7 +242,7 @@
 //                       else{
 //                           alert("增加失败！");
 //                       }
-                        $("#add_dept").find(".close").click();
+                        $("#add_drugs").find(".close").click();
                         DeptSum();
                         queryAll();
                     }
@@ -263,46 +250,40 @@
             },
 
             //修改
-            updateID:function (dept_id) {
+            updateID:function (drugs_id) {
                 $.ajax({
-                    url:'../../queryOneDept_ID.action',
+                    url:'../../queryOneDrugs_ID.action',
                     dataType:'JSON',
                     type:'post',
-                    data:'dept_id='+dept_id,
+                    data:'drugs_id='+drugs_id,
                     success:function (data) {
-                        dept_list._data.update=data;
+                        drugs_list._data.update=data;
                     }
                 })
-                $("#update_dept").modal("show");
-                query();
+                $("#update_drugs").modal("show");
             },
 
 
-            updateDept:function () {
-                var dept_id=$("#update_id").val();
-                var dept_name=$("#update_name").val();
-                var isParent=$("input[name='update_isParent']:checked").val();
-                var dept_pid=$("#update_pid").val();
-                var dept_remark=$("#update_remark").val();
-                info(dept_id);
-                if(dept_list._data.dept_info!=0){
+            updateDrugs:function () {
+                var drugs_id=$("#update_id").val();
+                var drugs_name=$("#update_name").val();
+                var drugs_is=$("input[name='update_is']:checked").val();
+                var drugs_type=$("#update_type").val();
+                var drugs_money_one=$("#update_money_one").val();
                     $.ajax({
-                        url:'../../updateDept.action',
+                        url:'../../updateDrugs.action',
                         dataType:'JSON',
                         type:'post',
-                        data:'dept_id='+dept_id+'&dept_name='+dept_name+'&isParent='+isParent+'&dept_pid='+dept_pid+'&dept_remark='+dept_remark,
+                        data:'drugs_id='+drugs_id+'&drugs_name='+drugs_name+'&drugs_is='+drugs_is+'&drugs_type='+drugs_type+'&drugs_money_one='+drugs_money_one,
                         success:function (data) {
                             if(data){
                                 alert("修改成功！");
                             }
+                            $("#update_drugs").find(".close").click();
+                            DeptSum();
+                            queryAll();
                         }
                     })
-                }else{
-                    alert("该父类下有子类，不能进行修改！")
-                }
-                $("#update_dept").find(".close").click();
-                DeptSum();
-                queryAll();
             }
         }
     });
@@ -312,62 +293,36 @@
         DeptSum();
     });
 
-
-    //查询所有
-    function query() {
-        $.ajax({
-            url:'../../queryAllDept_isPatent.action',
-            dataType:'JSON',
-            success:function (data) {
-                dept_list._data.isparent_tr=data;
-            }
-        })
-    };
-
     //查询所有+分页
     function queryAll(){
         var current_sum=$("#page_number").val();
         $.ajax({
-            url:'../../queryAllDept.action',
+            url:'../../queryAllDrugs.action',
             dataType:'JSON',
             type:'post',
             data:'current_sum='+current_sum,
             success:function (data) {
                 console.log(data);
-                dept_list._data.dept_tr=data;
-                console.log(dept_list._data.dept_tr);
+                drugs_list._data.drugs_tr=data;
+                console.log(drugs_list._data.drugs_tr);
             }
         })
     };
 
-    //查询父类下有没有子类
-    function info(dept_id) {
-        $.ajax({
-            url:'../../queryAllDept_isPatent_ID.action',
-            dataType:'JSON',
-            type:'post',
-            data:'dept_id='+dept_id,
-            success:function (data) {
-                dept_list._data.dept_info=data;
-                alert(data+"化");
-                alert(dept_list._data.dept_info+"学");
-            }
-        })
-    }
-
-
     //模糊查询
     function dimquery() {
-        dept_list._data.page_num=1;
-        var dept_name=$("#name").val();
+        drugs_list._data.page_num=1;
+        var drugs_name=$("#name").val();
+        var drugs_is=$("input[name='is']:checked").val();
+        var drugs_type=$("#type").val();
         $.ajax({
-            url:'../../queryAllDept.action',
+            url:'../../queryAllDrugs.action',
             dataType:'JSON',
             type:'post',
-            data:'dept_name='+dept_name,
+            data:'drugs_name='+drugs_name+"&drugs_is="+drugs_is+"&drugs_type="+drugs_type,
             success:function (data) {
-                dept_list._data.dept_tr=data;
-                dept_list._data.currentIndex=1;
+                drugs_list._data.drugs_tr=data;
+                drugs_list._data.currentIndex=1;
                 DeptSum();
             }
         })
@@ -375,15 +330,17 @@
 
     //查询总页码
     function DeptSum() {
-        var dept_name=$("#name").val();
+        var drugs_name=$("#name").val();
+        var drugs_is=$("input[name='is']:checked").val();
+        var drugs_type=$("#type").val();
         var current_sum=$("#page_number").val();
         $.ajax({
-            url:'../../DeptSum.action',
+            url:'../../DrugsSum.action',
             dataType:'JSON',
             type:'post',
-            data:'dept_name='+dept_name+"&current_sum="+current_sum,
+            data:'drugs_name='+drugs_name+"&drugs_is="+drugs_is+"&drugs_type="+drugs_type+"&current_sum="+current_sum,
             success:function (data) {
-                dept_list._data.sum=data;
+                drugs_list._data.sum=data;
             }
         })
     }
@@ -393,17 +350,19 @@
 
         //下拉事件5
         $("select#page_number").change(function () {
-            var dept_name=$("#name").val();
+            var drugs_name=$("#name").val();
+            var drugs_is=$("input[name='is']:checked").val();
+            var drugs_type=$("#type").val();
             var val=$(this).val();
             pageindex=1;
             $.ajax({
-                url:'../../queryAllDept.action',
+                url:'../../queryAllDrugs.action',
                 dataType:'JSON',
                 type:'post',
-                data:'dept_name='+dept_name+'&current_sum='+val,
+                data:'drugs_name='+drugs_name+"&drugs_is="+drugs_is+"&drugs_type="+drugs_type+'&current_sum='+val,
                 success:function (data) {
-                    dept_list._data.dept_tr=data;
-                    dept_list._data.currentIndex=1;
+                    drugs_list._data.drugs_tr=data;
+                    drugs_list._data.currentIndex=1;
                     DeptSum();
                 }
             })
@@ -412,9 +371,11 @@
 
         //翻页
         $(".paging").click(function () {
-            var dept_name=$("#name").val();
+            var drugs_name=$("#name").val();
+            var drugs_is=$("input[name='is']:checked").val();
+            var drugs_type=$("#type").val();
             var pageName=$(this).text();
-            var sum=dept_list._data.sum;
+            var sum=drugs_list._data.sum;
             var current_sum=$("#page_number").val();
 
             if(pageName=="首页"){
@@ -433,14 +394,14 @@
             if(pageName=="末页"){
                 pageindex=sum;
             }
-            dept_list._data.currentIndex=pageindex;
+            drugs_list._data.currentIndex=pageindex;
             $.ajax({
-                url:'../../queryAllDept.action',
+                url:'../../queryAllDrugs.action',
                 dataType:'JSON',
                 type:'post',
-                data:'dept_name='+dept_name+'&pageIndex='+pageindex+"&current_sum="+current_sum,
+                data:'drugs_name='+drugs_name+"&drugs_is="+drugs_is+"&drugs_type="+drugs_type+'&pageIndex='+pageindex+"&current_sum="+current_sum,
                 success:function (data) {
-                    dept_list._data.dept_tr=data;
+                    drugs_list._data.drugs_tr=data;
                 }
             })
         })

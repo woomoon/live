@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../../plugins/plugs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../plugins/UI/style/style.css">
+</head>
+
+<body>
+
+<!--控制出现位置-->
+<div id="prem_list" style="margin-top: -40px" class="col-md-12">
+    <!--背景-->
+    <div class="widget" style="">
+        <!--数据表 上边框 搜索框-->
+        <div style="height: 60px;" class="widget-head">
+            <div style="margin-left: 30px;margin-top: 10px">
+                处方ID：<input id="prep_id" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                药品名称：<input id="drugs_name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                数量：<input id="num" width="200px">
+                <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
+            </div>
+        </div>
+        <!--table-->
+        <div class="widget-content">
+            <!--数据内容-->
+            <table class="table table-striped table-bordered table-hover">
+                <!--字段名-->
+                <thead >
+                    <th>处方信息ID</th>
+                    <th>处方ID</th>
+                    <th>药品名</th>
+                    <th>数量</th>
+                    <th>金额</th>
+                    <th>费用种类</th>
+                    <th>操作</th>
+                </thead>
+                <!--数据行-->
+                <tbody>
+                <tr v-for="prem in prem_tr" >
+                    <td>{{prem.prem_id}}</td>
+                    <td>{{prem.prep_id}}</td>
+                    <td>{{prem.drugs_name}}</td>
+                    <td>{{prem.prem_num}}</td>
+                    <td>{{prem.prem_money}}</td>
+                    <td>{{prem.prem_type}}</td>
+                    <td><button v-on:click="updateID(prem.prem_id)">修改</button>
+                        <button v-on:click="deleteID(prem.prem_id)">删除</button></td>
+                </tr>
+                </tbody>
+            </table>
+            <!--数据下边框，及分页栏 控制下边宽度-->
+            <div style="height: 70px;" class="widget-foot">
+                <div class="btn-group" role="group">
+                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
+                </div>
+                <ul class="pagination pull-right">
+                    <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
+                    <li><a class="paging">首页</a></li>
+                    <li><a class="paging">上一页</a></li>
+                    <li><a>{{currentIndex}}/{{sum}}</a></li>
+                    <li><a class="paging">下一页</a></li>
+                    <li><a class="paging">末页</a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <!--删除退回处方-->
+        <div class="modal fade" id="delete_prem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">系统消息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h3>确定要删除吗？</h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger "  v-on:click="deletePrem()">确认删除</button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal">取消删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  增加信息   -->
+        <div class="modal fade" id="add_prem" tabindex="-1" role="dialog"
+             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                            <h4 class="modal-title">增加信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!--disabled="disabled" 隐藏文本框-->
+                            <div class="form-group">
+                                <label  class="control-label">处方ID:</label>
+                                <input type="text" class="form-control ordersId_update" id="add_prep_id">
+                            </div>
+                            <div>
+                                <label class="control-label">药品名称：</label>
+                                <select id="add_drugs_id">
+                                    <option value="">请选择药品</option>
+                                    <option v-for="drugsValue in drugs_value" :value="drugsValue.drugs_id">{{drugsValue.drugs_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">数量：</label>
+                                <input id="add_num" type="text" class="form-control ordersId_update">
+                            </div>
+                            <div>
+                                <label class="control-label">金额：</label>
+                                <input id="add_money" type="text" class="form-control ordersId_update">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">费用种类：</label>
+                                <input type="text" class="form-control ordersPrice_update"  id="add_type">
+                                <span style="color: red;"></span></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addPrem()">提交增加</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  修改信息   -->
+        <div class="modal fade" id="update_prem" tabindex="-1" role="dialog"
+             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" >修改信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!--disabled="disabled" 隐藏文本框-->
+                            <div class="form-group">
+                                <label class="control-label" >处方信息ID：</label>
+                                <input type="text" class="form-control" id="update_prem_id" disabled="disabled" v-model="update.prem_id">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">处方ID:</label>
+                                <input type="text" class="form-control ordersId_update" id="update_prep_id" v-model="update.prep_id">
+                            </div>
+                            <div>
+                                <label class="control-label">药品名称：</label>
+                                <select id="update_drugs_id" v-model="update.drugs_id">
+                                    <option value="">请选择药品</option>
+                                    <option v-for="drugsValue in drugs_value" :value="drugsValue.drugs_id">{{drugsValue.drugs_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">数量：</label>
+                                <input id="update_num" type="text" class="form-control ordersId_update" v-model="update.prem_num">
+                            </div>
+                            <div>
+                                <label class="control-label">金额：</label>
+                                <input id="update_money" type="text" class="form-control ordersId_update" v-model="update.prem_money">
+                            </div>
+                            <div class="form-group">
+                                <label  class="control-label">费用种类：</label>
+                                <input type="text" class="form-control ordersPrice_update"  id="update_type" v-model="update.prem_type">
+                                <span style="color: red;"></span></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="updatePrem()">提交修改</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script src="../../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../plugins/plugs/js/vue.min.js"></script>
+<script src="../../../plugins/laydate/laydate.js"></script>
+
+<script>
+    var pageindex=1;
+    var prem_list=new Vue({
+        el:"#prem_list",
+        data:{
+            prem_tr:{},
+            update:{},     //修改的数据
+            page_num:1,  //当前每页多少条
+            currentIndex:1, //当前在第几页
+            sum:'', //最大页码
+            delete_id:'',
+            drugs_value:{},
+        },
+        methods:{
+            //删除
+            deleteID:function (prem_id) {
+                $("#delete_prem").modal("show");
+                prem_list._data.delete_id=prem_id;
+            },
+
+            deletePrem:function () {
+                var prem_id=prem_list._data.delete_id;
+                $.ajax({
+                    url:'../../deletePrep_Message.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'prem_id='+prem_id,
+                    success:function (data) {
+                        if(data){
+                            alert("删除成功！");
+                        }
+                        $("#delete_prem").find(".close").click();
+                        prem_list._data.currentIndex=1;
+                        prep_messageSum();
+                        queryAll();
+                    }
+                })
+            },
+
+            //增加
+            add:function () {
+                $("#add_prem").modal("show");
+                queryprep_message();
+            },
+
+            addPrem:function () {
+                var prep_id=$("#add_prep_id").val();
+                var drugs_id=$("#add_drugs_id").val();
+                var prem_num=$("#add_num").val();
+                var prem_money=$("#add_money").val();
+                var prem_type=$("#add_type").val();
+                $.ajax({
+                    url:'../../addPrep_Message.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'prep_id='+prep_id+'&drugs_id='+drugs_id+'&prem_num='+prem_num+'&prem_money='+prem_money+"&prem_type="+prem_type,
+                    success:function (data) {
+                        if(data){
+                            alert("增加成功！");
+                        }
+//                       else{
+//                           alert("增加失败！");
+//                       }
+                        $("#add_prem").find(".close").click();
+                        prep_messageSum();
+                        queryAll();
+                    }
+                })
+            },
+
+            //修改
+            updateID:function (prem_id) {
+                queryprep_message();
+                $.ajax({
+                    url:'../../queryOnePrep_Message_ID.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'prem_id='+prem_id,
+                    success:function (data) {
+                        prem_list._data.update=data;
+                    }
+                })
+                $("#update_prem").modal("show");
+            },
+
+
+            updatePrem:function () {
+                var prem_id=$("#update_prem_id").val();
+                var prep_id=$("#update_prep_id").val();
+                var drugs_id=$("#update_drugs_id").val();
+                var prem_num=$("#update_num").val();
+                var prem_money=$("#update_money").val();
+                var prem_type=$("#update_type").val();
+                    $.ajax({
+                        url:'../../updatePrep_Message.action',
+                        dataType:'JSON',
+                        type:'post',
+                        data:'prem_id='+prem_id+'&prep_id='+prep_id+'&drugs_id='+drugs_id+'&prem_num='+prem_num+'&prem_money='+prem_money+"&prem_type="+prem_type,
+                        success:function (data) {
+                            if(data){
+                                alert("修改成功！");
+                            }
+                            $("#update_prem").find(".close").click();
+                            prep_messageSum();
+                            queryAll();
+                        }
+                    })
+            }
+        }
+    });
+
+    $(function () {
+        queryAll();
+        prep_messageSum();
+    });
+
+    //查询所有+分页
+    function queryAll(){
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../../queryAllPrep_Message.action',
+            dataType:'JSON',
+            type:'post',
+            data:'current_sum='+current_sum,
+            success:function (data) {
+                prem_list._data.prem_tr=data;
+            }
+        })
+    };
+
+    //模糊查询
+    function dimquery() {
+        prem_list._data.page_num=1;
+        var prep_id=$("#prep_id").val();
+        var drugs_name=$("#drugs_name").val();
+        var prem_num=$("#num").val();
+        $.ajax({
+            url:'../../queryAllPrep_Message.action',
+            dataType:'JSON',
+            type:'post',
+            data:'prep_id='+prep_id+"&prem_num="+prem_num+"&drugs_name="+drugs_name,
+            success:function (data) {
+                prem_list._data.prem_tr=data;
+                prem_list._data.currentIndex=1;
+                prep_messageSum();
+            }
+        })
+    }
+
+
+    //查询药品
+    function queryprep_message() {
+        $.ajax({
+            url:'../../queryDrugs.action',
+            dataType:'JSON',
+            success:function (data) {
+                prem_list._data.drugs_value=data;
+            }
+        })
+    }
+
+    //查询总页码
+    function prep_messageSum() {
+        var prep_id=$("#prep_id").val();
+        var drugs_name=$("#drugs_name").val();
+        var prem_num=$("#num").val();
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../../Prep_MessageSum.action',
+            dataType:'JSON',
+            type:'post',
+            data:'prep_id='+prep_id+"&prem_num="+prem_num+"&drugs_name="+drugs_name+"&current_sum="+current_sum,
+            success:function (data) {
+                prem_list._data.sum=data;
+            }
+        })
+    }
+
+    //分页1
+    $(function () {
+
+        //下拉事件5
+        $("select#page_number").change(function () {
+            var prep_id=$("#prep_id").val();
+            var drugs_name=$("#drugs_name").val();
+            var prem_num=$("#num").val();
+            var val=$(this).val();
+            pageindex=1;
+            $.ajax({
+                url:'../../queryAllPrep_Message.action',
+                dataType:'JSON',
+                type:'post',
+                data:'prep_id='+prep_id+"&prem_num="+prem_num+"&drugs_name="+drugs_name+'&current_sum='+val,
+                success:function (data) {
+                    prem_list._data.prem_tr=data;
+                    prem_list._data.currentIndex=1;
+                    prep_messageSum();
+                }
+            })
+
+        });
+
+        //翻页
+        $(".paging").click(function () {
+            var prep_id=$("#prep_id").val();
+            var drugs_name=$("#drugs_name").val();
+            var prem_num=$("#num").val();
+            var pageName=$(this).text();
+            var sum=prem_list._data.sum;
+            var current_sum=$("#page_number").val();
+
+            if(pageName=="首页"){
+                pageindex=1;
+            }
+            if(pageName=="上一页"){
+                if(pageindex!=1) {
+                    pageindex=pageindex-1;
+                }
+            }
+            if(pageName=="下一页"){
+                if(pageindex!=sum){
+                    pageindex=pageindex+1;
+                }
+            }
+            if(pageName=="末页"){
+                pageindex=sum;
+            }
+            prem_list._data.currentIndex=pageindex;
+            $.ajax({
+                url:'../../queryAllPrep_Message.action',
+                dataType:'JSON',
+                type:'post',
+                data:'prep_id='+prep_id+"&prem_num="+prem_num+"&drugs_name="+drugs_name+'&pageIndex='+pageindex+"&current_sum="+current_sum,
+                success:function (data) {
+                    prem_list._data.prem_tr=data;
+                }
+            })
+        })
+    })
+
+</script>
+</body>
+</html>
