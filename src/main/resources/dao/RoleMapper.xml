@@ -25,4 +25,16 @@
         delete from tb_role where role_id = #{role_id}
     </delete>
 
+    <select id="queryRoleCoPower" parameterType="String" resultType="java.util.Map">
+        SELECT power_id from tb_role_power where role_id = #{treeId}
+    </select>
+
+    <delete id="delRoleCoPower" parameterType="String">
+        DELETE FROM tb_role_power where role_id = #{treeId}
+    </delete>
+
+    <insert id="addRoleCoPower">
+        INSERT INTO tb_role_power VALUES (#{rid},#{pid})
+    </insert>
+
 </mapper>

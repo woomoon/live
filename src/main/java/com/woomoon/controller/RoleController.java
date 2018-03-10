@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class RoleController {
@@ -17,11 +18,64 @@ public class RoleController {
     @Autowired
     RoleMapper roleMapper;
 
-
-    //进入界面
+    //进入角色管理界面
     @RequestMapping(value = "href_role")
     public String href_power() {
         return "roleCRUD";
+    }
+
+    //进入角色授权界面
+    @RequestMapping(value = "href_roleGrant")
+    public String href_roleGrant() {
+        return "demo\\roleGrant";
+    }
+
+    //查询角色对应的权限
+    @RequestMapping(value = "queryRoleCoPower")
+    @ResponseBody
+    public List<Map<String, String>> queryRoleCoPower(String treeId) {
+        List<Map<String, String>> maps = roleMapper.queryRoleCoPower(treeId);
+        return maps;
+    }
+
+    //删除角色对应的权限
+    @RequestMapping(value = "delRoleCoPower")
+    @ResponseBody
+    public boolean deleteRoleCoPower(String treeId) {
+        try {
+            roleMapper.delRoleCoPower(treeId);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    //添加角色对应的权限
+    @RequestMapping("addRoleCoPower")
+    @ResponseBody
+    public boolean addRoleCoPower(String rid, String ids) {
+        deleteRoleCoPower(rid);
+        try {
+            String[] strIds = ids.split(",");
+            for (String strId : strIds) {
+                insRoleCoPower(rid, strId);
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean insRoleCoPower(String rid, String pid) {
+        try {
+            if (!"".equals(pid)) {
+                roleMapper.addRoleCoPower(Integer.parseInt(rid), Integer.parseInt(pid));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     //查询数据
@@ -48,7 +102,7 @@ public class RoleController {
     @ResponseBody
     public boolean updRole(String p_name, String p_id) {
         try {
-            roleMapper.updRole(p_name,p_id);
+            roleMapper.updRole(p_name, p_id);
         } catch (Exception e) {
             return false;
         }
@@ -58,7 +112,7 @@ public class RoleController {
     //添加节点
     @RequestMapping("addRole")
     @ResponseBody
-    public boolean addRole(String role_name,int role_pid) {
+    public boolean addRole(String role_name, int role_pid) {
         try {
             RoleEntity roleEntity = new RoleEntity();
             roleEntity.setRole_pid(role_pid);
