@@ -40,6 +40,20 @@ public class DeptController {
         return deptService.queryAllDept(deptEntity,begin,end);
     }
 
+    //查询所有科室
+    @RequestMapping("queryAllDept_isPatent")
+    @ResponseBody
+    public List<Map<String,Object>> queryAllDept_isPatent(){
+        return deptService.queryAllDept_isPatent();
+    }
+
+    //查询父类下有没有子类
+    @RequestMapping("queryAllDept_isPatent_ID")
+    @ResponseBody
+    public int queryAllDept_isPatent_ID(Integer dept_id){
+        return deptService.queryAllDept_isPatent_ID(dept_id);
+    }
+
     //根据ID查询科室
     @RequestMapping("queryOneDept_ID")
     @ResponseBody

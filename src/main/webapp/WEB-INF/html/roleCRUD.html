@@ -48,6 +48,7 @@
     <button id="addBtn" type="button" class="btn btn-default">添加</button>
     <button id="delBtn" type="button" class="btn btn-default">删除</button>
     <button id="updBtn" type="button" class="btn btn-default">修改</button>
+    <button id="refBtn" type="button" class="btn btn-default">刷新</button>
 </div>
 
 <div style="margin-top: 10px;">
@@ -202,6 +203,10 @@
                 alert("请先选择一个节点 !");
             }
         });
+
+        $("#refBtn").click(function () {
+            refLoad();
+        })
     })
 
     //init end

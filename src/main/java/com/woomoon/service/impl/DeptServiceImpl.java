@@ -21,6 +21,16 @@ public class DeptServiceImpl implements DeptService{
     }
 
     @Override
+    public List<Map<String, Object>> queryAllDept_isPatent() {
+        return deptDao.queryAllDept_isPatent();
+    }
+
+    @Override
+    public int queryAllDept_isPatent_ID(Integer dept_id) {
+        return deptDao.queryAllDept_isPatent_ID(dept_id);
+    }
+
+    @Override
     public DeptEntity queryOneDept_ID(Integer dept_id) {
         return deptDao.queryOneDept_ID(dept_id);
     }

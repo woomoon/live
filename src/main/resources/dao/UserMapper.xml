@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.UserMapper">
+
+    <select id="queryAllUser" resultType="java.util.Map">
+        select * from tb_user where 1=1
+        <if test="user_name != null and user_name != ''">
+            and user_name like '%${user_name}%'
+        </if>
+        limit #{begin},#{end}
+    </select>
+
+    <select id="queryAllUserCount" resultType="int">
+        select count(*) from tb_user where 1=1
+        <if test="user_name != null and user_name != ''">
+            and user_name like '%${user_name}%'
+        </if>
+    </select>
+
+
+</mapper>

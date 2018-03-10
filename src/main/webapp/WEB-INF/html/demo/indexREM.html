@@ -89,7 +89,7 @@
 
     <div class="mainbar"><!--内容中间的展示-->
         <br/>
-        <div class="col-md-11" style="background-color: #F0F3F4; height: 777px; width: 1122px;">
+        <div class="col-md-11" style="background-color: #F0F3F4; height: 777px; width: 1118px;">
             <!--中间-->
             <!-- Nav tabs -->
             <ul id="tabTitle" class="nav nav-tabs" role="tablist">
@@ -158,7 +158,7 @@
         console.log(treeNode);
         if (treeNode.isParent == false) {
             $("#tabTitle").append("<li role='presentation'><a href='#" + treeNode.power_url + "' aria-controls='" + treeNode.power_url + "' role='tab' data-toggle='tab'>" + treeNode.power_name + "</a></li>");
-            $("#tabContent").append("<div role='tabpanel' class='tab-pane' id='" + treeNode.power_url + "'><iframe src='../../../" + treeNode.power_url + ".action' width='1092px' height='736px;' frameborder='no' border='0' marginwidth='0' marginheight='0' scrolling='no' allowtransparency='yes'></iframe></div>");
+            $("#tabContent").append("<div role='tabpanel' class='tab-pane' id='" + treeNode.power_url + "'><iframe src='../../../" + treeNode.power_url + ".action' width='1088px' height='736px;' frameborder='no' border='0' marginwidth='0' marginheight='0' scrolling='no' allowtransparency='yes'></iframe></div>");
             $('#tabTitle a[href="#' + treeNode.power_url + '"]').tab('show');
         }
     }
