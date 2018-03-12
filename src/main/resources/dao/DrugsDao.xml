@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.DrugsDao">
+
+    <select id="queryAllDrugs" resultType="java.util.Map">
+        select * from tb_drugs where 1=1
+        <if test="d_entity.drugs_name !=null and d_entity.drugs_name !=''">
+             AND drugs_name like '%${d_entity.drugs_name}%'
+        </if>
+        <if test="d_entity.drugs_is !=null and d_entity.drugs_is !='' and d_entity.drugs_is !='undefined'">
+             AND  drugs_is=#{d_entity.drugs_is}
+        </if>
+        <if test="d_entity.drugs_type !=null and d_entity.drugs_type !=''">
+             AND pat_sex=#{d_entity.drugs_type}
+        </if>
+              limit #{begin},#{end}
+    </select>
+
+    <select id="queryDrugs" resultType="com.woomoon.entitys.DrugsEntity">
+        select * from tb_drugs
+    </select>
+
+    <select id="queryOneDrugs_ID" parameterType="Integer" resultType="com.woomoon.entitys.DrugsEntity">
+        SELECT * from tb_drugs where drugs_id=#{drugs_id}
+    </select>
+
+    <select id="DrugsSum" resultType="int">
+        select COUNT(*) from tb_drugs where 1=1
+        <if test="drugs_name !=null and drugs_name !=''">
+            AND drugs_name like '%${drugs_name}%'
+        </if>
+        <if test="drugs_is !=null and drugs_is !='' and drugs_is !='undefined'">
+            AND  drugs_is=#{drugs_is}
+        </if>
+        <if test="drugs_type !=null and drugs_type !=''">
+            AND drugs_type=#{drugs_type}
+        </if>
+    </select>
+
+    <insert id="addDrugs" parameterType="com.woomoon.entitys.DrugsEntity">
+        insert into tb_drugs(drugs_name,drugs_is,drugs_type,drugs_money_one) values(#{drugs_name},#{drugs_is},#{drugs_type},#{drugs_money_one})
+    </insert>
+
+    <update id="updateDrugs" parameterType="com.woomoon.entitys.DrugsEntity">
+        update tb_drugs set drugs_name=#{drugs_name},drugs_is=#{drugs_is},drugs_type=#{drugs_type},drugs_money_one=#{drugs_money_one} where drugs_id = #{drugs_id}
+    </update>
+
+    <delete id="deleteDrugs" parameterType="Integer">
+        delete from tb_drugs where drugs_id= #{drugs_id}
+    </delete>
+
+</mapper>

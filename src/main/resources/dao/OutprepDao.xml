@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.OutprepDao">
+
+    <select id="queryAllOutprep" resultType="java.util.Map">
+        select o.out_id,o.prep_id,o.out_type,o.out_remark,u.user_name,o.out_word,o.out_result from tb_outprep o
+        INNER JOIN tb_user u
+        ON  o.user_id=u.user_id where 1=1
+        <if test="o_entity.prep_id !=null and o_entity.prep_id !=''">
+             AND o.prep_id =#{o_entity.prep_id}
+        </if>
+        <if test="user_name !=null and user_name !='' ">
+             AND  u.user_name like '%${user_name}%'
+        </if>
+        <if test="o_entity.out_result !=null and o_entity.out_result !=''">
+             AND o.out_result=#{o_entity.out_result}
+        </if>
+              limit #{begin},#{end}
+    </select>
+
+    <select id="queryOneOutprep_ID" parameterType="Integer" resultType="com.woomoon.entitys.OutprepEntity">
+        SELECT * from tb_outprep where out_id=#{out_id}
+    </select>
+
+    <select id="queryUser" resultType="com.woomoon.entitys.UserEntity">
+        select * from tb_user
+    </select>
+
+    <select id="OutprepSum" resultType="int">
+        select COUNT(*) from tb_outprep o
+        INNER JOIN tb_user u
+        ON  o.user_id=u.user_id where 1=1
+        <if test="o_entity.prep_id !=null and o_entity.prep_id !=''">
+            AND o.prep_id =#{o_entity.prep_id}
+        </if>
+        <if test="user_name !=null and user_name !='' ">
+            AND  u.user_name like '%${user_name}%'
+        </if>
+        <if test="o_entity.out_result !=null and o_entity.out_result !=''">
+            AND o.out_result=#{o_entity.out_result}
+        </if>
+    </select>
+
+    <insert id="addOutprep" parameterType="com.woomoon.entitys.OutprepEntity">
+        insert into tb_outprep(prep_id,out_type,out_remark,user_id,out_word,out_result) values(#{prep_id},#{out_type},#{out_remark},#{user_id},#{out_word},#{out_result})
+    </insert>
+
+    <update id="updateOutprep" parameterType="com.woomoon.entitys.OutprepEntity">
+        update tb_outprep set prep_id=#{prep_id},out_type=#{out_type},out_remark=#{out_remark},user_id=#{user_id},out_word=#{out_word},out_result=#{out_result} where out_id = #{out_id}
+    </update>
+
+    <delete id="deleteOutprep" parameterType="Integer">
+        delete from tb_outprep where out_id= #{out_id}
+    </delete>
+
+</mapper>

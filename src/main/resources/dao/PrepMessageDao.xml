@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.PrepMessageDao">
+
+    <select id="queryAllPrep_Message" resultType="java.util.Map">
+        select pm.prem_id,pm.prep_id,d.drugs_name,pm.prem_num,pm.prem_money,pm.prem_type from tb_prep_message pm
+        INNER JOIN tb_drugs d
+        ON  pm.drugs_id=d.drugs_id where 1=1
+        <if test="pm_entity.prep_id !=null and pm_entity.prep_id !=''">
+             AND pm.prep_id=#{pm_entity.prep_id}
+        </if>
+        <if test="drugs_name !=null and drugs_name !=''">
+             AND d.drugs_name like '%${drugs_name}%'
+        </if>
+        <if test="pm_entity.prem_num !=null and pm_entity.prem_num !='' ">
+             AND  pm.prem_num=#{pm_entity.prem_num}
+        </if>
+              limit #{begin},#{end}
+    </select>
+
+    <select id="queryOnePrep_Message_ID" parameterType="Integer" resultType="com.woomoon.entitys.Prep_messageEntity">
+        SELECT * from tb_prep_message where prem_id=#{prem_id}
+    </select>
+
+    <select id="Prep_MessageSum" resultType="int">
+        select COUNT(*) from tb_prep_message pm
+        INNER JOIN tb_drugs d
+        ON  pm.drugs_id=d.drugs_id where 1=1
+        <if test="pm_entity.prep_id !=null and pm_entity.prep_id !=''">
+            AND pm.prep_id=#{pm_entity.prep_id}
+        </if>
+        <if test="drugs_name !=null and drugs_name !=''">
+            AND d.drugs_name like '%${drugs_name}%'
+        </if>
+        <if test="pm_entity.prem_num !=null and pm_entity.prem_num !='' ">
+            AND  pm.prem_num=#{pm_entity.prem_num}
+        </if>
+    </select>
+
+    <insert id="addPrep_Message" parameterType="com.woomoon.entitys.Prep_messageEntity" >
+        insert into tb_prep_message(prep_id,drugs_id,prem_num,prem_money,prem_type) values(#{prep_id},#{drugs_id},#{prem_num},#{prem_money},#{prem_type})
+    </insert>
+
+    <update id="updatePrep_Message" parameterType="com.woomoon.entitys.Prep_messageEntity">
+        update tb_prep_message set prep_id=#{prep_id},drugs_id=#{drugs_id},prem_num=#{prem_num},prem_money=#{prem_money},prem_type=#{prem_type} where prem_id= #{prem_id}
+    </update>
+
+    <delete id="deletePrep_Message" parameterType="Integer">
+        delete from tb_prep_message where prem_id= #{prem_id}
+    </delete>
+
+</mapper>
