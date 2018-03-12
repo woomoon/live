@@ -17,8 +17,8 @@ public class OutprepControler {
     @Autowired
     OutprepService outprepService;
 
-    @RequestMapping("fasout")
-    public String fasout(){
+    @RequestMapping("href_Outprep")
+    public String href_Outprep(){
         return "demo\\outprep";
     }
 
@@ -53,7 +53,7 @@ public class OutprepControler {
     @RequestMapping("queryUser")
     @ResponseBody
     public List<UserEntity> queryUser(){
-         return outprepService.queryUser();
+        return outprepService.queryUser();
     }
 
     //查询退回处方的总数

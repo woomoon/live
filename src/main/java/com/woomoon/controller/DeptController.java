@@ -16,8 +16,8 @@ public class DeptController {
     @Autowired
     DeptService deptService;
 
-    @RequestMapping("deptsele")
-    public String deptsele(){
+    @RequestMapping("href_Dept")
+    public String href_Dept(){
         return "demo\\dept";
     }
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.Money_recordDao">
+
+    <select id="queryAllMoney_record" resultType="java.util.Map">
+        select mr.record_id,mr.deposit_id,mr.out_id,u.user_name,mr.record_time,mr.record_type,mr.record_mode,mr.record_remark from tb_money_record mr
+        INNER JOIN tb_user u
+        ON  mr.user_id=u.user_id where 1=1
+        <if test="mr_entity.out_id !=null and mr_entity.out_id !=''">
+             AND mr.out_id=#{mr_entity.out_id}
+        </if>
+        <if test="user_name !=null and user_name !=''">
+             AND u.user_name like '%${user_name}%'
+        </if>
+             limit #{begin},#{end}
+    </select>
+
+    <select id="queryOneMoney_record_ID" parameterType="Integer" resultType="com.woomoon.entitys.Money_recordEntity">
+        SELECT * from tb_money_record where record_id=#{record_id}
+    </select>
+
+    <select id="Money_recordSum" resultType="int">
+        select COUNT(*) from tb_money_record mr
+        INNER JOIN tb_user u
+        ON  mr.user_id=u.user_id where 1=1
+        <if test="mr_entity.deposit_id !=null and mr_entity.deposit_id !=''">
+            AND mr.deposit_id=#{mr_entity.deposit_id}
+        </if>
+        <if test="user_name !=null and user_name !=''">
+            AND u.user_name like '%${user_name}%'
+        </if>
+    </select>
+
+    <insert id="addMoney_record" parameterType="com.woomoon.entitys.Money_recordEntity" >
+        insert into tb_money_record(deposit_id,out_id,user_id,record_time,record_type,record_mode,record_remark) values(#{deposit_id},#{out_id},#{user_id},#{record_time},#{record_type},#{record_mode},#{record_remark})
+    </insert>
+
+    <update id="updateMoney_record" parameterType="com.woomoon.entitys.Money_recordEntity">
+        update tb_money_record set deposit_id=#{deposit_id},out_id=#{out_id},user_id=#{user_id},record_time=#{record_time},record_type=#{record_type},record_mode=#{record_mode},record_remark=#{record_remark} where record_id= #{record_id}
+    </update>
+
+    <delete id="deleteMoney_record" parameterType="Integer">
+        delete from tb_money_record where record_id= #{record_id}
+    </delete>
+
+</mapper>
