@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.DepositDao">
+
+    <select id="queryAllDeposit" resultType="java.util.Map">
+        select deposit_id,pat_name,deposit_money_do from tb_deposit d
+        INNER JOIN tb_live l
+        ON  d.live_num=l.live_num
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num where 1=1
+        <if test="d_entity.live_num !=null and d_entity.live_num !=''">
+             AND d.live_num=#{d_entity.live_num}
+        </if>
+        <if test="pat_name !=null and pat_name !=''">
+             AND p.pat_name like '%${pat_name}%'
+        </if>
+             limit #{begin},#{end}
+    </select>
+
+    <select id="queryOneDeposit" parameterType="Integer" resultType="com.woomoon.entitys.DepositEntity">
+        SELECT * from tb_deposit where deposit_id=#{deposit_id}
+    </select>
+
+    <select id="DepositSum" resultType="int">
+        select COUNT(*) from tb_deposit d
+        INNER JOIN tb_live l
+        ON  d.live_num=l.live_num
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num where 1=1
+        <if test="d_entity.live_num !=null and d_entity.live_num !=''">
+            AND d.live_num=#{d_entity.live_num}
+        </if>
+        <if test="pat_name !=null and pat_name !=''">
+            AND p.pat_name like '%${pat_name}%'
+        </if>
+    </select>
+
+    <insert id="addDeposit" parameterType="com.woomoon.entitys.DepositEntity" >
+        insert into tb_deposit(live_num,deposit_money_do) values(#{live_num},#{deposit_money_do}
+    </insert>
+
+    <update id="updateDeposit" parameterType="com.woomoon.entitys.DepositEntity">
+        update tb_deposit set live_num=#{live_num},deposit_money_do=#{deposit_money_do} where deposit_id= #{deposit_id}
+    </update>
+
+    <delete id="deleteDeposit" parameterType="Integer">
+        delete from tb_deposit where deposit_id= #{deposit_id}
+    </delete>
+
+</mapper>

@@ -17,8 +17,8 @@ public class DrugsController {
     DrugsService drugsService;
 
     //测试
-    @RequestMapping("test")
-    private String te(){
+    @RequestMapping("href_Drugs")
+    private String href_Drugs(){
         return "demo\\drugs";
     }
 

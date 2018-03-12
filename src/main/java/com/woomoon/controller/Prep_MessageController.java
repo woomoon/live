@@ -24,8 +24,8 @@ public class Prep_MessageController {
     DrugsService drugsService;
 
     //测试
-    @RequestMapping("prem_hool")
-    public String prem_hool(){
+    @RequestMapping("href_Prep_Message")
+    public String href_Prep_Message(){
         return "demo\\prep_Message";
     }
 
