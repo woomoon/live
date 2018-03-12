@@ -22,13 +22,16 @@ public class PowerController {
         return "powerCRUD";
     }
 
-    //查询数据
+    //不带条件、查询数据
     @RequestMapping(value = "queryAllPower")
     @ResponseBody
     public List<PowerEntity> queryAllPower() {
-        List<PowerEntity> powerEntities = powerMapper.queryAllPower(3);
+        List<PowerEntity> powerEntities = powerMapper.queryAllPowers("");
         return powerEntities;
     }
+
+
+
 
     //查询单个
     @RequestMapping(value = "queryOnePower")

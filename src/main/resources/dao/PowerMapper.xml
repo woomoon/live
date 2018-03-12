@@ -5,10 +5,19 @@
 
 <mapper namespace="com.woomoon.dao.PowerMapper">
 
-    <select id="queryAllPower" parameterType="int" resultType="com.woomoon.entitys.PowerEntity">
-        select power_id,power_pid,power_name,power_url,icon,open from tb_power WHERE power_size != #{psize}
+    <select id="queryAllPowers" resultType="com.woomoon.entitys.PowerEntity">
+        select power_id,power_pid,power_name,power_url,icon,open from tb_power WHERE power_size != #{p_size}
     </select>
-    
+
+    <select id="queryAllPower" parameterType="String" resultType="com.woomoon.entitys.PowerEntity">
+        SELECT p.power_id,p.power_pid,p.power_name,p.power_url,p.icon,p.open FROM tb_power p INNER JOIN tb_role_power r
+        ON p.power_id = r.power_id INNER JOIN tb_user_role u ON u.role_id = r.role_id
+        WHERE 1=1 AND p.power_size != 0
+        <if test="u_id != null and u_id != ''">
+            AND u.user_id = #{u_id}
+        </if>
+    </select>
+
     <select id="queryOnePower" parameterType="String" resultType="com.woomoon.entitys.PowerEntity">
         select power_id,power_name from tb_power where power_id = #{treeId}
     </select>
@@ -18,7 +27,8 @@
     </update>
 
     <insert id="addPower" parameterType="com.woomoon.entitys.PowerEntity">
-        INSERT INTO tb_power (power_pid,power_name,isParent,power_size,power_url,icon) VALUES (#{power_pid},#{power_name},#{isParent},#{power_size},#{power_url},#{icon})
+        INSERT INTO tb_power (power_pid,power_name,isParent,power_size,power_url,icon) VALUES
+        (#{power_pid},#{power_name},#{isParent},#{power_size},#{power_url},#{icon})
     </insert>
 
     <delete id="delPower" parameterType="int">

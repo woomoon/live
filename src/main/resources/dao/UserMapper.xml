@@ -5,20 +5,38 @@
 
 <mapper namespace="com.woomoon.dao.UserMapper">
 
+
     <select id="queryAllUser" resultType="java.util.Map">
-        select * from tb_user where 1=1
+            SELECT u.user_id,u.user_name,u.user_account,u.user_time,d.dept_name FROM tb_user u LEFT JOIN tb_dept d on u.dept_id = d.dept_id where 1=1
         <if test="user_name != null and user_name != ''">
-            and user_name like '%${user_name}%'
+            and u.user_name like '%${user_name}%'
         </if>
         limit #{begin},#{end}
     </select>
 
     <select id="queryAllUserCount" resultType="int">
-        select count(*) from tb_user where 1=1
+        SELECT COUNT(u.user_id) FROM tb_user u LEFT JOIN tb_dept d on u.dept_id = d.dept_id where 1=1
         <if test="user_name != null and user_name != ''">
             and user_name like '%${user_name}%'
         </if>
     </select>
+
+    <select id="queryUserCoRole" parameterType="String" resultType="java.util.Map">
+        select role_id from tb_user_role where user_id = #{user_id}
+    </select>
+
+    <insert id="addUserCoRole">
+        INSERT INTO tb_user_role VALUES (#{user_id},#{role_id})
+    </insert>
+
+    <delete id="delUserCoRole" parameterType="String">
+        DELETE from tb_user_role where user_id = #{user_id}
+    </delete>
+
+    <select id="user_login" resultType="java.util.Map">
+        SELECT user_id,user_name,user_account,user_time FROM tb_user where user_account = #{user_name} and user_pwd = #{user_pwd}
+    </select>
+
 
 
 </mapper>
