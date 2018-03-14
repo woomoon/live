@@ -13,6 +13,9 @@ public interface PatientService {
     //查询最后一个病人的ID
     public String  queryOnePatient();
 
+    //根据ID查询病人是否存在
+    public int CountPatient(String pat_num);
+    
     //根据ID查询病人
     public PatientEntity queryOnePatient_ID(String pat_num);
 

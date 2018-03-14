@@ -27,6 +27,11 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public int CountPatient(String pat_num) {
+        return patientDao.CountPatient(pat_num);
+    }
+
+    @Override
     public PatientEntity queryOnePatient_ID(String pat_num) {
         return patientDao.queryOnePatient_ID(pat_num);
     }

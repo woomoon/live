@@ -259,6 +259,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_prem").find(".close").click();
+                        prem_list._data.currentIndex=1;
                         prep_messageSum();
                         queryAll();
                     }
@@ -298,6 +299,7 @@
                                 alert("修改成功！");
                             }
                             $("#update_prem").find(".close").click();
+                            prem_list._data.currentIndex=1;
                             prep_messageSum();
                             queryAll();
                         }

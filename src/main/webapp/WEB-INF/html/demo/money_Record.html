@@ -19,6 +19,7 @@
             <div style="margin-left: 30px;margin-top: 10px">
                 退回处方ID：<input id="out_id" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 用户名称：<input id="user_name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                病人名称：<input id="pat_name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
             </div>
         </div>
@@ -29,19 +30,20 @@
                 <!--字段名-->
                 <thead >
                     <th>记录ID</th>
+                    <th>病人名称</th>
                     <th>押金ID</th>
                     <th>退回处方ID</th>
                     <th>操作用户</th>
                     <th>操作时间</th>
                     <th>类型</th>
-                    <th>交款方式</th>
+                    <th>交款金额</th>
                     <th>备注</th>
-                    <th>操作</th>
                 </thead>
                 <!--数据行-->
                 <tbody>
                 <tr v-for="record in record_tr" >
                     <td>{{record.record_id}}</td>
+                    <td>{{record.pat_name}}</td>
                     <td>{{record.deposit_id}}</td>
                     <td>{{record.out_id}}</td>
                     <td>{{record.user_name}}</td>
@@ -49,8 +51,6 @@
                     <td>{{record.record_type}}</td>
                     <td>{{record.record_mode}}</td>
                     <td>{{record.record_remark}}</td>
-                    <td><button v-on:click="updateID(record.record_id)">修改</button>
-                        <button v-on:click="deleteID(record.record_id)">删除</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -280,6 +280,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_record").find(".close").click();
+                        record_list._data.currentIndex=1;
                         recordSum();
                         queryAll();
                     }
@@ -321,6 +322,7 @@
                                 alert("修改成功！");
                             }
                             $("#update_record").find(".close").click();
+                            record_list._data.currentIndex=1;
                             recordSum();
                             queryAll();
                         }
@@ -353,11 +355,12 @@
         record_list._data.page_num=1;
         var out_id=$("#out_id").val();
         var user_name=$("#user_name").val();
+        var pat_name=$("#pat_name").val();
         $.ajax({
             url:'../../queryAllMoney_record.action',
             dataType:'JSON',
             type:'post',
-            data:'out_id='+out_id+"&user_name="+user_name,
+            data:'out_id='+out_id+"&user_name="+user_name+"&pat_name="+pat_name,
             success:function (data) {
                 record_list._data.record_tr=data;
                 record_list._data.currentIndex=1;
@@ -382,12 +385,13 @@
     function recordSum() {
         var out_id=$("#out_id").val();
         var user_name=$("#user_name").val();
+        var pat_name=$("#pat_name").val();
         var current_sum=$("#page_number").val();
         $.ajax({
             url:'../../Money_recordSum.action',
             dataType:'JSON',
             type:'post',
-            data:'out_id='+out_id+"&user_name="+user_name+"&current_sum="+current_sum,
+            data:'out_id='+out_id+"&user_name="+user_name+"&pat_name="+pat_name+"&current_sum="+current_sum,
             success:function (data) {
                 record_list._data.sum=data;
             }
@@ -401,13 +405,14 @@
         $("select#page_number").change(function () {
             var out_id=$("#out_id").val();
             var user_name=$("#user_name").val();
+            var pat_name=$("#pat_name").val();
             var val=$(this).val();
             pageindex=1;
             $.ajax({
                 url:'../../queryAllMoney_record.action',
                 dataType:'JSON',
                 type:'post',
-                data:'out_id='+out_id+"&user_name="+user_name+"&current_sum="+val,
+                data:'out_id='+out_id+"&user_name="+user_name+"&pat_name="+pat_name+"&current_sum="+val,
                 success:function (data) {
                     record_list._data.record_tr=data;
                     record_list._data.currentIndex=1;
@@ -421,6 +426,7 @@
         $(".paging").click(function () {
             var out_id=$("#out_id").val();
             var user_name=$("#user_name").val();
+            var pat_name=$("#pat_name").val();
             var pageName=$(this).text();
             var sum=record_list._data.sum;
             var current_sum=$("#page_number").val();
@@ -445,7 +451,7 @@
                 url:'../../queryAllMoney_record.action',
                 dataType:'JSON',
                 type:'post',
-                data:'out_id='+out_id+"&user_name="+user_name+'&pageIndex='+pageindex+"&current_sum="+current_sum,
+                data:'out_id='+out_id+"&user_name="+user_name+"&pat_name="+pat_name+'&pageIndex='+pageindex+"&current_sum="+current_sum,
                 success:function (data) {
                     record_list._data.record_tr=data;
                 }

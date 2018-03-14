@@ -1,18 +1,34 @@
 package com.woomoon.controller;
 
 import com.woomoon.entitys.DepositEntity;
+import com.woomoon.entitys.Money_recordEntity;
+import com.woomoon.entitys.UserEntity;
 import com.woomoon.service.DepositService;
+import com.woomoon.service.LiveService;
+import com.woomoon.service.MoneyRecordService;
+import com.woomoon.service.OutprepService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
 
+@Controller
 public class DepositController {
 
     @Autowired
     DepositService depositService;
+
+    @Autowired
+    LiveService liveService;
+
+    @Autowired
+    OutprepService outprepService;
+
+    @Autowired
+    MoneyRecordService moneyRecordService;
 
     //测试
     @RequestMapping("href_deposit")
@@ -45,6 +61,27 @@ public class DepositController {
         return depositService.queryOneDeposit(deposit_id);
     }
 
+    //根据住院ID查询住院人是否存在
+    @RequestMapping("countDeposit")
+    @ResponseBody
+    public DepositEntity countDeposit(String live_num){
+        return depositService.countDeposit(live_num);
+    }
+
+    //根据ID查询住院人是否存在
+    @RequestMapping("countLive")
+    @ResponseBody
+    public int CountLive(String live_num){
+        return liveService.CountLive(live_num);
+    }
+
+    //查询所有用户
+    @RequestMapping("queryUserValue")
+    @ResponseBody
+    public List<UserEntity> queryUser(){
+        return outprepService.queryUser();
+    }
+
     //查询押金的总数+模糊查询
     @RequestMapping("DepositSum")
     @ResponseBody
@@ -59,5 +96,33 @@ public class DepositController {
             page_count++;
         }
         return page_count;
+    }
+
+    //增加押金
+    @RequestMapping("addDeposit")
+    @ResponseBody
+    public void addDeposit(DepositEntity depositEntity){
+        depositService.addDeposit(depositEntity);
+    }
+
+    //增加押金
+    @RequestMapping("addMoney_record")
+    @ResponseBody
+    public void addMoney_record(Money_recordEntity money_recordEntity){
+        moneyRecordService.addMoney_record(money_recordEntity);
+    }
+
+    //修改押金
+    @RequestMapping("updateDeposit")
+    @ResponseBody
+    public void updateDeposit(DepositEntity depositEntity){
+        depositService.updateDeposit(depositEntity);
+    }
+
+    //删除押金
+    @RequestMapping("deleteDeposit")
+    @ResponseBody
+    public void deleteDeposit(Integer deposit_id){
+        depositService.deleteDeposit(deposit_id);
     }
 }

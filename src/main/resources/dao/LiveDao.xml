@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.LiveDao">
+
+    <select id="queryAllLive" resultType="java.util.Map">
+        select l.live_num,l.pat_num,p.pat_name,l.live_count from tb_live l
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num where 1=1
+        <if test="l_entity.pat_num !=null and l_entity.pat_num !=''">
+             AND l.pat_num=#{l_entity.pat_num}
+        </if>
+        <if test="pat_name !=null and pat_name !=''">
+             AND p.pat_name like '%${pat_name}%'
+        </if>
+             limit #{begin},#{end}
+    </select>
+
+    <select id="CountLive_pat" parameterType="String" resultType="com.woomoon.entitys.LiveEntity">
+        SELECT * FROM tb_live WHERE pat_num=#{pat_num}
+    </select>
+
+    <select id="CountLive" parameterType="String" resultType="int">
+        select COUNT(*) from tb_live WHERE live_num=#{live_num}
+    </select>
+
+    <select id="queryOneLive" parameterType="String" resultType="com.woomoon.entitys.LiveEntity">
+        SELECT * from tb_live where deposit_id=#{deposit_id}
+    </select>
+
+    <select id="LiveSum" resultType="int">
+        select COUNT(*) from tb_live l
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num where 1=1
+        <if test="l_entity.pat_num !=null and l_entity.pat_num !=''">
+            AND l.pat_num=#{l_entity.pat_num}
+        </if>
+        <if test="pat_name !=null and pat_name !=''">
+            AND p.pat_name like '%${pat_name}%'
+        </if>
+    </select>
+
+    <insert id="addLive" parameterType="com.woomoon.entitys.LiveEntity" >
+        insert into tb_live(pat_num,live_count) values(#{pat_num},#{live_count})
+    </insert>
+
+    <update id="updateLive" parameterType="com.woomoon.entitys.LiveEntity">
+        update tb_live set pat_num=#{pat_num},live_count=#{live_count}+1 where live_num= #{live_num}
+    </update>
+
+</mapper>

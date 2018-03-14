@@ -18,18 +18,6 @@ public class RoleController {
     @Autowired
     RoleMapper roleMapper;
 
-    //进入角色管理界面
-    @RequestMapping(value = "href_role")
-    public String href_power() {
-        return "roleCRUD";
-    }
-
-    //进入角色授权界面
-    @RequestMapping(value = "href_roleGrant")
-    public String href_roleGrant() {
-        return "demo\\roleGrant";
-    }
-
     //查询角色对应的权限
     @RequestMapping(value = "queryRoleCoPower")
     @ResponseBody

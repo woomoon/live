@@ -205,6 +205,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_nexus").find(".close").click();
+                        nexus_list._data.currentIndex=1;
                         PatientSum();
                         queryAll();
                     }
@@ -243,6 +244,7 @@
                             alert("修改成功！");
                         }
                         $("#update_nexus").find(".close").click();
+                        nexus_list._data.currentIndex=1;
                         PatientSum();
                         queryAll();
                     }

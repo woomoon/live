@@ -15,18 +15,11 @@ public class PowerController {
     @Autowired
     PowerMapper powerMapper;
 
-
-    //进入界面
-    @RequestMapping(value = "href_power")
-    public String href_power() {
-        return "powerCRUD";
-    }
-
-    //查询数据
+    //不带条件、查询数据
     @RequestMapping(value = "queryAllPower")
     @ResponseBody
     public List<PowerEntity> queryAllPower() {
-        List<PowerEntity> powerEntities = powerMapper.queryAllPower(3);
+        List<PowerEntity> powerEntities = powerMapper.queryAllPowers("3");
         return powerEntities;
     }
 
