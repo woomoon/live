@@ -196,7 +196,6 @@
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
             isparent_tr:{},
-            dept_info:0,
             delete_id:'',
         },
         methods:{
@@ -208,28 +207,34 @@
 
             deleteDept:function () {
                 var dept_id=dept_list._data.delete_id;
-                alert(dept_id);
-                info(dept_id);
-                  if(dept_list._data.dept_info!=0){
-                      $.ajax({
-                          url:'../../deleteDept.action',
-                          dataType:'JSON',
-                          type:'post',
-                          data:'dept_id='+dept_id,
-                          success:function (data) {
-                            if(data){
-                                alert("删除成功！");
-                            }
-                          }
-                      })
-                  }
-                  else{
-                      alert("该父类下有子类，不能进行删除！");
-                  }
-              $("#delete_dept").find(".close").click();
-                drugs_list._data.currentIndex=1;
-              DeptSum();
-              queryAll();
+                $.ajax({
+                    url:'../../queryAllDept_isPatent_ID.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'dept_id='+dept_id,
+                    success:function (data) {
+                        if(data!=0){
+                            $.ajax({
+                                url:'../../deleteDept.action',
+                                dataType:'JSON',
+                                type:'post',
+                                data:'dept_id='+dept_id,
+                                success:function (data) {
+                                    if(data){
+                                        alert("删除成功！");
+                                    }
+                                }
+                            })
+                        }
+                        else{
+                            alert("该父类下有子类，不能进行删除！");
+                        }
+                        $("#delete_dept").find(".close").click();
+                        dept_id._data.currentIndex=1;
+                        DeptSum();
+                        queryAll();
+                    }
+                })
             },
 
             //增加
@@ -256,6 +261,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_dept").find(".close").click();
+                        dept_list._data.currentIndex=1;
                         DeptSum();
                         queryAll();
                     }
@@ -284,25 +290,33 @@
                 var isParent=$("input[name='update_isParent']:checked").val();
                 var dept_pid=$("#update_pid").val();
                 var dept_remark=$("#update_remark").val();
-                info(dept_id);
-                if(dept_list._data.dept_info!=0){
-                    $.ajax({
-                        url:'../../updateDept.action',
-                        dataType:'JSON',
-                        type:'post',
-                        data:'dept_id='+dept_id+'&dept_name='+dept_name+'&isParent='+isParent+'&dept_pid='+dept_pid+'&dept_remark='+dept_remark,
-                        success:function (data) {
-                            if(data){
-                                alert("修改成功！");
-                            }
+                $.ajax({
+                    url:'../../queryAllDept_isPatent_ID.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'dept_id='+dept_id,
+                    success:function (data) {
+                        if(data!=0){
+                            $.ajax({
+                                url:'../../updateDept.action',
+                                dataType:'JSON',
+                                type:'post',
+                                data:'dept_id='+dept_id+'&dept_name='+dept_name+'&isParent='+isParent+'&dept_pid='+dept_pid+'&dept_remark='+dept_remark,
+                                success:function (data) {
+                                    if(data){
+                                        alert("修改成功！");
+                                    }
+                                }
+                            })
+                        }else{
+                            alert("该父类下有子类，不能进行修改！")
                         }
-                    })
-                }else{
-                    alert("该父类下有子类，不能进行修改！")
-                }
-                $("#update_dept").find(".close").click();
-                DeptSum();
-                queryAll();
+                        $("#update_dept").find(".close").click();
+                        dept_list._data.currentIndex=1;
+                        DeptSum();
+                        queryAll();
+                    }
+                })
             }
         }
     });
@@ -340,20 +354,20 @@
         })
     };
 
-    //查询父类下有没有子类
-    function info(dept_id) {
-        $.ajax({
-            url:'../../queryAllDept_isPatent_ID.action',
-            dataType:'JSON',
-            type:'post',
-            data:'dept_id='+dept_id,
-            success:function (data) {
-                dept_list._data.dept_info=data;
-                alert(data+"化");
-                alert(dept_list._data.dept_info+"学");
-            }
-        })
-    }
+//    //查询父类下有没有子类
+//    function info(dept_id) {
+//        $.ajax({
+//            url:'../../queryAllDept_isPatent_ID.action',
+//            dataType:'JSON',
+//            type:'post',
+//            data:'dept_id='+dept_id,
+//            success:function (data) {
+//                dept_list._data.dept_info=data;
+//                alert(data+"化");
+//                alert(dept_list._data.dept_info+"学");
+//            }
+//        })
+//    }
 
 
     //模糊查询

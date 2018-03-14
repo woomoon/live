@@ -17,8 +17,8 @@ public class MoneyRecordServiceImpl implements MoneyRecordService{
     Money_recordDao money_recordDao;
 
     @Override
-    public List<Map<String, Object>> queryAllMoney_record(Money_recordEntity money_recordEntity, String user_name, int begin, int end) {
-        return money_recordDao.queryAllMoney_record(money_recordEntity,user_name,begin,end);
+    public List<Map<String, Object>> queryAllMoney_record(Money_recordEntity money_recordEntity, String user_name,String pat_name, int begin, int end) {
+        return money_recordDao.queryAllMoney_record(money_recordEntity,user_name,pat_name,begin,end);
     }
 
     @Override
@@ -27,8 +27,8 @@ public class MoneyRecordServiceImpl implements MoneyRecordService{
     }
 
     @Override
-    public int Money_recordSum(Money_recordEntity money_recordEntity, String user_name) {
-        return money_recordDao.Money_recordSum(money_recordEntity,user_name);
+    public int Money_recordSum(Money_recordEntity money_recordEntity, String user_name,String pat_name) {
+        return money_recordDao.Money_recordSum(money_recordEntity,user_name,pat_name);
     }
 
     @Override

@@ -6,7 +6,7 @@
 <mapper namespace="com.woomoon.dao.DepositDao">
 
     <select id="queryAllDeposit" resultType="java.util.Map">
-        select deposit_id,pat_name,deposit_money_do from tb_deposit d
+        select d.deposit_id,d.live_num,p.pat_name,d.deposit_money_do from tb_deposit d
         INNER JOIN tb_live l
         ON  d.live_num=l.live_num
         INNER JOIN tb_patient p
@@ -18,6 +18,10 @@
              AND p.pat_name like '%${pat_name}%'
         </if>
              limit #{begin},#{end}
+    </select>
+
+    <select id="countDeposit" parameterType="String" resultType="com.woomoon.entitys.DepositEntity">
+        SELECT * FROM tb_deposit WHERE live_num=#{live_num}
     </select>
 
     <select id="queryOneDeposit" parameterType="Integer" resultType="com.woomoon.entitys.DepositEntity">
@@ -39,7 +43,7 @@
     </select>
 
     <insert id="addDeposit" parameterType="com.woomoon.entitys.DepositEntity" >
-        insert into tb_deposit(live_num,deposit_money_do) values(#{live_num},#{deposit_money_do}
+        insert into tb_deposit(live_num,deposit_money_do) values(#{live_num},#{deposit_money_do})
     </insert>
 
     <update id="updateDeposit" parameterType="com.woomoon.entitys.DepositEntity">

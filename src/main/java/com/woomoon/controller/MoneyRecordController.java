@@ -30,7 +30,7 @@ public class MoneyRecordController {
     //查询所有押金+模糊查询
     @RequestMapping("queryAllMoney_record")
     @ResponseBody
-    public List<Map<String,Object>> queryAllMoney_record(Money_recordEntity money_recordEntity, String user_name,String pageIndex,String current_sum){
+    public List<Map<String,Object>> queryAllMoney_record(Money_recordEntity money_recordEntity, String user_name,String pat_name,String pageIndex,String current_sum){
 
         int begin=1;
         int end=1;
@@ -43,15 +43,9 @@ public class MoneyRecordController {
         }
         begin=(index-1)*end;
 
-        return moneyRecordService.queryAllMoney_record(money_recordEntity,user_name,begin,end);
+        return moneyRecordService.queryAllMoney_record(money_recordEntity,user_name,pat_name,begin,end);
     }
 
-    //查询所有用户
-    @RequestMapping("queryUserValue")
-    @ResponseBody
-    public List<UserEntity> queryUser(){
-        return outprepService.queryUser();
-    }
 
     //根据ID查询押金
     @RequestMapping("queryOneMoney_record_ID")
@@ -63,8 +57,8 @@ public class MoneyRecordController {
     //查询押金的总数+模糊查询
     @RequestMapping("Money_recordSum")
     @ResponseBody
-    public int Money_recordSum( Money_recordEntity money_recordEntity,String user_name,String current_sum){
-        int sum=moneyRecordService.Money_recordSum(money_recordEntity,user_name);
+    public int Money_recordSum( Money_recordEntity money_recordEntity,String user_name,String current_sum,String pat_name){
+        int sum=moneyRecordService.Money_recordSum(money_recordEntity,user_name,pat_name);
         int end=1;
         if(current_sum!=null&&current_sum!=""){
             end=Integer.parseInt(current_sum);
@@ -76,12 +70,6 @@ public class MoneyRecordController {
         return page_count;
     }
 
-    //增加押金
-    @RequestMapping("addMoney_record")
-    @ResponseBody
-    public void addMoney_record(Money_recordEntity money_recordEntity){
-        moneyRecordService.addMoney_record(money_recordEntity);
-    }
 
     //修改押金
     @RequestMapping("updateMoney_record")
