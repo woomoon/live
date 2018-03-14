@@ -11,26 +11,33 @@
 
 </head>
 <style type="text/css">
+    h3 {
+        margin-top: 15px;
+        margin-left: 15px;
+        font-weight: bold;
+    }
+
     .divL {
         float: left;
         width: 500px;
+        margin-left: 15px;
     }
 
     .divR {
+        float: left;
+        width: 220px;
+        margin-left: 10px;
+    }
+
+    .divBtn {
+        width: 350px;
         float: right;
-        width: 260px;
+        margin-top: 15px;
     }
 
     .widget {
-        margin-left: 15px;
         width: 470px;
         margin-top: 15px;
-    }
-
-    h3 {
-        margin-top: 15px;
-        margin-left: 5px;
-        font-weight: bold;
     }
 
     .btnHeight {
@@ -47,11 +54,20 @@
         width: 30px;
     }
 
+    .btnFontSi {
+        font-size: 15px;
+    }
+
+    .msgDiv {
+        font-size: 15px;
+        width: 260px;
+    }
+
 </style>
 <body>
 
 <!--两棵树，角色与权限，进行数据的绑定-->
-<div style="width: 800px; margin-top: -40px;">
+<div style="width: 1100px; margin-top: -40px;">
     <div class="divL">
         <!--背景-->
         <div class="widget">
@@ -74,6 +90,7 @@
                         <th>#</th>
                         <th>ID</th>
                         <th>姓名</th>
+                        <th>账号</th>
                         <th>注册时间</th>
                         <th>所属科室</th>
                     </tr>
@@ -93,8 +110,10 @@
                         </td>
                         <td>{{s.user_id}}</td>
                         <td>{{s.user_name}}</td>
+                        <td>{{s.user_account}}</td>
                         <td>{{new Date(s.user_time).toLocaleDateString()}}</td>
-                        <td>{{s.dept_id}}</td>
+                        <td>{{s.dept_name==null?'暂无分配':s.dept_name}}</td>
+                        <!--{{patient.pat_sex==1?'男':'女'}}-->
                     </tr>
 
                     </tbody>
@@ -111,6 +130,20 @@
         <h3>角色选择：</h3>
         <div class="tree_left">
             <ul id="rTree" class="ztree"></ul>
+        </div>
+    </div>
+    <div class="divBtn">
+        <div class="btn-group btn-group-lg">
+            <button id="addBtn" type="button" class="btn btn-default"><span class="btnFontSi">保存</span></button>
+            <button id="delBtn" type="button" class="btn btn-default"><span class="btnFontSi">删除</span></button>
+            <button id="refBtn" type="button" class="btn btn-default"><span class="btnFontSi">刷新</span></button>
+        </div>
+        <br/>
+        <br/>
+        <div class="msgDiv">
+            选择一个用户，会自动勾选用户对应的角色。<br/><br/>
+            点击保存按钮，即可保存用户对应的角色。<br/><br/>
+            选择一个用户，再点击删除按钮，将会把这个用户所对应的角色删掉。<br/><br/>
         </div>
     </div>
 </div>
@@ -144,7 +177,7 @@
                     data: "queryCondition=" + queryVal + "&pageNum=" + pageNumber + "&pageSize=" + pageSize,
                     success: function (msg) {
                         user_list._data.user_tr = msg.user_list;
-                        $('#pp').pagination("refresh", {total:msg.total});
+                        $('#pp').pagination("refresh", {total: msg.total});
                     }
                 })
             }
@@ -160,14 +193,16 @@
 
         //刷新rTree 按钮
         $("#refBtn").click(function () {
+            $("span.pagination-load").click();
             refreshRole();
         })
 
+        //删除按钮
         $("#delBtn").click(function () {
             $.ajax({
-                url: "../../delRoleCoPower.action",
+                url: "../../delUserCoRole.action",
                 type: "post",
-                data: "treeId=" + treeID,
+                data: "user_id=" + treeID,
                 success: function (msg) {
                     if (msg == "false") {
                         alert("失败！");
@@ -179,20 +214,19 @@
             })
         })
 
+        //保存按钮
         $("#addBtn").click(function () {
             var ids = ",";
             if (treeID != null) {
-                var treeObj = $.fn.zTree.getZTreeObj("pTree");
+                var treeObj = $.fn.zTree.getZTreeObj("rTree");
                 var nodes = treeObj.getCheckedNodes(true);
                 $.each(nodes, function (k, v) {
-                    if (v.power_pid != 0) {
-                        ids += v.power_id + ",";
-                    }
+                        ids += v.role_id + ",";
                 })
-                $.ajax({
-                    url: "../../addRoleCoPower.action",
+                $.ajax({//用户对应的角色
+                    url: "../../addUserCoRole.action",
                     type: "post",
-                    data: "rid=" + treeID + "&ids=" + ids,
+                    data: "user_id=" + treeID + "&ids=" + ids,
                     success: function (msg) {
                         if (msg == "false") {
                             alert("失败！");
@@ -211,7 +245,21 @@
         },
         methods: {
             updateID: function (uid) {
-                alert(uid);
+                treeID = uid;
+                closeAllTreeNode();
+                var strIds = "";
+                $.ajax({
+                    url: "../../queryUserCoRole.action",
+                    type: "post",
+                    data: "user_id=" + treeID,
+                    success: function (msg) {
+                        var ids = JSON.parse(msg);
+                        $.each(ids, function (k, v) {
+                            strIds += v.role_id + "$";
+                        })
+                        checkTreeNode(strIds);
+                    }
+                })
             }
         }
     });
@@ -249,37 +297,19 @@
             type: 'post',
             success: function (msg) {
                 user_list._data.user_tr = msg.user_list;
-                $('#pp').pagination("refresh", {total:msg.total});
+                $('#pp').pagination("refresh", {total: msg.total});
             }
         })
     };
 
     //选择用户对应的角色
-    function checkNodes(treeID) {
-        closeAllTreeNode();
-        var strIds = "";
-        $.ajax({
-            url: "../../queryRoleCoPower.action",
-            type: "post",
-            data: "treeId=" + treeID,
-            success: function (msg) {
-                var ids = JSON.parse(msg);
-                $.each(ids, function (k, v) {
-                    strIds += v.power_id + "$";
-                })
-                checkTreeNode(strIds);
-            }
-        })
-    }
-
-    //选择用户对应的角色
     function checkTreeNode(ids) {
         var idsArr = ids.split("$");
-        var treeObj = $.fn.zTree.getZTreeObj("pTree");
+        var treeObj = $.fn.zTree.getZTreeObj("rTree");
         var nodes = treeObj.transformToArray(treeObj.getNodes());
         $.each(nodes, function (k, v) {
             $.each(idsArr, function (ki, vi) {
-                if (vi == v.power_id) {
+                if (vi == v.role_id) {
                     if (!v.isParent) {
                         treeObj.checkNode(v, true, true, true);
                     }

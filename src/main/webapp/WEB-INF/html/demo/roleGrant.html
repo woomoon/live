@@ -119,11 +119,9 @@
                 var treeObj = $.fn.zTree.getZTreeObj("pTree");
                 var nodes = treeObj.getCheckedNodes(true);
                 $.each(nodes, function (k, v) {
-                    if (v.power_pid != 0) {
-                        ids += v.power_id + ",";
-                    }
+                    ids += v.power_id + ",";
                 })
-                $.ajax({
+                $.ajax({//角色对应的权限
                     url: "../../addRoleCoPower.action",
                     type: "post",
                     data: "rid=" + treeID + "&ids=" + ids,

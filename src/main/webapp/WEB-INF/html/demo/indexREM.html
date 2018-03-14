@@ -61,9 +61,9 @@
                     <!-- Dropdown menu -->
 
                     <ul class="dropdown-menu">
-                        <li><a href="#"><i class="icon-user"></i> 资料</a></li>
-                        <li><a href="#"><i class="icon-cogs"></i> 设置</a></li>
-                        <li><a href="login.html"><i class="icon-off"></i> 退出</a></li>
+                        <li><a href="#"><i class="icon-user"></i>&nbsp;资料</a></li>
+                        <li><a href="#"><i class="icon-cogs"></i>设置</a></li>
+                        <li><a href="javascript:void(0);" id="closeSe"><i class="icon-off"></i>&nbsp;退出</a></li>
                     </ul>
                 </li>
 
@@ -129,6 +129,15 @@
 <script type="text/javascript">
     $(function () {
         $.fn.zTree.init($("#pTree"), settings);
+
+        $("#closeSe").click(function () {
+            $.ajax({
+                url: "../../../closeSession.action",
+                success: function (msg) {
+                    window.location.href = "../../../login.action";
+                }
+            })
+        })
     })
 
     var settings = {
