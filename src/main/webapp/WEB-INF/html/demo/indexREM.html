@@ -11,10 +11,10 @@
 
 <body>
 
+<!-- Navigation starts 最上面的搜索框及退出 -->
 <div class="navbar navbar-fixed-top bs-docs-nav" role="banner">
 
     <div class="conjtainer" style="height: 60px;">
-        <!-- Navigation starts 最上面的搜索框及退出 -->
         <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 
             <ul class="nav navbar-nav">
@@ -57,36 +57,26 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <i class="icon-user"></i> 管理员 <b class="caret"></b>
                     </a>
-
-                    <!-- Dropdown menu -->
-
                     <ul class="dropdown-menu">
-                        <li><a href="#"><i class="icon-user"></i>&nbsp;资料</a></li>
+                        <li><a href="javascript:userMsgBtn();"><i class="icon-user"></i>&nbsp;修改</a></li>
                         <li><a href="#"><i class="icon-cogs"></i>设置</a></li>
                         <li><a href="javascript:void(0);" id="closeSe"><i class="icon-off"></i>&nbsp;退出</a></li>
                     </ul>
                 </li>
-
             </ul>
         </nav>
     </div>
-
 </div>
 
-
-<!-- Header ends -->
-
-<!-- Main content starts -->
-
 <div class="content">
-    <!-- Sidebar -->
+    <!--菜单树-->
     <div style="height: 800px;" class="sidebar">
         <br/>
         <div style="float: left;width: 360px;height:700px; margin-top:10px;margin-left:10px;">
             <ul id="pTree" class="ztree"></ul>
         </div>
     </div>
-
+    <!--标签页-->
     <div class="mainbar"><!--内容中间的展示-->
         <br/>
         <div class="col-md-11" style="background-color: #F0F3F4; height: 777px; width: 1118px;">
@@ -105,6 +95,30 @@
             </div>
             <!--中间-->
         </div>
+    </div>
+
+    <div class="modal" id="userMsg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+         data-backdrop="true">
+        <div style="width: 330px;margin-top: 120px;" class="modal-dialog"><!--设置modal 的width -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        添加
+                    </h4>
+                </div>
+                <div style="height: 160px;" class="modal-body">
+                    姓名：<input type="text" class="form-control" placeholder="姓名">
+                    账号：<input type="text" class="form-control" placeholder="账号">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="p_submit" type="button" class="btn btn-primary">提交</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
     </div>
 </div>
 
@@ -140,6 +154,10 @@
         })
     })
 
+    function userMsgBtn() {
+        $('#userMsg').modal('show');
+    }
+
     var settings = {
         async: {
             enable: true,
@@ -162,17 +180,23 @@
         }
     }
 
-
     function addTab(event, treeId, treeNode) {
-        console.log(treeNode);
-        if (treeNode.isParent == false) {
-            $("#tabTitle").append("<li role='presentation'><a href='#" + treeNode.power_url + "' aria-controls='" + treeNode.power_url + "' role='tab' data-toggle='tab'>" + treeNode.power_name + "</a></li>");
-            $("#tabContent").append("<div role='tabpanel' class='tab-pane' id='" + treeNode.power_url + "'><iframe src='../../../" + treeNode.power_url + ".action' width='1088px' height='736px;' frameborder='no' border='0' marginwidth='0' marginheight='0' scrolling='no' allowtransparency='yes'></iframe></div>");
+        var vals = "";
+        var tag = treeNode.power_name;
+        $.each($("#tabTitle"), function (k, v) {
+            vals = v.innerHTML;
+        })
+        if (vals.indexOf(tag) != -1) {
             $('#tabTitle a[href="#' + treeNode.power_url + '"]').tab('show');
+        } else {
+            if (treeNode.isParent == false) {
+                $("#tabTitle").append("<li role='presentation'><a href='#" + treeNode.power_url + "' aria-controls='" + treeNode.power_url + "' role='tab' data-toggle='tab'>" + treeNode.power_name + "</a></li>");
+                $("#tabContent").append("<div role='tabpanel' class='tab-pane' id='" + treeNode.power_url + "'><iframe src='../../../" + treeNode.power_url + ".action' width='1088px' height='736px;' frameborder='no' border='0' marginwidth='0' marginheight='0' scrolling='no' allowtransparency='yes'></iframe></div>");
+                $('#tabTitle a[href="#' + treeNode.power_url + '"]').tab('show');
+            }
         }
     }
 
 </script>
-
 </body>
 </html>

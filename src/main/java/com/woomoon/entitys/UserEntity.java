@@ -8,7 +8,14 @@ public class UserEntity {
 	private String user_time;
 	private Integer dept_id;
 	private String user_account;
+	private String isdel;
 
+	public String getIsdel() {
+		return isdel;
+	}
+	public void setIsdel(String isdel) {
+		this.isdel = isdel;
+	}
 	public Integer getUser_id() {
 		return user_id;
 	}
@@ -46,5 +53,15 @@ public class UserEntity {
 		this.user_account = user_account;
 	}
 
-
+	@Override
+	public String toString() {
+		return "UserEntity{" +
+				"user_id=" + user_id +
+				", user_name='" + user_name + '\'' +
+				", user_pwd='" + user_pwd + '\'' +
+				", user_time='" + user_time + '\'' +
+				", dept_id=" + dept_id +
+				", user_account='" + user_account + '\'' +
+				'}';
+	}
 }

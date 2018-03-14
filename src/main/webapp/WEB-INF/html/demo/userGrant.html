@@ -134,8 +134,8 @@
     </div>
     <div class="divBtn">
         <div class="btn-group btn-group-lg">
-            <button id="addBtn" type="button" class="btn btn-default"><span class="btnFontSi">保存</span></button>
-            <button id="delBtn" type="button" class="btn btn-default"><span class="btnFontSi">删除</span></button>
+            <!--<button onclick="addFun()" type="button" class="btn btn-default"><span class="btnFontSi">保存</span></button>-->
+            <!--<button onclick="delFun()" type="button" class="btn btn-default"><span class="btnFontSi">删除</span></button>-->
             <button id="refBtn" type="button" class="btn btn-default"><span class="btnFontSi">刷新</span></button>
         </div>
         <br/>
@@ -160,6 +160,19 @@
     var treeID;
 
     $(function () {
+
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=39",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
+
+
         //init vue.js
         queryAll();
 
@@ -197,45 +210,46 @@
             refreshRole();
         })
 
-        //删除按钮
-        $("#delBtn").click(function () {
-            $.ajax({
-                url: "../../delUserCoRole.action",
+    })
+
+    //保存按钮
+    function addFun() {
+        var ids = ",";
+        if (treeID != null) {
+            var treeObj = $.fn.zTree.getZTreeObj("rTree");
+            var nodes = treeObj.getCheckedNodes(true);
+            $.each(nodes, function (k, v) {
+                ids += v.role_id + ",";
+            })
+            $.ajax({//用户对应的角色
+                url: "../../addUserCoRole.action",
                 type: "post",
-                data: "user_id=" + treeID,
+                data: "user_id=" + treeID + "&ids=" + ids,
                 success: function (msg) {
                     if (msg == "false") {
                         alert("失败！");
                     }
-                    else {
-                        closeAllTreeNode();
-                    }
                 }
             })
-        })
+        }
+    }
 
-        //保存按钮
-        $("#addBtn").click(function () {
-            var ids = ",";
-            if (treeID != null) {
-                var treeObj = $.fn.zTree.getZTreeObj("rTree");
-                var nodes = treeObj.getCheckedNodes(true);
-                $.each(nodes, function (k, v) {
-                        ids += v.role_id + ",";
-                })
-                $.ajax({//用户对应的角色
-                    url: "../../addUserCoRole.action",
-                    type: "post",
-                    data: "user_id=" + treeID + "&ids=" + ids,
-                    success: function (msg) {
-                        if (msg == "false") {
-                            alert("失败！");
-                        }
-                    }
-                })
+    //删除按钮
+    function delFun() {
+        $.ajax({
+            url: "../../delUserCoRole.action",
+            type: "post",
+            data: "user_id=" + treeID,
+            success: function (msg) {
+                if (msg == "false") {
+                    alert("失败！");
+                }
+                else {
+                    closeAllTreeNode();
+                }
             }
         })
-    })
+    }
 
     //Vue.js
     var user_list = new Vue({
@@ -262,7 +276,7 @@
                 })
             }
         }
-    });
+    })
 
     //zTree 配置
     var rsettings = {
@@ -300,7 +314,7 @@
                 $('#pp').pagination("refresh", {total: msg.total});
             }
         })
-    };
+    }
 
     //选择用户对应的角色
     function checkTreeNode(ids) {
@@ -325,7 +339,7 @@
         $.each(nodes, function (k, v) {						//遍历所有的父节点
             treeObj.checkNode(v, false, true, true); 	    //取消所有被勾选的节点
         })
-    };
+    }
 
     //刷新rTree
     function refreshRole() {
