@@ -32,6 +32,10 @@
         SELECT * from tb_patient  order   by   pat_num   desc   limit   1
     </select>
 
+    <select id="CountPatient" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM tb_patient where pat_num=#{pat_num}
+    </select>
+
     <select id="queryOnePatient_ID" parameterType="String" resultType="com.woomoon.entitys.PatientEntity">
         SELECT * from tb_patient where pat_num=#{pat_num}
     </select>

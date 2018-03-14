@@ -15,6 +15,9 @@ public interface DepositDao {
     //根据ID查询押金
     public DepositEntity queryOneDeposit(Integer  deposit_id);
 
+    //根据住院ID查询住院人是否存在于押金
+    public DepositEntity countDeposit(String live_num);
+
     //查询押金的总数+模糊查询
     public int DepositSum(@Param("d_entity") DepositEntity depositEntity,@Param("pat_name") String pat_name);
 

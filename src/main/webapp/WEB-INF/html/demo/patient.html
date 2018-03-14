@@ -244,6 +244,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_patient").find(".close").click();
+                        patient_list._data.currentIndex=1;
                         PatientSum();
                         queryAll();
                     }
@@ -284,6 +285,7 @@
                             alert("修改成功！");
                         }
                         $("#update_patient").find(".close").click();
+                        patient_list._data.currentIndex=1;
                         PatientSum();
                         queryAll();
                     }

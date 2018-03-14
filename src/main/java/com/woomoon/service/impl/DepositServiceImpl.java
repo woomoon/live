@@ -25,6 +25,11 @@ public class DepositServiceImpl implements DepositService{
     }
 
     @Override
+    public DepositEntity countDeposit(String live_num) {
+        return depositDao.countDeposit(live_num);
+    }
+
+    @Override
     public int DepositSum(DepositEntity depositEntity, String pat_name) {
         return depositDao.DepositSum(depositEntity,pat_name);
     }

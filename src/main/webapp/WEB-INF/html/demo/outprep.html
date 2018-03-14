@@ -273,6 +273,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_outprep").find(".close").click();
+                        outprep_list._data.currentIndex=1;
                         OutprepSum();
                         queryAll();
                     }
@@ -314,6 +315,7 @@
                                 alert("修改成功！");
                             }
                             $("#update_outprep").find(".close").click();
+                            outprep_list._data.currentIndex=1;
                             OutprepSum();
                             queryAll();
                         }

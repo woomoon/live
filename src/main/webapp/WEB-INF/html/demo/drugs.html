@@ -243,6 +243,7 @@
 //                           alert("增加失败！");
 //                       }
                         $("#add_drugs").find(".close").click();
+                        drugs_list._data.currentIndex=1;
                         DeptSum();
                         queryAll();
                     }
@@ -280,6 +281,7 @@
                                 alert("修改成功！");
                             }
                             $("#update_drugs").find(".close").click();
+                            drugs_list._data.currentIndex=1;
                             DeptSum();
                             queryAll();
                         }
