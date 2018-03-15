@@ -12,8 +12,8 @@ public interface PowerMapper {
     //查询所有
     public List<PowerEntity> queryAllPowers(String p_size);
 
-    //查询所有
-    public List<PowerEntity> queryAllPower(@Param("u_id") String u_id);
+    //查询所有power_size,power_pid,user_id
+    public List<PowerEntity> queryAllPower(@Param("power_size")String power_size,@Param("power_pid")String power_pid,@Param("user_id") String user_id);
 
     //查询单个
     public PowerEntity queryOnePower(String treeId);

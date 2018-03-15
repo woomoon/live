@@ -1,5 +1,6 @@
 package com.woomoon.dao;
 
+import com.woomoon.entitys.UserEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +26,12 @@ public interface UserMapper {
     void delUserCoRole(String user_id);
 
     //用户登录
-    List<Map<String, String>> user_login(@Param("user_name") String user_name, @Param("user_pwd") String user_pwd);
+    UserEntity user_login(@Param("user_name") String user_name, @Param("user_pwd") String user_pwd);
+
+    void addUser(UserEntity user);
+
+    void delUser(int user_id);
+
+    void updUser(@Param("user_id") int user_id, @Param("dept_id") int dept_id);
 
 }

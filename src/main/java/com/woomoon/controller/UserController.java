@@ -1,12 +1,15 @@
 package com.woomoon.controller;
 
 import com.woomoon.dao.UserMapper;
+import com.woomoon.entitys.UserEntity;
+import jdk.nashorn.internal.ir.ReturnNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,14 +88,55 @@ public class UserController {
     @RequestMapping("user_login")
     @ResponseBody
     public boolean user_login(HttpServletRequest request, String user_name, String user_pwd) {
-        List<Map<String, String>> maps = userMapper.user_login(user_name, user_pwd);
+//        List<> maps =
+        UserEntity userEntity = userMapper.user_login(user_name, user_pwd);
         try {
-            Map<String, String> userMap = maps.get(0);
-            request.getSession().setAttribute("user", userMap);
+            request.getSession().setAttribute("user", userEntity);
         } catch (Exception e) {
             return false;
         }
         return true;
     }
+
+    //添加用户
+    @RequestMapping("addUser")
+    @ResponseBody
+    public boolean addUser(UserEntity userEntity) {
+        try {
+            userEntity.setIsdel("n");
+            userEntity.setUser_pwd("123");
+            userEntity.setUser_time(new Date().toLocaleString());
+            userMapper.addUser(userEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    //删除用户
+    @RequestMapping("delUser")
+    @ResponseBody
+    public boolean delUser(int user_id) {
+        try {
+            userMapper.delUser(user_id);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    //修改用户
+    @RequestMapping("updUser")
+    @ResponseBody
+    public boolean updUser(int user_id, int dept_id) {
+        try {
+            userMapper.updUser(user_id, dept_id);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
 
 }

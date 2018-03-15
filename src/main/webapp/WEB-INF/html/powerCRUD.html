@@ -42,10 +42,11 @@
     <ul id="pTree" class="ztree"></ul>
 </div>
 
+<!--按钮组-->
 <div class="btn-group" role="group" aria-label="...">
-    <button id="addBtn" type="button" class="btn btn-default">添加</button>
-    <button id="delBtn" type="button" class="btn btn-default">删除</button>
-    <button id="updBtn" type="button" class="btn btn-default">修改</button>
+    <!--<button onclick="addFun()" type="button" class="btn btn-default">添加</button>-->
+    <!--<button onclick="delFun()" type="button" class="btn btn-default">删除</button>-->
+    <!--<button onclick="updFun()" type="button" class="btn btn-default">修改</button>-->
     <button id="refBtn" type="button" class="btn btn-default">刷新</button>
 </div>
 
@@ -86,7 +87,6 @@
     </div><!-- /.modal -->
 </div>
 
-
 <div class="modal" id="addPowerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false"
      data-backdrop="false">
     <div style="width: 330px;margin-top: 120px;" class="modal-dialog"><!--设置modal 的width -->
@@ -117,7 +117,6 @@
     </div><!-- /.modal -->
 </div>
 
-
 </body>
 <script src="../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
 <script src="../../plugins/zTree/js/jquery.ztree.core.js"></script>
@@ -128,6 +127,18 @@
 
 
     $(function () {
+
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=2",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
+
         // init ztree
         $.fn.zTree.init($("#pTree"), settings);
 
@@ -149,15 +160,6 @@
             refLoad();
         })
 
-        $("#addBtn").click(function () {
-            if (treeID != null && treeID != "") {
-                $('#addPowerModal').modal('show');
-            }
-            else {
-                alert("请先选择一个节点 !");
-            }
-        });
-
         $("#addPower_submit").click(function () {
             var rad = $("input[type='radio']:checked").val();
             var p_name = $("#power_name").val();
@@ -175,54 +177,61 @@
             refLoad();
         });
 
-        $("#delBtn").click(function () {
-            if (window.confirm("确认删除吗?")) {
-                if (treeID != null && treeID != "") {
-                    $.ajax({
-                        url: "../../delPower.action",
-                        type: "post",
-                        data: "p_id=" + treeID,
-                        success: function (msg) {
-                        }
-                    })
-                }
-                else {
-                    alert("请先选择一个节点 !");
-                }
-            }
-            refLoad();
-        });
-
-        $("#updBtn").click(function () {
-            if (treeID != null && treeID != "") {
-                $.ajax({
-                    url: "../../queryOnePower.action",
-                    type: "post",
-                    data: "treeId=" + treeID,
-                    success: function (d) {
-                        $("#p_name").val(JSON.parse(d).power_name);
-                        $("#p_id").html(JSON.parse(d).power_id);
-                    }
-                })
-                $('#myModal').modal('show');
-            }
-            else {
-                alert("请先选择一个节点 !");
-            }
-        });
-
         $("#refBtn").click(function () {
             refLoad();
         })
     })
 
     //init end
+    function addFun() {
+        if (treeID != null && treeID != "") {
+            $('#addPowerModal').modal('show');
+        }
+        else {
+            alert("请先选择一个节点 !");
+        }
+    }
+
+    function delFun() {
+        if (window.confirm("确认删除吗?")) {
+            if (treeID != null && treeID != "") {
+                $.ajax({
+                    url: "../../delPower.action",
+                    type: "post",
+                    data: "p_id=" + treeID,
+                    success: function (msg) {
+                    }
+                })
+            }
+            else {
+                alert("请先选择一个节点 !");
+            }
+        }
+        refLoad();
+    }
+
+    function updFun() {
+        if (treeID != null && treeID != "") {
+            $.ajax({
+                url: "../../queryOnePower.action",
+                type: "post",
+                data: "treeId=" + treeID,
+                success: function (d) {
+                    $("#p_name").val(JSON.parse(d).power_name);
+                    $("#p_id").html(JSON.parse(d).power_id);
+                }
+            })
+            $('#myModal').modal('show');
+        }
+        else {
+            alert("请先选择一个节点 !");
+        }
+    }
 
     function refLoad() {
         var treeObj = $.fn.zTree.getZTreeObj("pTree");
         treeObj.reAsyncChildNodes(null, "refresh");
     }
-
 
     var settings = {
         async: {

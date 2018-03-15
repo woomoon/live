@@ -7,7 +7,8 @@
 
 
     <select id="queryAllUser" resultType="java.util.Map">
-            SELECT u.user_id,u.user_name,u.user_account,u.user_time,d.dept_name FROM tb_user u LEFT JOIN tb_dept d on u.dept_id = d.dept_id where 1=1
+        SELECT u.user_id,u.user_name,u.user_account,u.user_time,d.dept_name FROM tb_user u LEFT JOIN tb_dept d on
+        u.dept_id = d.dept_id where 1=1 and isdel = 'n'
         <if test="user_name != null and user_name != ''">
             and u.user_name like '%${user_name}%'
         </if>
@@ -15,7 +16,8 @@
     </select>
 
     <select id="queryAllUserCount" resultType="int">
-        SELECT COUNT(u.user_id) FROM tb_user u LEFT JOIN tb_dept d on u.dept_id = d.dept_id where 1=1
+        SELECT COUNT(u.user_id) FROM tb_user u LEFT JOIN tb_dept d on u.dept_id = d.dept_id
+        where 1=1 and isdel = 'n'
         <if test="user_name != null and user_name != ''">
             and user_name like '%${user_name}%'
         </if>
@@ -33,10 +35,22 @@
         DELETE from tb_user_role where user_id = #{user_id}
     </delete>
 
-    <select id="user_login" resultType="java.util.Map">
-        SELECT user_id,user_name,user_account,user_time FROM tb_user where user_account = #{user_name} and user_pwd = #{user_pwd}
+    <select id="user_login" resultType="com.woomoon.entitys.UserEntity">
+        SELECT user_id,user_name,user_account,user_time FROM tb_user
+        where isdel = 'n' and user_account = #{user_name} and user_pwd = #{user_pwd}
     </select>
 
+    <insert id="addUser" parameterType="com.woomoon.entitys.UserEntity">
+        INSERT INTO TB_USER (user_name,user_account,user_pwd,user_time,dept_id,isdel) VALUES
+        (#{user_name},#{user_account},#{user_pwd},#{user_time},#{dept_id},#{isdel})
+    </insert>
 
+    <update id="delUser" parameterType="int">
+        update tb_user set isdel = 'y' where user_id = #{user_id}
+    </update>
+
+    <update id="updUser">
+        update tb_user set dept_id = #{dept_id} where user_id = #{user_id}
+    </update>
 
 </mapper>
