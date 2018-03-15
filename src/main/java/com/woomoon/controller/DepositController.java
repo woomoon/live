@@ -115,14 +115,9 @@ public class DepositController {
     //修改押金
     @RequestMapping("updateDeposit")
     @ResponseBody
-    public void updateDeposit(DepositEntity depositEntity){
-        depositService.updateDeposit(depositEntity);
-    }
-
-    //删除押金
-    @RequestMapping("deleteDeposit")
-    @ResponseBody
-    public void deleteDeposit(Integer deposit_id){
-        depositService.deleteDeposit(deposit_id);
+    public void updateDeposit(DepositEntity depositEntity,double record_mode,String record_type){
+        System.out.println(record_mode);
+        System.out.println(record_type);
+        depositService.updateDeposit(depositEntity,record_mode,record_type);
     }
 }

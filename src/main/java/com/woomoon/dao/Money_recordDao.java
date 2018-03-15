@@ -22,10 +22,4 @@ public interface Money_recordDao {
 
     //增加押金记录
     public void addMoney_record(Money_recordEntity money_recordEntity);
-
-    //修改押金记录
-    public void updateMoney_record(Money_recordEntity money_recordEntity);
-
-    //删除押金记录
-    public void deleteMoney_record(Integer record_id);
 }

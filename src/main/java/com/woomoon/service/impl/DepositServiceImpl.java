@@ -40,12 +40,7 @@ public class DepositServiceImpl implements DepositService{
     }
 
     @Override
-    public void updateDeposit(DepositEntity depositEntity) {
-        depositDao.updateDeposit(depositEntity);
-    }
-
-    @Override
-    public void deleteDeposit(Integer deposit_id) {
-        depositDao.deleteDeposit(deposit_id);
+    public void updateDeposit(DepositEntity depositEntity,double record_mode,String record_type) {
+        depositDao.updateDeposit(depositEntity,record_mode,record_type);
     }
 }

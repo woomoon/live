@@ -56,9 +56,6 @@
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -70,142 +67,6 @@
                 <div class="clearfix"></div>
             </div>
         </div>
-
-        <!--删除退回处方-->
-        <div class="modal fade" id="delete_record" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">系统消息</h4>
-                    </div>
-                    <div class="modal-body">
-                        <h3>确定要删除吗？</h3>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger "  v-on:click="deleteRecord()">确认删除</button>
-                        <button type="button" class="btn btn-success" data-dismiss="modal">取消删除</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--  增加信息   -->
-        <div class="modal fade" id="add_record" tabindex="-1" role="dialog"
-             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                            <h4 class="modal-title">增加押金记录</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <!--disabled="disabled" 隐藏文本框-->
-                            <div class="form-group">
-                                <label  class="control-label">押金ID:</label>
-                                <input type="text" class="form-control ordersId_update" id="add_deposit_id">
-                            </div>
-                            <div class="form-group">
-                                <label  class="control-label">退回处方ID:</label>
-                                <input type="text" class="form-control ordersId_update" id="add_out_id">
-                            </div>
-                            <div>
-                                <label class="control-label">操作用户：</label>
-                                <select id="add_user_id">
-                                    <option value="">请选择用户</option>
-                                    <option v-for="userValue in user_value" :value="userValue.user_id">{{userValue.user_name}}</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="control-label">操作时间：</label>
-                                <input id="add_time" type="text" class="form-control ordersId_update">
-                            </div>
-                            <div>
-                                <label class="control-label">类型：</label>
-                                <input id="add_type" type="text" class="form-control ordersId_update">
-                            </div>
-                            <div>
-                                <label class="control-label">交款方式：</label>
-                                <input id="add_mode" type="text" class="form-control ordersId_update">
-                            </div>
-                            <div class="form-group">
-                                <label  class="control-label">类型：</label>
-                                <input type="text" class="form-control ordersPrice_update"  id="add_remark">
-                                <span style="color: red;"></span></div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addRecord()">提交增加</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--  修改信息   -->
-        <div class="modal fade" id="update_record" tabindex="-1" role="dialog"
-             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" >修改押金记录</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <!--disabled="disabled" 隐藏文本框-->
-                            <div class="form-group">
-                                <label class="control-label" >记录ID：</label>
-                                <input type="text" class="form-control" id="update_record_id" disabled="disabled" v-model="update.record_id">
-                            </div>
-                            <div class="form-group">
-                                <label  class="control-label">押金ID:</label>
-                                <input type="text" class="form-control ordersId_update" id="update_deposit_id" v-model="update.deposit_id">
-                            </div>
-                            <div class="form-group">
-                                <label  class="control-label">退回处方ID:</label>
-                                <input type="text" class="form-control ordersId_update" id="update_out_id" v-model="update.out_id">
-                            </div>
-                            <div>
-                                <label class="control-label">操作用户：</label>
-                                <select id="update_user_id" v-model="update.user_id">
-                                    <option value="">请选择用户</option>
-                                    <option v-for="userValue in user_value" :value="userValue.user_id">{{userValue.user_name}}</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="control-label">操作时间：</label>
-                                <input id="update_time" type="text" class="form-control ordersId_update" v-model="update.record_time">
-                            </div>
-                            <div>
-                                <label class="control-label">类型：</label>
-                                <input id="update_type" type="text" class="form-control ordersId_update" v-model="update.record_type">
-                            </div>
-                            <div>
-                                <label class="control-label">交款方式：</label>
-                                <input id="update_mode" type="text" class="form-control ordersId_update" v-model="update.record_mode">
-                            </div>
-                            <div class="form-group">
-                                <label  class="control-label">备注：</label>
-                                <input type="text" class="form-control ordersPrice_update"  id="update_remark" v-model="update.record_remark">
-                                <span style="color: red;"></span></div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="updateRecord()">提交修改</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消修改</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 </div>
 
@@ -224,111 +85,7 @@
             page_num:1,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
-            delete_id:'',
-            user_value:{},
         },
-        methods:{
-            //删除
-            deleteID:function (record_id) {
-                $("#delete_record").modal("show");
-                record_list._data.delete_id=record_id;
-            },
-
-            deleteRecord:function () {
-                var record_id=record_list._data.delete_id;
-                $.ajax({
-                    url:'../../deleteMoney_record.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'record_id='+record_id,
-                    success:function (data) {
-                        if(data){
-                            alert("删除成功！");
-                        }
-                        $("#delete_record").find(".close").click();
-                        record_list._data.currentIndex=1;
-                        recordSum();
-                        queryAll();
-                    }
-                })
-            },
-
-            //增加
-            add:function () {
-                $("#add_record").modal("show");
-                queryprep_message();
-            },
-
-            addRecord:function () {
-                var deposit_id=$("#add_deposit_id").val();
-                var out_id=$("#add_out_id").val();
-                var user_id=$("#add_user_id").val();
-                var record_time=$("#add_time").val();
-                var record_type=$("#add_type").val();
-                var record_mode=$("#add_mode").val();
-                var record_remark=$("#add_remark").val();
-                $.ajax({
-                    url:'../../addMoney_record.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'deposit_id='+deposit_id+'&out_id='+out_id+'&user_id='+user_id+'&record_time='+record_time+"&record_type="+record_type+"&record_mode="+record_mode+"&record_remark="+record_remark,
-                    success:function (data) {
-                        if(data){
-                            alert("增加成功！");
-                        }
-//                       else{
-//                           alert("增加失败！");
-//                       }
-                        $("#add_record").find(".close").click();
-                        record_list._data.currentIndex=1;
-                        recordSum();
-                        queryAll();
-                    }
-                })
-            },
-
-            //修改
-            updateID:function (record_id) {
-                queryprep_message();
-                $.ajax({
-                    url:'../../queryOneMoney_record_ID.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'record_id='+record_id,
-                    success:function (data) {
-                        record_list._data.update=data;
-                    }
-                })
-                $("#update_record").modal("show");
-            },
-
-
-            updateRecord:function () {
-                var record_id=$("#update_record_id").val();
-                var deposit_id=$("#update_deposit_id").val();
-                var out_id=$("#update_out_id").val();
-                var user_id=$("#update_user_id").val();
-                var record_time=$("#update_time").val();
-                var record_type=$("#update_type").val();
-                var record_mode=$("#update_mode").val();
-                var record_remark=$("#update_remark").val();
-                    $.ajax({
-                        url:'../../updateMoney_record.action',
-                        dataType:'JSON',
-                        type:'post',
-                        data:'record_id='+record_id+'&deposit_id='+deposit_id+'&out_id='+out_id+'&user_id='+user_id+'&record_time='+record_time+"&record_type="+record_type+"&record_mode="+record_mode+"&record_remark="+record_remark,
-                        success:function (data) {
-                            if(data){
-                                alert("修改成功！");
-                            }
-                            $("#update_record").find(".close").click();
-                            record_list._data.currentIndex=1;
-                            recordSum();
-                            queryAll();
-                        }
-                    })
-            }
-        }
     });
 
     $(function () {
@@ -365,18 +122,6 @@
                 record_list._data.record_tr=data;
                 record_list._data.currentIndex=1;
                 recordSum();
-            }
-        })
-    }
-
-
-    //查询用户
-    function queryprep_message() {
-        $.ajax({
-            url:'../../queryUserValue.action',
-            dataType:'JSON',
-            success:function (data) {
-                record_list._data.user_value=data;
             }
         })
     }

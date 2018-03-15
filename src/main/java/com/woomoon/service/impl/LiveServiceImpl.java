@@ -20,6 +20,16 @@ public class LiveServiceImpl implements LiveService {
     }
 
     @Override
+    public List<Map<String, Object>> queryLive_Patient() {
+        return liveDao.queryLive_Patient();
+    }
+
+    @Override
+    public String queryOneLive() {
+        return liveDao.queryOneLive();
+    }
+
+    @Override
     public LiveEntity CountLive_pat(String pat_num) {
         return liveDao.CountLive_pat(pat_num);
     }

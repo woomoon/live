@@ -3,6 +3,7 @@ package com.woomoon.controller;
 import com.woomoon.entitys.LiveEntity;
 import com.woomoon.service.LiveService;
 import com.woomoon.service.PatientService;
+import com.woomoon.utils.Generate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,6 +70,9 @@ public class LiveController {
     @RequestMapping("addLive")
     @ResponseBody
     public void addLive(LiveEntity liveEntity){
+        String id=liveService.queryOneLive();
+        String live_name= Generate.testGenerate(id);
+        liveEntity.setLive_num(live_name);
         liveService.addLive(liveEntity);
     }
 

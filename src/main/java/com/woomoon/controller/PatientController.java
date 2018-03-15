@@ -37,23 +37,6 @@ public class PatientController {
         return maps;
     }
 
-
-
-
-    /**
-     * 查询所有+模糊查询病人
-     * String pat_num,String pat_name,String pat_birthday,Integer pat_sex,String pat_time,String pat_address,String pat_tel,String pat_occupaction
-     *      PatientEntity patientEntity=new PatientEntity();
-             patientEntity.setPat_num(pat_num);
-             patientEntity.setPat_name(pat_name);
-             patientEntity.setPat_birthday(pat_birthday);
-             patientEntity.setPat_sex(pat_sex);
-             patientEntity.setPat_time(pat_time);
-             patientEntity.setPat_address(pat_address);
-             patientEntity.setPat_tel(pat_tel);
-             patientEntity.setPat_occupaction(pat_occupaction);
-     */
-//    limit #{begin,jdbcType=Integer},#{end,jdbcType=Integer}
     @RequestMapping("queryAllPatient")
     @ResponseBody
     public List<Map<String, Object>> queryAllPatient(PatientEntity patientEntity,String pageIndex,String current_sum){

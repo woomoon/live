@@ -29,7 +29,7 @@
     </select>
 
     <select id="queryOnePatient" resultType="String">
-        SELECT * from tb_patient  order   by   pat_num   desc   limit   1
+        SELECT pat_num from tb_patient  order   by   pat_num   desc   limit   1
     </select>
 
     <select id="CountPatient" parameterType="String" resultType="int">

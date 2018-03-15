@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../../plugins/plugs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../plugins/UI/style/style.css">
+</head>
+
+<body>
+
+<!--控制出现位置-->
+<div id="outlive_list" style="margin-top: -40px" class="col-md-12">
+    <!--背景-->
+    <div class="widget" style="">
+        <!--数据表 上边框 搜索框-->
+        <div style="height: 60px;" class="widget-head">
+            <div style="margin-left: 30px;margin-top: 10px">
+                患者名字：<input id="pat_name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                处理医师名：<input id="user_name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" style="width: 100px"   onclick="dimquery()">查询</button>
+            </div>
+        </div>
+        <!--table-->
+        <div class="widget-content">
+            <!--数据内容-->
+            <table class="table table-striped table-bordered table-hover">
+                <!--字段名-->
+                <thead >
+                    <th>出院ID</th>
+                    <th>住院ID</th>
+                    <th>患者姓名</th>
+                    <th>出院时间</th>
+                    <th>主治医师是否同意</th>
+                    <th>处理医师名字</th>
+                    <th>出院医嘱</th>
+                    <th>出院情况</th>
+                </thead>
+                <!--数据行-->
+                <tbody>
+                <tr v-for="outlive in outlive_tr" >
+                    <td>{{outlive.outl_id}}</td>
+                    <td>{{outlive.live_num}}</td>
+                    <td>{{outlive.pat_name}}</td>
+                    <td>{{new Date(outlive.outl_time).toLocaleDateString()}}</td>
+                    <td>{{outlive.outl_apply}}</td>
+                    <td>{{outlive.user_name}}</td>
+                    <td>{{outlive.outl_remark}}</td>
+                    <td>{{outlive.outl_state}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <!--数据下边框，及分页栏 控制下边宽度-->
+            <div style="height: 70px;" class="widget-foot">
+                <div class="btn-group" role="group">
+                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
+                </div>
+                <ul class="pagination pull-right">
+                    <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
+                    <li><a class="paging">首页</a></li>
+                    <li><a class="paging">上一页</a></li>
+                    <li><a>{{currentIndex}}/{{sum}}</a></li>
+                    <li><a class="paging">下一页</a></li>
+                    <li><a class="paging">末页</a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <!--  出院   -->
+        <div class="modal fade" id="add_outlive" tabindex="-1" role="dialog"
+             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                            <h4 class="modal-title">出院</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!--disabled="disabled" 隐藏文本框-->
+                            <div>
+                                <label class="control-label">住院ID：</label>
+                                <select id="add_live_num">
+                                    <option value="">请选择患者</option>
+                                    <option v-for="lp in live_patient" :value="lp.live_num">{{lp.pat_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">主治医师是否同意：</label>
+                                <select id="add_outl_apply">
+                                    <option value="">请选择患者</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">处理医师：</label>
+                                <select id="add_user_id">
+                                    <option value="">请选择患者</option>
+                                    <option v-for="userValue in user_value" :value="userValue.user_id">{{userValue.user_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">出院医嘱：</label>
+                                <input id="add_outl_remark" type="text" class="form-control ordersId_update">
+                            </div>
+                            <div>
+                                <label class="control-label">出院情况：</label>
+                                <input id="add_outl_state" type="text" class="form-control ordersId_update">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addOutlive()">提交增加</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../plugins/plugs/js/vue.min.js"></script>
+<script src="../../../plugins/laydate/laydate.js"></script>
+
+<script>
+    var pageindex=1;
+    var outlive_list=new Vue({
+        el:"#outlive_list",
+        data:{
+            outlive_tr:{},
+            page_num:1,  //当前每页多少条
+            currentIndex:1, //当前在第几页
+            sum:'', //最大页码
+            live_patient:{},
+            user_value:{},
+        },
+        methods:{
+
+            //增加
+            add:function () {
+                $("#add_outlive").modal("show");
+                queryprep_message();
+                queryLive_Patient();
+            },
+
+            addOutlive:function () {
+                var live_num=$("#add_live_num").val();
+                var outl_time=new Date().toLocaleDateString();
+                var outl_apply=$("#add_outl_apply").val();
+                var user_id=$("#add_user_id").val();
+                var outl_remark=$("#add_outl_remark").val();
+                var outl_state=$("#add_outl_state").val();
+                $.ajax({
+                    url:'../../addOutlive.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'live_num='+live_num+"&outl_time="+outl_time+"&outl_apply="+outl_apply+"&user_id="+user_id+"&outl_remark="+outl_remark+"&outl_state="+outl_state,
+                    success:function () {
+                        $("#add_outlive").find(".close").click();
+                        outlive_list._data.currentIndex=1;
+                        liveSum();
+                        queryAll();
+                    }
+                })
+            },
+        }
+    });
+
+    $(function () {
+        queryAll();
+        liveSum();
+    });
+
+    //查询所有+分页
+    function queryAll(){
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../../queryAllOutlive.action',
+            dataType:'JSON',
+            type:'post',
+            data:'current_sum='+current_sum,
+            success:function (data) {
+                outlive_list._data.outlive_tr=data;
+            }
+        })
+    };
+
+    //模糊查询
+    function dimquery() {
+        outlive_list._data.page_num=1;
+        var pat_name=$("#pat_name").val();
+        var user_name=$("#user_name").val();
+        $.ajax({
+            url:'../../queryAllOutlive.action',
+            dataType:'JSON',
+            type:'post',
+            data:'pat_name='+pat_name+"&user_name="+user_name,
+            success:function (data) {
+                outlive_list._data.outlive_tr=data;
+                outlive_list._data.currentIndex=1;
+                liveSum();
+            }
+        })
+    };
+
+    //查询用户
+    function queryprep_message() {
+        $.ajax({
+            url:'../../queryUserValue.action',
+            dataType:'JSON',
+            success:function (data) {
+                outlive_list._data.user_value=data;
+            }
+        })
+    };
+
+    //查询所有的住院ID及患者姓名
+    function queryLive_Patient() {
+        $.ajax({
+            url:'../../queryLive_Patient.action',
+            dataType:'JSON',
+            success:function (data) {
+                outlive_list._data.live_patient=data;
+            }
+        })
+    };
+
+    //查询总页码
+    function liveSum() {
+        var pat_name=$("#pat_name").val();
+        var user_name=$("#user_name").val();
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../../OutliveSum.action',
+            dataType:'JSON',
+            type:'post',
+            data:'pat_name='+pat_name+"&user_name="+user_name+"&current_sum="+current_sum,
+            success:function (data) {
+                outlive_list._data.sum=data;
+            }
+        })
+    };
+
+    //分页1
+    $(function () {
+
+        //下拉事件5
+        $("select#page_number").change(function () {
+            var pat_name=$("#pat_name").val();
+            var user_name=$("#user_name").val();
+            var val=$(this).val();
+            pageindex=1;
+            $.ajax({
+                url:'../../queryAllOutlive.action',
+                dataType:'JSON',
+                type:'post',
+                data:'pat_name='+pat_name+"&user_name="+user_name+'&current_sum='+val,
+                success:function (data) {
+                    outlive_list._data.outlive_tr=data;
+                    outlive_list._data.currentIndex=1;
+                    liveSum();
+                }
+            })
+
+        });
+
+        //翻页
+        $(".paging").click(function () {
+            var pat_name=$("#pat_name").val();
+            var user_name=$("#user_name").val();
+            var pageName=$(this).text();
+            var sum=outlive_list._data.sum;
+            var current_sum=$("#page_number").val();
+
+            if(pageName=="首页"){
+                pageindex=1;
+            }
+            if(pageName=="上一页"){
+                if(pageindex!=1) {
+                    pageindex=pageindex-1;
+                }
+            }
+            if(pageName=="下一页"){
+                if(pageindex!=sum){
+                    pageindex=pageindex+1;
+                }
+            }
+            if(pageName=="末页"){
+                pageindex=sum;
+            }
+            outlive_list._data.currentIndex=pageindex;
+            $.ajax({
+                url:'../../queryAllOutlive.action',
+                dataType:'JSON',
+                type:'post',
+                data:'pat_name='+pat_name+"&user_name="+user_name+'&pageIndex='+pageindex+"&current_sum="+current_sum,
+                success:function (data) {
+                    outlive_list._data.outlive_tr=data;
+                }
+            })
+        })
+    })
+
+</script>
+</body>
+</html>
