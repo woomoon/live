@@ -10,7 +10,7 @@ import java.util.Map;
 public interface NursingDao {
 
 
-    //查询所有sadf、
+    //查询所有sadf
     public List<Map<String,Object>> queryAllNursing(@Param("N_entity") NursingEntity nursingEntity,@Param("begin") int begin,@Param("end")int end);
 
     //查询单个
