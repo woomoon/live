@@ -17,28 +17,33 @@ public class BedpositionServiceImpl implements BedpositionService{
 
 
     @Override
-    public List<Map<String, Object>> queryAllbedposition() {
-        return bedpositionDao.queryAllbedposition();
+    public List<Map<String, Object>> queryAllBedposition(BedpositionEntity bedpositionEntity,int begin,int end) {
+        return bedpositionDao.queryAllBedposition(bedpositionEntity,begin,end);
     }
 
     @Override
-    public Map<String, Object> queryOnebedposition(int bed_id) {
-        return bedpositionDao.queryOnebedposition(bed_id);
+    public Map<String, Object> queryOneBedposition(int bed_id) {
+        return bedpositionDao.queryOneBedposition(bed_id);
     }
 
     @Override
-    public void addbedposition(BedpositionEntity bedpositionEntity) {
-        bedpositionDao.addbedposition(bedpositionEntity);
+    public int BedpositionSum(BedpositionEntity bedpositionEntity) {
+        return bedpositionDao.BedpositionSum(bedpositionEntity);
     }
 
     @Override
-    public void delbedposition(int bed_id) {
-        bedpositionDao.delbedposition(bed_id);
+    public void addBedposition(BedpositionEntity bedpositionEntity) {
+        bedpositionDao.addBedposition(bedpositionEntity);
     }
 
     @Override
-    public void updbedposition(BedpositionEntity bedpositionEntity){
-        bedpositionDao.updbedposition(bedpositionEntity);
+    public void delBedposition(int bed_id) {
+        bedpositionDao.delBedposition(bed_id);
+    }
+
+    @Override
+    public void updBedposition(BedpositionEntity bedpositionEntity){
+        bedpositionDao.updBedposition(bedpositionEntity);
     }
 
 }

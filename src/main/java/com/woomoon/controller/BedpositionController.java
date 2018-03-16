@@ -20,47 +20,81 @@ public class BedpositionController {
 
     @RequestMapping("href_bedposition")
     public String href_bedposition(){
-        return "bedposition";
+        return "demo\\bedposition";
     }
 
 
     //查询所有
-    @RequestMapping("queryAllbedposition")
+    @RequestMapping("queryAllBedposition")
     @ResponseBody
-    public List<Map<String,Object>> queryAllbedposition(){
-        List<Map<String,Object>> query =bedpositionService.queryAllbedposition();
+    public List<Map<String,Object>> queryAllBedposition(BedpositionEntity bedpositionEntity,String pageIndex,String current_sum){
+
+        int begin=1;
+        int end=1;
+        int index=1;
+        if(current_sum!=null && current_sum !=""){
+            end=Integer.parseInt(current_sum);
+        }
+        if(pageIndex!=null && pageIndex!=""){
+            index=Integer.parseInt(pageIndex);
+        }
+        begin=(index-1)*end;
+        List<Map<String,Object>> query =bedpositionService.queryAllBedposition(bedpositionEntity,begin,end);
         return query;
     }
 
+     
 
     //查询单个
-    @RequestMapping("queryOnebedposition")
+    @RequestMapping("queryOneBedposition")
     @ResponseBody
-    public Map<String,Object> queryOnebedposition(int bed_id){
-        return bedpositionService.queryOnebedposition(bed_id);
+    public Map<String,Object> queryOneBedposition(int bed_id){
+        return bedpositionService.queryOneBedposition(bed_id);
     }
 
 
-    //增加
-    @RequestMapping("addbedposition")
+    /**
+     *查询病人的总数
+     * 查询页数
+     */
+    @RequestMapping("BedpositionSum")
     @ResponseBody
-    public void addbedposition(BedpositionEntity bedpositionEntity){
-        bedpositionService.addbedposition(bedpositionEntity);
+    public int BedpositionSum(BedpositionEntity bedpositionEntity,String current_sum){
+        int sum=bedpositionService.BedpositionSum(bedpositionEntity);
+        int end=1;
+        if(current_sum!=null && current_sum!=""){
+            end=Integer.parseInt(current_sum);
+        }
+        int page_count=sum/end;
+        if(sum%end!=0){
+            page_count++;
+        }
+        return page_count;
+    }
+
+
+
+    //增加
+    @RequestMapping("addBedposition")
+    @ResponseBody
+    public void addBedposition(BedpositionEntity bedpositionEntity){
+        bedpositionService.addBedposition(bedpositionEntity);
     }
 
 
     //删除
-    @RequestMapping("delbedposition")
+    @RequestMapping("delBedposition")
     @ResponseBody
-    public void delbedposition(int bed_id){
-        bedpositionService.delbedposition(bed_id);
+    public void delBedposition(int bed_id){
+        bedpositionService.delBedposition(bed_id);
     }
 
     //修改
-    @RequestMapping("updbedposition")
-    public String updbedposition(BedpositionEntity bedpositionEntity){
-        bedpositionService.updbedposition(bedpositionEntity);
-        return "index";
+    @RequestMapping("updBedposition")
+    @ResponseBody
+    public void updBedposition(BedpositionEntity bedpositionEntity){
+        bedpositionService.updBedposition(bedpositionEntity);
+
     }
 
 }

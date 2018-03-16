@@ -1,21 +1,19 @@
-package com.woomoon.dao;
+package com.woomoon.service;
 
 import com.woomoon.entitys.NursingEntity;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-@Repository
-public interface NursingDao {
 
+@Repository
+public interface NursingService {
 
     //查询所有
-    public List<Map<String,Object>> queryAllNursing(@Param("N_entity") NursingEntity nursingEntity,@Param("begin") int begin,@Param("end")int end);
+    public List<Map<String,Object>> queryAllNursing(NursingEntity nursingEntity,int begin,int end);
 
     //查询单个
     public List<Map<String,Object>> queryOneNursing(int nurse_id);
-
 
     //查询总数
     public int NursingSum(NursingEntity nursingEntity);

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.NursingDao">
+
+    <select id="queryAllNursing" resultType="java.util.Map">
+        select * from tb_nursing where 1=1
+        <if test="N_entity.nurse_id !=null and N_entity.nurse_id !=''">
+            AND nurse_id=#{N_entity.nurse_id}
+        </if>
+        <if test="N_entity.nurse_level !=null and N_entity.nurse_level !=''">
+            AND nurse_level=#{N_entity.nurse_level}
+        </if>
+            limit #{begin},#{end}
+    </select>
+
+
+    <select id="NursingSum" parameterType="com.woomoon.entitys.NursingEntity" resultType="Integer">
+        SELECT count(nurse_id) from tb_nursing where 1=1
+        <if test="nurse_id !=null and nurse_id !=''">
+            AND nurse_id=#{nurse_id}
+        </if>
+        <if test="nurse_level !=null and nurse_level !=''">
+            AND nurse_level=#{nurse_level}
+        </if>
+    </select>
+
+    <select id="queryOneNursing" parameterType="int" resultType="java.util.Map">
+        select * from tb_nursing where nurse_id=#{nurse_id}
+    </select>
+
+    <insert id="addNursing" parameterType="com.woomoon.entitys.NursingEntity">
+        insert into tb_nursing(nurse_level) values(#{nurse_level})
+    </insert>
+
+    <delete id="delNursing" parameterType="int">
+        delete from tb_nursing where nurse_id=#{nurse_id}
+    </delete>
+
+    <update id="updNursing" parameterType="com.woomoon.entitys.NursingEntity">
+        update tb_nursing set nurse_level=#{nurse_level} where nurse_id=#{nurse_id}
+    </update>
+
+</mapper>

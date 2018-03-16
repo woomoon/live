@@ -7,6 +7,20 @@ public class BedpositionEntity {
 	private String bed_type;
 	private Integer bed_grade;
 	private String bed_sex;
+	private String bed_state;
+
+
+
+	public String getBed_state() {
+		return bed_state;
+	}
+
+	public void setBed_state(String bed_state) {
+		this.bed_state = bed_state;
+	}
+
+
+
 
 	public Integer getBed_id() {
 		return bed_id;

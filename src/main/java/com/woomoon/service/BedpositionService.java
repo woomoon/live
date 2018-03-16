@@ -7,18 +7,21 @@ import java.util.Map;
 
 public interface BedpositionService {
 
-    //查询所有
-    public List<Map<String,Object>> queryAllbedposition();
+    //查询所有+模糊查询
+    public List<Map<String,Object>> queryAllBedposition(BedpositionEntity bedpositionEntity,int begin,int end);
 
     //查询单个
-    public Map<String,Object> queryOnebedposition(int bed_id);
+    public Map<String,Object> queryOneBedposition(int bed_id);
+
+    //查询总数
+    public int BedpositionSum(BedpositionEntity bedpositionEntity);
 
     //增加
-    public void addbedposition(BedpositionEntity bedpositionEntity);
+    public void addBedposition(BedpositionEntity bedpositionEntity);
 
     //删除
-    public void delbedposition(int bed_id);
+    public void delBedposition(int bed_id);
 
     //修改
-    public void updbedposition(BedpositionEntity bedpositionEntity);
+    public void updBedposition(BedpositionEntity bedpositionEntity);
 }
