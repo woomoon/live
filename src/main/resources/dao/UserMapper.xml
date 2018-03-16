@@ -15,6 +15,18 @@
         limit #{begin},#{end}
     </select>
 
+    <select id="queryAllMZ" resultType="com.woomoon.entitys.UserEntity">
+        SELECT user_id,user_name FROM tb_user WHERE user_id=(SELECT role_id FROM tb_role WHERE role_name="门诊医师")
+    </select>
+
+    <select id="queryAllZZ" resultType="com.woomoon.entitys.UserEntity">
+        SELECT user_id,user_name FROM tb_user WHERE user_id=(SELECT role_id FROM tb_role WHERE role_name="主治医师")
+    </select>
+
+    <select id="queryAllZR" resultType="com.woomoon.entitys.UserEntity">
+        SELECT user_id,user_name FROM tb_user WHERE user_id=(SELECT role_id FROM tb_role WHERE role_name="主任医师")
+    </select>
+
     <select id="queryAllUserCount" resultType="int">
         SELECT COUNT(u.user_id) FROM tb_user u LEFT JOIN tb_dept d on u.dept_id = d.dept_id
         where 1=1 and isdel = 'n'

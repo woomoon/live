@@ -15,6 +15,9 @@ public interface NursingService {
     //查询单个
     public List<Map<String,Object>> queryOneNursing(int nurse_id);
 
+    //查询所有护理等级
+    public List<NursingEntity> queryAllNursingB();
+
     //查询总数
     public int NursingSum(NursingEntity nursingEntity);
 

@@ -13,6 +13,15 @@ public interface UserMapper {
     //查询所有用户
     List<Map<String, String>> queryAllUser(@Param("user_name") String user_name, @Param("begin") int begin, @Param("end") int end);
 
+    //查询所有的门诊医师的名字
+    List<UserEntity> queryAllMZ();
+
+    //查询所有的主治医师的名字
+    List<UserEntity> queryAllZZ();
+
+    //查询所有的主任医师的名字
+    List<UserEntity> queryAllZR();
+
     //查询此表的总行数
     int queryAllUserCount(@Param("user_name") String user_name);
 

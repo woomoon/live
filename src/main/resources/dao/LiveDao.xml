@@ -19,7 +19,7 @@
     </select>
 
     <select id="queryLive_Patient" resultType="java.util.Map">
-        select l.live_num,p.pat_name FROM tb_live l
+        select l.live_num,p.pat_name,p.pat_sex FROM tb_live l
         INNER JOIN tb_patient p
         ON l.pat_num=p.pat_num
     </select>

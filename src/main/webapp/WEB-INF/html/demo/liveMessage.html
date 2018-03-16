@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../../plugins/plugs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../plugins/UI/style/style.css">
+</head>
+
+<body>
+
+<!--控制出现位置-->
+<div id="liveMessage_list" style="margin-top: -40px" class="col-md-12">
+    <!--背景-->
+    <div class="widget" style="">
+        <!--数据表 上边框 搜索框-->
+        <div style="height: 60px;" class="widget-head">
+            <div style="margin-left: 30px;margin-top: 10px">
+                住院ID：<input id="live_num" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                病床ID：<input id="bed_id" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                患者姓名：<input id="pat_name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" style="width: 100px"   onclick="dimquery()">查询</button>
+            </div>
+        </div>
+        <!--table-->
+        <div class="widget-content">
+            <!--数据内容-->
+            <table class="table table-striped table-bordered table-hover">
+                <!--字段名-->
+                <thead >
+                    <th>住院信息ID</th>
+                    <th>住院ID</th>
+                    <th>病床ID</th>
+                    <th>患者姓名</th>
+                    <th>入院时间</th>
+                    <th>护理等级</th>
+                    <th>科室</th>
+                    <th>入院状态</th>
+                    <th>入院方式</th>
+                    <th>转入名</th>
+                    <th>门诊医师</th>
+                    <th>主治医师</th>
+                    <th>主任医师</th>
+                    <th>入院诊断</th>
+                    <th>备注</th>
+                </thead>
+                <!--数据行-->
+                <tbody>
+                <tr v-for="liveMessage in liveMessage_tr" >
+                    <td>{{liveMessage.message_id}}</td>
+                    <td>{{liveMessage.live_num}}</td>
+                    <td>{{liveMessage.bed_id}}</td>
+                    <td>{{liveMessage.pat_name}}</td>
+                    <td>{{new Date(liveMessage.message_time).toLocaleDateString()}}</td>
+                    <td>{{liveMessage.nurse_level}}</td>
+                    <td>{{liveMessage.dept_name}}</td>
+                    <td>{{liveMessage.message_state}}</td>
+                    <td>{{liveMessage.message_type}}</td>
+                    <td>{{liveMessage.message_name}}</td>
+                    <td>{{liveMessage.user_name_1}}</td>
+                    <td>{{liveMessage.user_name_2}}</td>
+                    <td>{{liveMessage.user_name_3}}</td>
+                    <td>{{liveMessage.message_doctor}}</td>
+                    <td>{{liveMessage.message_remark}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <!--数据下边框，及分页栏 控制下边宽度-->
+            <div style="height: 70px;" class="widget-foot">
+                <div class="btn-group" role="group">
+                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
+                </div>
+                <ul class="pagination pull-right">
+                    <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
+                    <li><a class="paging">首页</a></li>
+                    <li><a class="paging">上一页</a></li>
+                    <li><a>{{currentIndex}}/{{sum}}</a></li>
+                    <li><a class="paging">下一页</a></li>
+                    <li><a class="paging">末页</a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <!--  入院   -->
+        <div class="modal fade" id="add_liveMessage" tabindex="-1" role="dialog"
+             aria-labelledby="exampleOrdersLabel" data-backdrop="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                            <h4 class="modal-title">入院</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!--disabled="disabled" 隐藏文本框-->
+                            <div>
+                                <label class="control-label">住院ID：</label>
+                                <select id="add_live_num">
+                                    <option value="">请选择患者</option>
+                                    <option v-for="lp in live_patient" :value="lp.live_num">{{lp.pat_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">病床ID：</label>
+                                <select id="add_bed_id">
+                                    <option value="">请选择病床</option>
+                                    <option v-for="bp in Bedposition_vl" :value="bp.bed_id">{{bp.bed_id}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">护理等级：</label>
+                                <select id="add_nurse_id">
+                                    <option value="">请选择护理等级</option>
+                                    <option v-for="nv in nursing_vl" :value="nv.nurse_id">{{nv.nurse_level}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">科室：</label>
+                                <select id="add_dept_id">
+                                    <option value="">请选择科室名称</option>
+                                    <option v-for="sc in Subclass" :value="sc.dept_id">{{sc.dept_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">入院状态：</label>
+                                <input id="add_message_state" type="text" class="form-control ordersId_update">
+                            </div>
+                            <div>
+                                <label class="control-label">入院方式：</label>
+                                <input id="add_message_type" type="text" class="form-control ordersId_update">
+                            </div>
+                            <div>
+                                <label class="control-label">转入名：</label>
+                                <input id="add_message_name" type="text" class="form-control ordersId_update">
+                            </div>
+                            <div>
+                                <label class="control-label">门诊医师：</label>
+                                <select id="add_user_id_3">
+                                    <option value="">请选择门诊医师</option>
+                                    <option v-for="mz in user_name_mz" :value="mz.user_id">{{mz.user_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">主治医师：</label>
+                                <select id="add_user_id_2">
+                                    <option value="">请选择主治医师</option>
+                                    <option v-for="zz in user_name_zz" :value="zz.user_id">{{zz.user_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">主任医师：</label>
+                                <select id="add_user_id_1">
+                                    <option value="">请选择主任医师</option>
+                                    <option v-for="zr in user_name_zr" :value="zr.user_id">{{zr.user_name}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="control-label">入院诊断：</label>
+                                <input id="add_message_doctor" type="text" class="form-control ordersId_update">
+                            </div>
+                            <div>
+                                <label class="control-label">入院诊断：</label>
+                                <input id="add_message_remark" type="text" class="form-control ordersId_update">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addLiveMessage()">提交增加</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
+<script src="../../../plugins/plugs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../plugins/plugs/js/vue.min.js"></script>
+<script src="../../../plugins/laydate/laydate.js"></script>
+
+<script>
+    var pageindex=1;
+    var liveMessage_list=new Vue({
+        el:"#liveMessage_list",
+        data:{
+            liveMessage_tr:{},
+            page_num:1,  //当前每页多少条
+            currentIndex:1, //当前在第几页
+            sum:'', //最大页码
+            sex:'',
+            live_patient:{},
+            Bedposition_vl:{},
+            nursing_vl:{},
+            Subclass:{},
+            user_name_mz:{},
+            user_name_zz:{},
+            user_name_zr:{},
+        },
+        methods:{
+
+            //增加12
+            add:function () {
+                $("#add_liveMessage").modal("show");
+                queryLive_Patient();
+                queryBedposition(liveMessage_list._data.sex);
+                queryNursing();
+                queryAllSubclass();
+                queryAllqueryAllMZ();
+                queryAllqueryAllZZ();
+                queryAllqueryAllZR();
+            },
+
+            addLiveMessage:function () {
+                var live_num=$("#add_live_num").val();
+                $.ajax({
+                    url:'../../querysex.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'live_num='+live_num,
+                    success:function (data) {
+                        liveMessage_list._data.sex=data;
+                    }
+                });
+                queryBedposition(liveMessage_list._data.sex);
+
+                var bed_id=$("#add_bed_id").val();
+                var message_time=new Date().toLocaleDateString();
+                var nurse_id=$("#add_nurse_id").val();
+                var dept_id=$("#add_dept_id").val();
+                var message_state=$("#add_message_state").val();
+                var message_type=$("#add_message_type").val();
+                var message_name=$("#add_message_name").val();
+                var user_id_3=$("#add_user_id_3").val();
+                var user_id_2=$("#add_user_id_2").val();
+                var user_id_1=$("#add_user_id_1").val();
+                var message_doctor=$("#add_message_doctor").val();
+                var message_remark=$("#add_message_remark").val();
+                $.ajax({
+                    url:'../../addLiveMessage.action',
+                    dataType:'JSON',
+                    type:'post',
+                    data:'live_num='+live_num+"&bed_id="+bed_id+"&message_time="+message_time+"&nurse_id="+nurse_id+"&dept_id="+dept_id+"&message_state="+message_state+"&message_type="+message_type+"&message_name="+message_name+"&user_id_3="+user_id_3+"&user_id_2="+user_id_2+"&user_id_1="+user_id_1+"&message_doctor="+message_doctor+"&message_remark="+message_remark,
+                    success:function () {
+                        $("#add_liveMessage").find(".close").click();
+                        liveMessage_list._data.currentIndex=1;
+                        liveMessageSum();
+                        queryAll();
+                    }
+                })
+            },
+        }
+    });
+
+    $(function () {
+        queryAll();
+        liveMessageSum();
+    });
+
+    //查询所有+分页
+    function queryAll(){
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../../queryAllLiveMessage.action',
+            dataType:'JSON',
+            type:'post',
+            data:'current_sum='+current_sum,
+            success:function (data) {
+                liveMessage_list._data.liveMessage_tr=data;
+            }
+        })
+    };
+
+    //模糊查询
+    function dimquery() {
+        liveMessage_list._data.page_num=1;
+        var live_num=$("#live_num").val();
+        var bed_id=$("#bed_id").val();
+        var pat_name=$("#pat_name").val();
+        $.ajax({
+            url:'../../queryAllLiveMessage.action',
+            dataType:'JSON',
+            type:'post',
+            data:'live_num='+live_num+"&bed_id="+bed_id+"&pat_name="+pat_name,
+            success:function (data) {
+                liveMessage_list._data.liveMessage_tr=data;
+                liveMessage_list._data.currentIndex=1;
+                liveMessageSum();
+            }
+        })
+    };
+
+    //查询所有的住院ID及患者姓名、性别
+    function queryLive_Patient() {
+        $.ajax({
+            url:'../../queryLive_Patient.action',
+            dataType:'JSON',
+            success:function (data) {
+                liveMessage_list._data.live_patient=data;
+            }
+        })
+    };
+
+    //查询所有的空床位
+    function queryBedposition(bed_sex) {
+        $.ajax({
+            url:'../../queryAllBedposition_sky.action',
+            dataType:'JSON',
+            type:'post',
+            data:'bed_sex='+bed_sex,
+            success:function (data) {
+                liveMessage_list._data.Bedposition_vl=data;
+            }
+        })
+    }
+
+    //查询所有护理等级
+    function queryNursing() {
+        $.ajax({
+            url:'../../queryAllNursingB.action',
+            dataType:'JSON',
+            success:function (data) {
+                liveMessage_list._data.nursing_vl=data;
+            }
+        })
+    };
+
+    //查询所有没有子类的科室
+    function queryAllSubclass() {
+        $.ajax({
+            url:'../../queryAllSubclass.action',
+            dataType:'JSON',
+            success:function (data) {
+               liveMessage_list._data.Subclass=data;
+            }
+        })
+    };
+
+    //查询所有的门诊医师的名字
+    function queryAllqueryAllMZ() {
+        $.ajax({
+            url:'../../queryAllMZ.action',
+            dataType:'JSON',
+            success:function(data){
+                liveMessage_list._data.user_name_mz=data;
+            }
+        })
+    };
+
+    //查询所有的主治医师的名字
+    function queryAllqueryAllZZ() {
+        $.ajax({
+            url:'../../queryAllZZ.action',
+            dataType:'JSON',
+            success:function(data){
+                liveMessage_list._data.user_name_zz=data;
+            }
+        })
+    };
+
+    //查询所有的主任医师的名字
+    function queryAllqueryAllZR() {
+        $.ajax({
+            url:'../../queryAllZR.action',
+            dataType:'JSON',
+            success:function(data){
+                liveMessage_list._data.user_name_zr=data;
+            }
+        })
+    };
+
+    //查询总页码
+    function liveMessageSum() {
+        var live_num=$("#live_num").val();
+        var bed_id=$("#bed_id").val();
+        var pat_name=$("#pat_name").val();
+        var current_sum=$("#page_number").val();
+        $.ajax({
+            url:'../../LiveMessageSum.action',
+            dataType:'JSON',
+            type:'post',
+            data:'live_num='+live_num+"&bed_id="+bed_id+"&pat_name="+pat_name+"&current_sum="+current_sum,
+            success:function (data) {
+                liveMessage_list._data.sum=data;
+            }
+        })
+    };
+
+    //分页1
+    $(function () {
+
+        //下拉事件5
+        $("select#page_number").change(function () {
+            var live_num=$("#live_num").val();
+            var bed_id=$("#bed_id").val();
+            var pat_name=$("#pat_name").val();
+            var val=$(this).val();
+            pageindex=1;
+            $.ajax({
+                url:'../../queryAllLiveMessage.action',
+                dataType:'JSON',
+                type:'post',
+                data:'live_num='+live_num+"&bed_id="+bed_id+"&pat_name="+pat_name+'&current_sum='+val,
+                success:function (data) {
+                    liveMessage_list._data.liveMessage_tr=data;
+                    liveMessage_list._data.currentIndex=1;
+                    liveMessageSum();
+                }
+            })
+
+        });
+
+        //翻页
+        $(".paging").click(function () {
+            var live_num=$("#live_num").val();
+            var bed_id=$("#bed_id").val();
+            var pat_name=$("#pat_name").val();
+            var pageName=$(this).text();
+            var sum=liveMessage_list._data.sum;
+            var current_sum=$("#page_number").val();
+
+            if(pageName=="首页"){
+                pageindex=1;
+            }
+            if(pageName=="上一页"){
+                if(pageindex!=1) {
+                    pageindex=pageindex-1;
+                }
+            }
+            if(pageName=="下一页"){
+                if(pageindex!=sum){
+                    pageindex=pageindex+1;
+                }
+            }
+            if(pageName=="末页"){
+                pageindex=sum;
+            }
+            liveMessage_list._data.currentIndex=pageindex;
+            $.ajax({
+                url:'../../queryAllLiveMessage.action',
+                dataType:'JSON',
+                type:'post',
+                data:'live_num='+live_num+"&bed_id="+bed_id+"&pat_name="+pat_name+'&pageIndex='+pageindex+"&current_sum="+current_sum,
+                success:function (data) {
+                    liveMessage_list._data.liveMessage_tr=data;
+                }
+            })
+        })
+    })
+
+</script>
+</body>
+</html>

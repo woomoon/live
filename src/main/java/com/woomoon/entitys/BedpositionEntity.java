@@ -9,19 +9,6 @@ public class BedpositionEntity {
 	private String bed_sex;
 	private String bed_state;
 
-
-
-	public String getBed_state() {
-		return bed_state;
-	}
-
-	public void setBed_state(String bed_state) {
-		this.bed_state = bed_state;
-	}
-
-
-
-
 	public Integer getBed_id() {
 		return bed_id;
 	}
@@ -37,6 +24,9 @@ public class BedpositionEntity {
 	public String getBed_sex() {
 		return bed_sex;
 	}
+	public String getBed_state() {
+		return bed_state;
+	}
 	public void setBed_id(Integer bed_id) {
 		this.bed_id = bed_id;
 	}
@@ -51,6 +41,9 @@ public class BedpositionEntity {
 	}
 	public void setBed_sex(String bed_sex) {
 		this.bed_sex = bed_sex;
+	}
+	public void setBed_state(String bed_state) {
+		this.bed_state = bed_state;
 	}
 
 

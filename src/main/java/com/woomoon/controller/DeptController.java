@@ -62,6 +62,13 @@ public class DeptController {
         return deptService.queryOneDept_ID(dept_id);
     }
 
+    //查询所有没有子类的科室
+    @RequestMapping("queryAllSubclass")
+    @ResponseBody
+    public List<DeptEntity> queryAllSubclass(){
+        return deptService.queryAllSubclass();
+    }
+
     //查询科室的总数
     @RequestMapping("DeptSum")
     @ResponseBody

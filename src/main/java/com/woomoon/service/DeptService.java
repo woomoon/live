@@ -19,6 +19,9 @@ public interface DeptService {
     //根据ID查询科室
     public DeptEntity queryOneDept_ID(Integer dept_id);
 
+    //查询所有没有子类的科室
+    public List<DeptEntity> queryAllSubclass();
+
     //查询科室的总数
     public int DeptSum(DeptEntity deptEntity);
 

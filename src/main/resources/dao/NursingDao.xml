@@ -16,6 +16,9 @@
             limit #{begin},#{end}
     </select>
 
+    <select id="queryAllNursingB" resultType="com.woomoon.entitys.NexusEntity">
+        SELECT nurse_id,nurse_level FROM tb_nursing
+    </select>
 
     <select id="NursingSum" parameterType="com.woomoon.entitys.NursingEntity" resultType="Integer">
         SELECT count(nurse_id) from tb_nursing where 1=1

@@ -13,6 +13,8 @@ public interface BedpositionDao {
     //查询所有
     public List<Map<String,Object>> queryAllBedposition(@Param("B_entity") BedpositionEntity bedpositionEntity,@Param("begin") int begin,@Param("end") int end);
 
+    //查询所有的空床位
+    public List<BedpositionEntity> queryAllBedposition_sky();
 
     //查询单个
     public Map<String,Object> queryOneBedposition(int bed_id);

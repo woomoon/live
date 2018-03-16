@@ -26,6 +26,11 @@ public class NursingServiceImpl implements NursingService{
     }
 
     @Override
+    public List<NursingEntity> queryAllNursingB() {
+        return nursingDao.queryAllNursingB();
+    }
+
+    @Override
     public int NursingSum(NursingEntity nursingEntity) {
         return nursingDao.NursingSum(nursingEntity);
     }

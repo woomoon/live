@@ -28,6 +28,10 @@
             limit #{begin},#{end}
     </select>
 
+    <select id="queryAllBedposition_sky" resultType="com.woomoon.entitys.BedpositionEntity">
+        SELECT bed_id FROM tb_bedposition WHERE bed_state="空床"
+    </select>
+
     <select id="BedpositionSum" resultType="int">
         select COUNT(*) from tb_bedposition where 1=1
         <if test="bed_id !=null and bed_id !=''">

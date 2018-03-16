@@ -22,6 +22,11 @@ public class BedpositionServiceImpl implements BedpositionService{
     }
 
     @Override
+    public List<BedpositionEntity> queryAllBedposition_sky() {
+        return bedpositionDao.queryAllBedposition_sky();
+    }
+
+    @Override
     public Map<String, Object> queryOneBedposition(int bed_id) {
         return bedpositionDao.queryOneBedposition(bed_id);
     }

@@ -43,7 +43,12 @@ public class BedpositionController {
         return query;
     }
 
-     
+    //查询所有的空床位
+    @RequestMapping("queryAllBedposition_sky")
+    @ResponseBody
+    public List<BedpositionEntity> queryAllBedposition_sky(){
+        return bedpositionService.queryAllBedposition_sky();
+    }
 
     //查询单个
     @RequestMapping("queryOneBedposition")

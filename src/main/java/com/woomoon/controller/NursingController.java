@@ -49,6 +49,13 @@ public class NursingController {
         return query;
     }
 
+    //查询所有护理等级
+    @RequestMapping("queryAllNursingB")
+    @ResponseBody
+    public List<NursingEntity> queryAllNursingB(){
+        return nursingService.queryAllNursingB();
+    }
+
 
     /*
     * 查询总数

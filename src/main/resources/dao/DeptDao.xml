@@ -25,6 +25,10 @@
         select * from tb_dept where dept_id = #{dept_id}
     </select>
 
+    <select id="queryAllSubclass" resultType="com.woomoon.entitys.DepositEntity">
+        SELECT dept_id,dept_name,isParent,dept_pid,dept_remark FROM tb_dept WHERE dept_id !=(SELECT dept_pid FROM tb_dept)
+    </select>
+
     <select id="DeptSum" parameterType="com.woomoon.entitys.DeptEntity" resultType="int">
         select COUNT(*) from tb_dept where 1=1
         <if test="dept_name !=null and dept_name !=''">

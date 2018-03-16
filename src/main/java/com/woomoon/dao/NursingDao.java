@@ -10,12 +10,14 @@ import java.util.Map;
 public interface NursingDao {
 
 
-    //查询所有sadf
+    //查询所有
     public List<Map<String,Object>> queryAllNursing(@Param("N_entity") NursingEntity nursingEntity,@Param("begin") int begin,@Param("end")int end);
 
     //查询单个
     public List<Map<String,Object>> queryOneNursing(int nurse_id);
 
+    //查询所有护理等级
+    public List<NursingEntity> queryAllNursingB();
 
     //查询总数
     public int NursingSum(NursingEntity nursingEntity);

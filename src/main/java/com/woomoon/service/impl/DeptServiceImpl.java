@@ -36,6 +36,11 @@ public class DeptServiceImpl implements DeptService{
     }
 
     @Override
+    public List<DeptEntity> queryAllSubclass() {
+        return deptDao.queryAllSubclass();
+    }
+
+    @Override
     public int DeptSum(DeptEntity deptEntity) {
         return deptDao.DeptSum(deptEntity);
     }

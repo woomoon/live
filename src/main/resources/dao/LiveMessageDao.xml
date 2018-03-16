@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.LiveMessageDao">
+
+    <select id="queryAllLiveMessage" resultType="java.util.Map">
+        select lm.message_id,lm.live_num,p.pat_name,lm.bed_id,lm.message_time,n.nurse_level,d.dept_name,lm.message_state,lm.message_type,lm.message_name,ua.user_name user_name_1,ub.user_name user_name_2,uc.user_name user_name_3,lm.message_doctor,lm.message_remark from tb_live_message lm
+        INNER JOIN tb_live l
+        ON lm.live_num=l.live_num
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num
+        INNER JOIN tb_nursing n
+        ON lm.nurse_id=n.nurse_id
+        INNER JOIN tb_dept d
+        ON lm.dept_id=d.dept_id
+        INNER JOIN tb_user ua
+        on ua.user_id = lm.user_id_1
+        INNER JOIN tb_user ub
+        on ub.user_id = lm.user_id_2
+        INNER JOIN tb_user uc
+        on uc.user_id = lm.user_id_3
+        where 1=1
+        <if test="lm_entity.live_num !=null and lm_entity.live_num !=''">
+             AND lm.live_num=#{lm_entity.live_num}
+        </if>
+        <if test="lm_entity.bed_id !=null and lm_entity.bed_id !=''">
+             AND lm.bed_id=#{lm_entity.bed_id}
+        </if>
+        <if test="pat_name !=null and pat_name !=''">
+             AND p.pat_name like '%${pat_name}%'
+        </if>
+             limit #{begin},#{end}
+    </select>
+
+    <select id="querysex" parameterType="String" resultType="String">
+        select l.live_num,p.pat_name,p.pat_sex FROM tb_live_message lm
+        INNER  JOIN tb_live l
+        ON lm.live_num=l.live_num
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num
+        where lm.live_num=l.live_num
+    </select>
+
+    <select id="LiveMessageSum" resultType="int">
+        select COUNT(lm.message_id) from tb_live_message lm
+        INNER JOIN tb_live l
+        ON lm.live_num=l.live_num
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num
+        where 1=1
+        <if test="lm_entity.live_num !=null and lm_entity.live_num !=''">
+            AND lm.live_num=#{lm_entity.live_num}
+        </if>
+        <if test="lm_entity.bed_id !=null and lm_entity.bed_id !=''">
+            AND lm.lm_entity.bed_id=#{lm_entity.bed_id}
+        </if>
+        <if test="pat_name !=null and pat_name !=''">
+            AND p.pat_name like '%${pat_name}%'
+        </if>
+    </select>
+
+    <insert id="addLiveMessage" parameterType="com.woomoon.entitys.Live_messageEntity" >
+            insert into tb_live_message(live_num,bed_id,message_time,nurse_id,dept_id,message_state,message_type,message_name,user_id_3,user_id_2,user_id_1,message_doctor,message_remark) values(#{live_num},#{bed_id},#{message_time},#{nurse_id},#{dept_id},#{message_state},#{message_type},#{message_name},#{user_id_3},#{user_id_2},#{user_id_1},#{message_doctor},#{message_remark})
+    </insert>
+</mapper>
