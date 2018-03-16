@@ -10,7 +10,7 @@ import java.util.Map;
 @Repository
 public interface LiveMessageDao {
 
-    //查询所有入院+分页
+    //查询所有入院+分页1
     public List<Map<String,Object>> queryAllLiveMessage(@Param("lm_entity")Live_messageEntity live_messageEntity,@Param("pat_name")String pat_name,@Param("begin") int begin, @Param("end") int end);
 
     //根据你选择的住院ID查询出病人的性别
