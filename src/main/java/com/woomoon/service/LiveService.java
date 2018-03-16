@@ -12,6 +12,12 @@ public interface LiveService {
     //查询所有住院+模糊查询
     public List<Map<String,Object>> queryAllLive( LiveEntity liveEntity, String pat_name, int begin, int end);
 
+    //查询所有的住院ID及患者姓名
+    public List<Map<String,Object>> queryLive_Patient();
+
+    //查询最后一个病人的ID
+    public String queryOneLive();
+
     //根据患者ID查询住院人是否存在
     public LiveEntity CountLive_pat(String pat_num);
 

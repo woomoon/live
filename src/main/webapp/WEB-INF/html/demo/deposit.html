@@ -41,8 +41,8 @@
                     <td>{{deposit.live_num}}</td>
                     <td>{{deposit.pat_name}}</td>
                     <td>{{deposit.deposit_money_do}}</td>
-                    <td><button v-on:click="addMoney(deposit.deposit_id)">充值押金</button>
-                        <button v-on:click="reduceMoney(deposit.deposit_id)">扣除押金</button></td>
+                    <td><button v-on:click="addMoney(deposit.deposit_id,deposit.deposit_money_do)">充值押金</button>
+                        <button v-on:click="reduceMoney(deposit.deposit_id,deposit.deposit_money_do)">扣除押金</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <!--  增加押金   -->
+        <!--  增加押金人   -->
         <div class="modal fade" id="add_deposit" tabindex="-1" role="dialog"
              aria-labelledby="exampleOrdersLabel" data-backdrop="false">
             <div class="modal-dialog" role="document">
@@ -111,8 +111,8 @@
             </div>
         </div>
 
-        <!--  增加押金   -->
-        <div class="modal fade" id="addMoney_deposit" tabindex="-1" role="dialog"
+        <!--  充值押金   -->
+        <div class="modal fade" id="Money_deposit" tabindex="-1" role="dialog"
              aria-labelledby="exampleOrdersLabel" data-backdrop="false">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -121,15 +121,11 @@
                                 aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title">增加押金</h4>
+                        <h4 class="modal-title">{{val}}</h4>
                     </div>
                     <div class="modal-body">
                         <form>
                             <!--disabled="disabled" 隐藏文本框-->
-                            <div>
-                                <label class="control-label">住院ID：</label>
-                                <input id="addMoney_live_num" type="text" class="form-control ordersId_update">
-                            </div>
                             <div class="form-group">
                                 <label  class="control-label">退回处方ID:</label>
                                 <input type="text" class="form-control ordersId_update" id="addMoney_out_id">
@@ -152,8 +148,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addMoneyDeposit()">提交增加</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="MoneyDeposit()">{{val}}</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
                 </div>
             </div>
@@ -179,6 +175,9 @@
             delete_id:'',
             count_live:0,
             user_value:{},
+            val:'',
+            did:'',
+            money:'',
         },
         methods:{
             //增加
@@ -193,7 +192,7 @@
                 //押金记录
                 var out_id=$("#add_out_id").val();
                 var user_id=$("#add_user_id").val();
-                var record_time=new Date().toLocaleDateString();;
+                var record_time=new Date().toLocaleDateString();
                 var record_type="充值";
                 var record_mode=$("#add_Money").val();
                 var record_remark=$("#add_remark").val();
@@ -267,10 +266,63 @@
             },
 
             //充值押金
-            addMony:function (deposit_id) {
+            addMoney:function (deposit_id,deposit_money_do) {
+                $("#Money_deposit").modal("show");
+                deposit_list._data.did=deposit_id;
+                deposit_list._data.money=deposit_money_do;
+                deposit_list._data.val="充值";
+                queryprep_message();
+            },
 
-            }
+            //扣除押金
+            reduceMoney:function (deposit_id,deposit_money_do) {
+                $("#Money_deposit").modal("show");
+                deposit_list._data.did=deposit_id;
+                deposit_list._data.money=deposit_money_do;
+                deposit_list._data.val="扣除";
+                queryprep_message();
+            },
 
+            MoneyDeposit:function () {
+                var deposit_id=deposit_list._data.did;
+                var deposit_money_do=deposit_list._data.money;
+                var out_id=$("#addMoney_out_id").val();
+                var user_id=$("#addMoney_user_id").val();
+                var record_time=new Date().toLocaleDateString();
+                var record_type=deposit_list._data.val;
+                var record_mode=$("#addMoney_Money").val();
+                var record_remark=$("#addMoney_remark").val();
+                alert(deposit_id);
+                alert(deposit_money_do);
+                alert(record_mode);
+                alert(record_type);
+                if(record_type=="扣除"&&deposit_money_do<record_mode){
+                    alert("余额不足，请及时充值！")
+                }else{
+                    $.ajax({
+                        url:'../../updateDeposit.action',
+                        dataType:'JSON',
+                        type:'post',
+                        data:'deposit_id='+deposit_id+"&deposit_money_do="+deposit_money_do+"&record_mode="+record_mode+"&record_type="+record_type,
+                        success:function (data) {
+                            if(data){
+                                alert("充值成功！")
+                            }
+                            $.ajax({
+                                url:'../../addMoney_record.action',
+                                dataType:'JSON',
+                                type:'post',
+                                data:'deposit_id='+deposit_id+'&out_id='+out_id + '&user_id='+user_id + '&record_time=' + record_time + "&record_type=" + record_type + "&record_mode=" + record_mode + "&record_remark=" + record_remark,
+                                success:function (data) {
+                                }
+                            })
+                            deposit_list._data.currentIndex=1;
+                            queryAll();
+                        }
+                    })
+                }
+                $("#Money_deposit").find(".close").click();
+            },
         }
     });
 

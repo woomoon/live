@@ -47,11 +47,13 @@
     </insert>
 
     <update id="updateDeposit" parameterType="com.woomoon.entitys.DepositEntity">
-        update tb_deposit set live_num=#{live_num},deposit_money_do=#{deposit_money_do} where deposit_id= #{deposit_id}
+        update tb_deposit set
+        <if test="record_type =='充值'">
+          deposit_money_do=#{d_entity.deposit_money_do}+#{record_mode}
+        </if>
+        <if test="record_type =='扣除'">
+          deposit_money_do=#{d_entity.deposit_money_do}-#{record_mode}
+        </if>
+        where deposit_id= #{d_entity.deposit_id}
     </update>
-
-    <delete id="deleteDeposit" parameterType="Integer">
-        delete from tb_deposit where deposit_id= #{deposit_id}
-    </delete>
-
 </mapper>

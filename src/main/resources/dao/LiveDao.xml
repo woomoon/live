@@ -18,16 +18,22 @@
              limit #{begin},#{end}
     </select>
 
+    <select id="queryLive_Patient" resultType="java.util.Map">
+        select l.live_num,p.pat_name FROM tb_live l
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num
+    </select>
+
+    <select id="queryOneLive" resultType="String">
+        SELECT live_num from tb_live ORDER BY live_num DESC limit 1
+    </select>
+
     <select id="CountLive_pat" parameterType="String" resultType="com.woomoon.entitys.LiveEntity">
         SELECT * FROM tb_live WHERE pat_num=#{pat_num}
     </select>
 
     <select id="CountLive" parameterType="String" resultType="int">
         select COUNT(*) from tb_live WHERE live_num=#{live_num}
-    </select>
-
-    <select id="queryOneLive" parameterType="String" resultType="com.woomoon.entitys.LiveEntity">
-        SELECT * from tb_live where deposit_id=#{deposit_id}
     </select>
 
     <select id="LiveSum" resultType="int">
@@ -43,7 +49,7 @@
     </select>
 
     <insert id="addLive" parameterType="com.woomoon.entitys.LiveEntity" >
-        insert into tb_live(pat_num,live_count) values(#{pat_num},#{live_count})
+        insert into tb_live(live_num,pat_num,live_count) values(#{live_num},#{pat_num},#{live_count})
     </insert>
 
     <update id="updateLive" parameterType="com.woomoon.entitys.LiveEntity">

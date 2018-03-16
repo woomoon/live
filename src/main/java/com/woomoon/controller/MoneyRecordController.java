@@ -18,9 +18,6 @@ public class MoneyRecordController {
     @Autowired
     MoneyRecordService moneyRecordService;
 
-    @Autowired
-    OutprepService outprepService;
-
     //测试
     @RequestMapping("href_Money_record")
     public String href_Money_record(){
@@ -70,18 +67,4 @@ public class MoneyRecordController {
         return page_count;
     }
 
-
-    //修改押金
-    @RequestMapping("updateMoney_record")
-    @ResponseBody
-    public void updateMoney_record(Money_recordEntity money_recordEntity){
-        moneyRecordService.updateMoney_record(money_recordEntity);
-    }
-
-    //删除押金
-    @RequestMapping("deleteMoney_record")
-    @ResponseBody
-    public void deleteMoney_record(Integer record_id){
-        moneyRecordService.deleteMoney_record(record_id);
-    }
 }

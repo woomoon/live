@@ -21,10 +21,4 @@ public interface MoneyRecordService {
 
     //增加押金
     public void addMoney_record(Money_recordEntity money_recordEntity);
-
-    //修改押金
-    public void updateMoney_record(Money_recordEntity money_recordEntity);
-
-    //删除押金
-    public void deleteMoney_record(Integer record_id);
 }

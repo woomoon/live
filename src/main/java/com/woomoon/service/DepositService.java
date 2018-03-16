@@ -25,8 +25,5 @@ public interface DepositService {
     public void addDeposit(DepositEntity depositEntity);
 
     //修改押金
-    public void updateDeposit(DepositEntity depositEntity);
-
-    //删除押金
-    public void deleteDeposit(Integer deposit_id);
+    public void updateDeposit(DepositEntity depositEntity,double record_mode,String record_type);
 }

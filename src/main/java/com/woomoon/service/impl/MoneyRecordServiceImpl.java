@@ -35,14 +35,4 @@ public class MoneyRecordServiceImpl implements MoneyRecordService{
     public void addMoney_record(Money_recordEntity money_recordEntity) {
         money_recordDao.addMoney_record(money_recordEntity);
     }
-
-    @Override
-    public void updateMoney_record(Money_recordEntity money_recordEntity) {
-        money_recordDao.updateMoney_record(money_recordEntity);
-    }
-
-    @Override
-    public void deleteMoney_record(Integer record_id) {
-        money_recordDao.deleteMoney_record(record_id);
-    }
 }

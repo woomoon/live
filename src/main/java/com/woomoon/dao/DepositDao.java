@@ -25,8 +25,6 @@ public interface DepositDao {
     public void addDeposit(DepositEntity depositEntity);
 
     //修改押金
-    public void updateDeposit(DepositEntity depositEntity);
+    public void updateDeposit(@Param("d_entity") DepositEntity depositEntity,@Param("record_mode") double record_mode,@Param("record_type")String record_type);
 
-    //删除押金
-    public void deleteDeposit(Integer deposit_id);
 }

@@ -57,13 +57,4 @@
     <insert id="addMoney_record" parameterType="com.woomoon.entitys.Money_recordEntity" >
         insert into tb_money_record(deposit_id,out_id,user_id,record_time,record_type,record_mode,record_remark) values(#{deposit_id},#{out_id},#{user_id},#{record_time},#{record_type},#{record_mode},#{record_remark})
     </insert>
-
-    <update id="updateMoney_record" parameterType="com.woomoon.entitys.Money_recordEntity">
-        update tb_money_record set deposit_id=#{deposit_id},out_id=#{out_id},user_id=#{user_id},record_time=#{record_time},record_type=#{record_type},record_mode=#{record_mode},record_remark=#{record_remark} where record_id= #{record_id}
-    </update>
-
-    <delete id="deleteMoney_record" parameterType="Integer">
-        delete from tb_money_record where record_id= #{record_id}
-    </delete>
-
 </mapper>

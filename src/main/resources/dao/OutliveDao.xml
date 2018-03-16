@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.woomoon.dao.OutliveDao">
+
+    <select id="queryAllOutlive" resultType="java.util.Map">
+        select ol.outl_id,ol.live_num,p.pat_name,ol.outl_time,ol.outl_apply,u.user_name,ol.outl_remark,ol.outl_state from tb_outlive ol
+        INNER JOIN tb_user u
+        ON ol.user_id=u.user_id
+        INNER JOIN tb_live l
+        ON ol.live_num=l.live_num
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num
+        where 1=1
+        <if test="user_name !=null and user_name !=''">
+             AND u.user_name='%#{user_name}%'
+        </if>
+        <if test="pat_name !=null and pat_name !=''">
+             AND p.pat_name like '%${pat_name}%'
+        </if>
+             limit #{begin},#{end}
+    </select>
+
+    <select id="OutliveSum" resultType="int">
+        select COUNT(*) from  tb_outlive ol
+        INNER JOIN tb_user u
+        ON ol.user_id=u.user_id
+        INNER JOIN tb_live l
+        ON ol.live_num=l.live_num
+        INNER JOIN tb_patient p
+        ON l.pat_num=p.pat_num
+        where 1=1
+        <if test="user_name !=null and user_name !=''">
+            AND u.user_name='%#{user_name}%'
+        </if>
+        <if test="pat_name !=null and pat_name !=''">
+            AND p.pat_name like '%${pat_name}%'
+        </if>
+    </select>
+
+    <insert id="addOutlive" parameterType="com.woomoon.entitys.OutliveEntity" >
+            insert into tb_outlive(live_num,outl_time,outl_apply,user_id,outl_remark,outl_state) values(#{live_num},#{outl_time},#{outl_apply},#{user_id},#{outl_remark},#{outl_state})
+    </insert>
+</mapper>
