@@ -201,7 +201,7 @@
             ID:'',
             prem_tr:{},
             update:{},     //修改的数据
-            page_num:1,  //当前每页多少条
+            page_num:3,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
             delete_id:'',
@@ -339,7 +339,7 @@
         })
     };
 
-    //模糊查询
+    //模糊查询+分页
     function dimquery() {
         prem_list._data.page_num=1;
         var prep_id=$("#prep_id").val();
@@ -376,6 +376,7 @@
         var drugs_name=$("#drugs_name").val();
         var prem_num=$("#num").val();
         var current_sum=$("#page_number").val();
+        alert(current_sum);
         $.ajax({
             url:'../../Prep_MessageSum.action',
             dataType:'JSON',
