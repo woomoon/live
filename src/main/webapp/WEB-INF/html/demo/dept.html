@@ -54,6 +54,9 @@
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
+                <!--<div class="btn-group" role="group">-->
+                    <!--<button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>-->
+                <!--</div>-->
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -202,7 +205,7 @@
             delete_id:'',
         },
         methods:{
-            //删除
+//            //删除
             deleteDept:function () {
                 var dept_id=dept_list._data.delete_id;
                 $.ajax({
@@ -235,7 +238,7 @@
                 })
             },
 
-            //增加
+//            //增加
             addDept:function () {
                 var dept_name=$("#add_name").val();
                 var isParent=$("input[name='add_isParent']:checked").val();
@@ -258,7 +261,7 @@
                 })
             },
 
-            //修改
+//            //修改
             updateDept:function () {
                 var dept_id=$("#update_id").val();
                 var dept_name=$("#update_name").val();
@@ -271,7 +274,7 @@
                     type:'post',
                     data:'dept_id='+dept_id,
                     success:function (data) {
-                        if(data!=0){
+                        if(data==0){
                             $.ajax({
                                 url:'../../updateDept.action',
                                 dataType:'JSON',
