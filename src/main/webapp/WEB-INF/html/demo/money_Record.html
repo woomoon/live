@@ -109,15 +109,16 @@
 
     //模糊查询
     function dimquery() {
-        record_list._data.page_num=1;
+        record_list._data.page_num=3;
         var out_id=$("#out_id").val();
         var user_name=$("#user_name").val();
         var pat_name=$("#pat_name").val();
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../../queryAllMoney_record.action',
             dataType:'JSON',
             type:'post',
-            data:'out_id='+out_id+"&user_name="+user_name+"&pat_name="+pat_name,
+            data:'out_id='+out_id+"&user_name="+user_name+"&pat_name="+pat_name+'&current_sum='+current_sum,
             success:function (data) {
                 record_list._data.record_tr=data;
                 record_list._data.currentIndex=1;

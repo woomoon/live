@@ -365,11 +365,12 @@
         var prep_id=$("#prep_id").val();
         var user_name=$("#user_name").val();
         var out_result=$("#result").val();
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../../queryAllOutprep.action',
             dataType:'JSON',
             type:'post',
-            data:'prep_id='+prep_id+"&out_result="+out_result+"&user_name="+user_name,
+            data:'prep_id='+prep_id+"&out_result="+out_result+"&user_name="+user_name+'&current_sum='+current_sum,
             success:function (data) {
                 outprep_list._data.outprep_tr=data;
                 outprep_list._data.currentIndex=1;

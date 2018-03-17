@@ -220,7 +220,7 @@
             ID:'',
             patient_tr:[],
             update:{},     //修改的数据
-            page_num:1,  //当前每页多少条
+            page_num:3,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
         },
@@ -338,18 +338,19 @@
 
     //模糊查询
     function dimquery() {
-        patient_list._data.page_num=1;
+        patient_list._data.page_num=3;
         var pat_num=$("#pid").val();
         var pat_name=$("#name").val();
         var pat_sex=$("#sex").val();
         var pat_birthday=$("#test1").val();
         var pat_time=$("#test2").val();
         var pat_tel=$("#phone").val();
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../../../queryAllPatient.action',
             dataType:'JSON',
             type:'post',
-            data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel,
+            data:'pat_num='+pat_num+'&pat_name='+pat_name+'&pat_birthday='+pat_birthday+'&pat_sex='+pat_sex+'&pat_time='+pat_time+'&pat_tel='+pat_tel+'&current_sum='+current_sum,
             success:function (data) {
                 patient_list._data.patient_tr=data;
                 patient_list._data.currentIndex=1;

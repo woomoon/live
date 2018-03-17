@@ -341,15 +341,16 @@
 
     //模糊查询+分页
     function dimquery() {
-        prem_list._data.page_num=1;
+        prem_list._data.page_num=3;
         var prep_id=$("#prep_id").val();
         var drugs_name=$("#drugs_name").val();
         var prem_num=$("#num").val();
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../../queryAllPrep_Message.action',
             dataType:'JSON',
             type:'post',
-            data:'prep_id='+prep_id+"&prem_num="+prem_num+"&drugs_name="+drugs_name,
+            data:'prep_id='+prep_id+"&prem_num="+prem_num+"&drugs_name="+drugs_name+'&current_sum='+current_sum,
             success:function (data) {
                 prem_list._data.prem_tr=data;
                 prem_list._data.currentIndex=1;
@@ -376,7 +377,6 @@
         var drugs_name=$("#drugs_name").val();
         var prem_num=$("#num").val();
         var current_sum=$("#page_number").val();
-        alert(current_sum);
         $.ajax({
             url:'../../Prep_MessageSum.action',
             dataType:'JSON',

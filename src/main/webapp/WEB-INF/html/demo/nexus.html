@@ -296,16 +296,17 @@
 
     //模糊查询
     function dimquery() {
-        nexus_list._data.page_num=1;
+        nexus_list._data.page_num=3;
         var pat_num=$("#pid").val();
         var nexus_nickname=$("#name").val();
         var nexus_type=$("#relation").val();
         var nexus_tel=$("#phone").val();
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../../queryAllNexus.action',
             dataType:'JSON',
             type:'post',
-            data:'pat_num='+pat_num+'&nexus_nickname='+nexus_nickname+'&nexus_type='+nexus_type+'&nexus_tel='+nexus_tel,
+            data:'pat_num='+pat_num+'&nexus_nickname='+nexus_nickname+'&nexus_type='+nexus_type+'&nexus_tel='+nexus_tel+'&current_sum='+current_sum,
             success:function (data) {
                 nexus_list._data.nexus_tr=data;
                 nexus_list._data.currentIndex=1;

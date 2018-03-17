@@ -283,7 +283,7 @@
 
     //模糊查询
     function dimquery() {
-        nursing_list._data.page_num=1;
+        nursing_list._data.page_num=3;
         var nurse_id=$("#nurse_id").val();
         var nurse_level=$("#nurse_level").val();
         var current_sum=$("#page_number").val();
@@ -291,7 +291,7 @@
             url:'../../../queryAllNursing.action',
             dataType:'JSON',
             type:'post',
-            data:'nurse_id='+nurse_id+'&nurse_level='+nurse_level,
+            data:'nurse_id='+nurse_id+'&nurse_level='+nurse_level+'&current_sum='+current_sum,
             success:function (data) {
                 nursing_list._data.nursing_tr=data;
                 nursing_list._data.currentIndex=1;

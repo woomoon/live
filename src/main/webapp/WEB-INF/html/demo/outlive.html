@@ -211,11 +211,12 @@
         outlive_list._data.page_num=1;
         var pat_name=$("#pat_name").val();
         var user_name=$("#user_name").val();
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../../queryAllOutlive.action',
             dataType:'JSON',
             type:'post',
-            data:'pat_name='+pat_name+"&user_name="+user_name,
+            data:'pat_name='+pat_name+"&user_name="+user_name+'&current_sum='+current_sum,
             success:function (data) {
                 outlive_list._data.outlive_tr=data;
                 outlive_list._data.currentIndex=1;

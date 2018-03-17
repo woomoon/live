@@ -293,15 +293,16 @@
 
     //模糊查询
     function dimquery() {
-        liveMessage_list._data.page_num=1;
+        liveMessage_list._data.page_num=3;
         var live_num=$("#live_num").val();
         var bed_id=$("#bed_id").val();
         var pat_name=$("#pat_name").val();
+        var current_sum=$("#page_number").val();
         $.ajax({
             url:'../../queryAllLiveMessage.action',
             dataType:'JSON',
             type:'post',
-            data:'live_num='+live_num+"&bed_id="+bed_id+"&pat_name="+pat_name,
+            data:'live_num='+live_num+"&bed_id="+bed_id+"&pat_name="+pat_name+'&current_sum='+current_sum,
             success:function (data) {
                 liveMessage_list._data.liveMessage_tr=data;
                 liveMessage_list._data.currentIndex=1;
