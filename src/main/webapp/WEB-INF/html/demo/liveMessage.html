@@ -247,6 +247,14 @@
                     type:'post',
                     data:'live_num='+live_num+"&bed_id="+bed_id+"&message_time="+message_time+"&nurse_id="+nurse_id+"&dept_id="+dept_id+"&message_state="+message_state+"&message_type="+message_type+"&message_name="+message_name+"&user_id_3="+user_id_3+"&user_id_2="+user_id_2+"&user_id_1="+user_id_1+"&message_doctor="+message_doctor+"&message_remark="+message_remark,
                     success:function () {
+                        $.ajax({
+                            url:'../../updBedposition.action',
+                            dataType:'JSON',
+                            type:'post',
+                            data:'bed_state=是',
+                            success:function () {
+                            }
+                        })
                         $("#add_liveMessage").find(".close").click();
                         liveMessage_list._data.currentIndex=1;
                         liveMessageSum();
