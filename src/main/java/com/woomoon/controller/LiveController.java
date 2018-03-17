@@ -62,8 +62,17 @@ public class LiveController {
     //查询住院的总数+模糊查询
     @RequestMapping("LiveSum")
     @ResponseBody
-    public int LiveSum(LiveEntity liveEntity, String pat_name){
-        return liveService.LiveSum(liveEntity,pat_name);
+    public int LiveSum(LiveEntity liveEntity, String pat_name,String current_sum){
+        int sum=liveService.LiveSum(liveEntity,pat_name);
+        int end=1;
+        if(current_sum!=null&&current_sum!=""){
+            end=Integer.parseInt(current_sum);
+        }
+        int page_count=sum/end;
+        if(sum%end!=0){
+            page_count++;
+        }
+        return page_count;
     }
 
     //增加住院
