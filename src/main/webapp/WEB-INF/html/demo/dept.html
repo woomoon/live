@@ -20,6 +20,11 @@
                 科室名称：<input id="name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
             </div>
+            <div class="btn-group" role="group" style="margin-left: 390px;margin-top: -55px;">
+                <!--<button onclick="addFun()" type="button" class="btn btn-default">添加</button>-->
+                <!--<button onclick="delFun()" type="button" class="btn btn-default">删除</button>-->
+                <!--<button onclick="updFun()" type="button" class="btn btn-default">修改</button>-->
+            </div>
         </div>
         <!--table-->
         <div class="widget-content">
@@ -32,26 +37,25 @@
                     <th>是否为父目录</th>
                     <th>科室父ID</th>
                     <th>备注</th>
-                    <th>操作</th>
                 </thead>
                 <!--数据行-->
                 <tbody>
                 <tr v-for="dept in dept_tr">
-                    <td>{{dept.dept_id}}</td>
+                    <td><button type="button" class="btn btn-default btn-xs" v-on:click="valueID(dept.dept_id)">
+                        {{dept.dept_id}}
+                    </button></td>
                     <td>{{dept.dept_name}}</td>
                     <td>{{dept.isParent}}</td>
                     <td>{{dept.dept_pid}}</td>
                     <td>{{dept.dept_remark}}</td>
-                    <td><button v-on:click="updateID(dept.dept_id)">修改</button>
-                        <button v-on:click="deleteID(dept.dept_id)">删除</button></td>
                 </tr>
                 </tbody>
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
+                <!--<div class="btn-group" role="group">-->
+                    <!--<button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>-->
+                <!--</div>-->
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -190,20 +194,21 @@
     var dept_list=new Vue({
         el:"#dept_list",
         data:{
+            ID:'',
             dept_tr:[],
             update:{},     //修改的数据
-            page_num:1,  //当前每页多少条
+            page_num:3,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
             isparent_tr:{},
             delete_id:'',
         },
         methods:{
-            //删除
-            deleteID:function (dept_id) {
-                $("#delete_dept").modal("show");
-                dept_list._data.delete_id=dept_id;
-            },
+//            //删除
+//            deleteID:function (dept_id) {
+//                $("#delete_dept").modal("show");
+//                dept_list._data.delete_id=dept_id;
+//            },
 
             deleteDept:function () {
                 var dept_id=dept_list._data.delete_id;
@@ -213,7 +218,7 @@
                     type:'post',
                     data:'dept_id='+dept_id,
                     success:function (data) {
-                        if(data!=0){
+                        if(data ==0){
                             $.ajax({
                                 url:'../../deleteDept.action',
                                 dataType:'JSON',
@@ -230,18 +235,18 @@
                             alert("该父类下有子类，不能进行删除！");
                         }
                         $("#delete_dept").find(".close").click();
-                        dept_id._data.currentIndex=1;
+                        dept_list._data.currentIndex=1;
                         DeptSum();
                         queryAll();
                     }
                 })
             },
 
-            //增加
-            add:function () {
-                $("#add_dept").modal("show");
-                query();
-            },
+//            //增加
+//            add:function () {
+//                $("#add_dept").modal("show");
+//                query();
+//            },
 
             addDept:function () {
                 var dept_name=$("#add_name").val();
@@ -257,9 +262,6 @@
                         if(data){
                             alert("增加成功！");
                         }
-//                       else{
-//                           alert("增加失败！");
-//                       }
                         $("#add_dept").find(".close").click();
                         dept_list._data.currentIndex=1;
                         DeptSum();
@@ -268,20 +270,20 @@
                 })
             },
 
-            //修改
-            updateID:function (dept_id) {
-                $.ajax({
-                    url:'../../queryOneDept_ID.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'dept_id='+dept_id,
-                    success:function (data) {
-                        dept_list._data.update=data;
-                    }
-                })
-                $("#update_dept").modal("show");
-                query();
-            },
+//            //修改
+//            updateID:function (dept_id) {
+//                $.ajax({
+//                    url:'../../queryOneDept_ID.action',
+//                    dataType:'JSON',
+//                    type:'post',
+//                    data:'dept_id='+dept_id,
+//                    success:function (data) {
+//                        dept_list._data.update=data;
+//                    }
+//                })
+//                $("#update_dept").modal("show");
+//                query();
+//            },
 
 
             updateDept:function () {
@@ -296,7 +298,7 @@
                     type:'post',
                     data:'dept_id='+dept_id,
                     success:function (data) {
-                        if(data!=0){
+                        if(data==0){
                             $.ajax({
                                 url:'../../updateDept.action',
                                 dataType:'JSON',
@@ -322,10 +324,51 @@
     });
 
     $(function () {
+
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=9",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
+
+
         queryAll();
         DeptSum();
     });
 
+
+    function valueID(id) {
+        dept_list._data.ID=id;
+    }
+
+    function addFun() {
+        $("#add_dept").modal("show");
+        query();
+    }
+
+    function updFun() {
+        $.ajax({
+            url:'../../queryOneDept_ID.action',
+            dataType:'JSON',
+            type:'post',
+            data:'dept_id='+dept_list._data.ID,
+            success:function (data) {
+                dept_list._data.update=data;
+            }
+        })
+        $("#update_dept").modal("show");
+        query();
+    }
+
+    function delFun() {
+        $("#delete_dept").modal("show");
+        dept_list._data.delete_id=dept_list._data.ID;
+    }
 
     //查询所有
     function query() {
