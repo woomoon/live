@@ -229,6 +229,7 @@
             addDrugs:function () {
                 var drugs_name=$("#add_name").val();
                 var drugs_is=$("input[name='add_is']:checked").val();
+                var drugs_type=$("#add_type").val();
                 var drugs_money_one=$("#add_money_one").val();
                 $.ajax({
                     url:'../../addDrugs.action',

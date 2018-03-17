@@ -68,9 +68,6 @@
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -190,7 +187,7 @@
         el:"#liveMessage_list",
         data:{
             liveMessage_tr:{},
-            page_num:1,  //当前每页多少条
+            page_num:3,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
             sex:'',
@@ -205,17 +202,6 @@
         methods:{
 
             //增加12
-            add:function () {
-                $("#add_liveMessage").modal("show");
-                queryLive_Patient();
-                queryBedposition(liveMessage_list._data.sex);
-                queryNursing();
-                queryAllSubclass();
-                queryAllqueryAllMZ();
-                queryAllqueryAllZZ();
-                queryAllqueryAllZR();
-            },
-
             addLiveMessage:function () {
                 var live_num=$("#add_live_num").val();
                 $.ajax({
@@ -266,9 +252,30 @@
     });
 
     $(function () {
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=9",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
         queryAll();
         liveMessageSum();
     });
+
+    function addFun() {
+        $("#add_liveMessage").modal("show");
+        queryLive_Patient();
+        queryBedposition(liveMessage_list._data.sex);
+        queryNursing();
+        queryAllSubclass();
+        queryAllqueryAllMZ();
+        queryAllqueryAllZZ();
+        queryAllqueryAllZR();
+    }
 
     //查询所有+分页
     function queryAll(){

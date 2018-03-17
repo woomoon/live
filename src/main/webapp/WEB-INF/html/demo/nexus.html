@@ -23,6 +23,11 @@
                 电话号码：<input id="phone" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
             </div>
+            <div class="btn-group" role="group" style="margin-left: 390px;margin-top: -55px;">
+                <!--<button onclick="addFun()" type="button" class="btn btn-default">添加</button>-->
+                <!--<button onclick="delFun()" type="button" class="btn btn-default">删除</button>-->
+                <!--<button onclick="updFun()" type="button" class="btn btn-default">修改</button>-->
+            </div>
         </div>
         <!--table-->
         <div class="widget-content">
@@ -36,26 +41,23 @@
                     <th>姓名</th>
                     <th>电话号码</th>
                     <th>备注</th>
-                    <th>操作</th>
                 </thead>
                 <!--数据行-->
                 <tbody>
                 <tr v-for="nexus in nexus_tr">
-                    <td>{{nexus.nexus_id}}</td>
+                    <td><button type="button" class="btn btn-default btn-xs" v-on:click="valueID(nexus.nexus_id)">
+                        {{nexus.nexus_id}}
+                    </button></td>
                     <td>{{nexus.pat_num}}</td>
                     <td>{{nexus.nexus_type}}</td>
                     <td>{{nexus.nexus_nickname}}</td>
                     <td>{{nexus.nexus_tel}}</td>
                     <td>{{nexus.nexus_remark}}</td>
-                    <td><button v-on:click="updateID(nexus.nexus_id)">修改</button></td>
                 </tr>
                 </tbody>
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -174,18 +176,15 @@
     var nexus_list=new Vue({
         el:"#nexus_list",
         data:{
+            ID:'',
             nexus_tr:[],
             update:{},     //修改的数据
-            page_num:1,  //当前每页多少条
+            page_num:3,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
         },
         methods:{
             //增加
-            add:function () {
-                $("#add_nexus").modal("show");
-            },
-
             addNexus:function () {
                 var nexus_nickname=$("#add_name").val();
                 var pat_num=$("#add_num").val();
@@ -213,20 +212,6 @@
             },
 
             //修改
-            updateID:function (nexus_id) {
-                $.ajax({
-                    url:'../../queryOneNexus_ID.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'nexus_id='+nexus_id,
-                    success:function (data) {
-                        nexus_list._data.update=data;
-                    }
-                })
-                $("#update_nexus").modal("show");
-            },
-
-
             updateNexus:function () {
                 var nexus_id=$("#update_pid").val();
                 var nexus_nickname=$("#upate_name").val();
@@ -254,9 +239,41 @@
     });
 
     $(function () {
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=9",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
         queryAll();
         PatientSum();
     });
+
+
+    function valueID(id) {
+        dept_list._data.ID=id;
+    }
+
+    function addFun() {
+        $("#add_nexus").modal("show");
+    }
+
+    function updFun() {
+        $.ajax({
+            url:'../../queryOneNexus_ID.action',
+            dataType:'JSON',
+            type:'post',
+            data:'nexus_id='+dept_list._data.ID,
+            success:function (data) {
+                nexus_list._data.update=data;
+            }
+        })
+        $("#update_nexus").modal("show");
+    }
 
     //查询所有病人
     function queryAll(){

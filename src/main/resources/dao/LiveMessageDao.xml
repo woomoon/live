@@ -6,7 +6,8 @@
 <mapper namespace="com.woomoon.dao.LiveMessageDao">
 
     <select id="queryAllLiveMessage" resultType="java.util.Map">
-        select lm.message_id,lm.live_num,p.pat_name,lm.bed_id,lm.message_time,n.nurse_level,d.dept_name,lm.message_state,lm.message_type,lm.message_name,ua.user_name user_name_1,ub.user_name user_name_2,uc.user_name user_name_3,lm.message_doctor,lm.message_remark from tb_live_message lm
+        select lm.message_id,lm.live_num,p.pat_name,lm.bed_id,lm.message_time,n.nurse_level,d.dept_name,lm.message_state,lm.message_type,lm.message_name,ua.user_name user_name_1,ub.user_name user_name_2,uc.user_name user_name_3,lm.message_doctor,lm.message_remark
+        from tb_live_message lm
         INNER JOIN tb_live l
         ON lm.live_num=l.live_num
         INNER JOIN tb_patient p

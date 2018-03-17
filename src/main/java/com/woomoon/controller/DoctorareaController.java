@@ -20,7 +20,7 @@ public class DoctorareaController {
 
     @RequestMapping("href_doctorarea")
     public String href_doctorarea(){
-        return "doctorarea";
+        return "demo\\doctorarea";
     }
 
     /**

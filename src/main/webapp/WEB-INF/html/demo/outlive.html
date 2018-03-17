@@ -21,6 +21,11 @@
                 处理医师名：<input id="user_name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" style="width: 100px"   onclick="dimquery()">查询</button>
             </div>
+            <div class="btn-group" role="group" style="margin-left: 390px;margin-top: -55px;">
+                <!--<button onclick="addFun()" type="button" class="btn btn-default">添加</button>-->
+                <!--<button onclick="delFun()" type="button" class="btn btn-default">删除</button>-->
+                <!--<button onclick="updFun()" type="button" class="btn btn-default">修改</button>-->
+            </div>
         </div>
         <!--table-->
         <div class="widget-content">
@@ -53,9 +58,6 @@
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -136,7 +138,7 @@
         el:"#outlive_list",
         data:{
             outlive_tr:{},
-            page_num:1,  //当前每页多少条
+            page_num:3,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
             live_patient:{},
@@ -145,12 +147,6 @@
         methods:{
 
             //增加12
-            add:function () {
-                $("#add_outlive").modal("show");
-                queryprep_message();
-                queryLive_Patient();
-            },
-
             addOutlive:function () {
                 var live_num=$("#add_live_num").val();
                 var outl_time=new Date().toLocaleDateString();
@@ -175,9 +171,26 @@
     });
 
     $(function () {
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=9",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
         queryAll();
         liveSum();
     });
+
+    function addFun() {
+        $("#add_outlive").modal("show");
+        queryprep_message();
+        queryLive_Patient();
+    }
+
 
     //查询所有+分页
     function queryAll(){

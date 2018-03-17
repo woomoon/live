@@ -21,6 +21,11 @@
                 姓名：<input id="pat_name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" style="width: 100px"   onclick="dimquery()">查询</button>
             </div>
+            <div class="btn-group" role="group" style="margin-left: 390px;margin-top: -55px;">
+                <!--<button onclick="addFun()" type="button" class="btn btn-default">添加</button>-->
+                <!--<button onclick="delFun()" type="button" class="btn btn-default">删除</button>-->
+                <!--<button onclick="updFun()" type="button" class="btn btn-default">修改</button>-->
+            </div>
         </div>
         <!--table-->
         <div class="widget-content">
@@ -32,25 +37,27 @@
                     <th>住院ID</th>
                     <th>姓名</th>
                     <th>押金余额</th>
-                    <th>操作</th>
                 </thead>
                 <!--数据行-->
                 <tbody>
                 <tr v-for="deposit in deposit_tr" >
-                    <td>{{deposit.deposit_id}}</td>
+                    <!--<td>{{deposit.deposit_id}}</td>-->
+                    <td><button type="button" class="btn btn-default btn-xs" v-on:click="valueID(deposit.deposit_id,deposit.deposit_money_do)">
+                        {{dept.dept_id}}
+                    </button></td>
                     <td>{{deposit.live_num}}</td>
                     <td>{{deposit.pat_name}}</td>
                     <td>{{deposit.deposit_money_do}}</td>
-                    <td><button v-on:click="addMoney(deposit.deposit_id,deposit.deposit_money_do)">充值押金</button>
-                        <button v-on:click="reduceMoney(deposit.deposit_id,deposit.deposit_money_do)">扣除押金</button></td>
+                    <!--<td><button v-on:click="addMoney(deposit.deposit_id,deposit.deposit_money_do)">充值押金</button>-->
+                        <!--<button v-on:click="reduceMoney(deposit.deposit_id,deposit.deposit_money_do)">扣除押金</button></td>-->
                 </tr>
                 </tbody>
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
+                <!--<div class="btn-group" role="group">-->
+                    <!--<button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>-->
+                <!--</div>-->
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -169,7 +176,7 @@
         data:{
             deposit_tr:{},
             update:{},     //修改的数据
-            page_num:1,  //当前每页多少条
+            page_num:3,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
             delete_id:'',
@@ -181,10 +188,7 @@
         },
         methods:{
             //增加
-            add:function () {
-                $("#add_deposit").modal("show");
-                queryprep_message();
-            },
+
 
             addDeposit:function () {
                 //押金
@@ -265,24 +269,6 @@
 
             },
 
-            //充值押金
-            addMoney:function (deposit_id,deposit_money_do) {
-                $("#Money_deposit").modal("show");
-                deposit_list._data.did=deposit_id;
-                deposit_list._data.money=deposit_money_do;
-                deposit_list._data.val="充值";
-                queryprep_message();
-            },
-
-            //扣除押金
-            reduceMoney:function (deposit_id,deposit_money_do) {
-                $("#Money_deposit").modal("show");
-                deposit_list._data.did=deposit_id;
-                deposit_list._data.money=deposit_money_do;
-                deposit_list._data.val="扣除";
-                queryprep_message();
-            },
-
             MoneyDeposit:function () {
                 var deposit_id=deposit_list._data.did;
                 var deposit_money_do=deposit_list._data.money;
@@ -331,9 +317,45 @@
 //    queryAll();
 
     $(function () {
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=9",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
+
         queryAll();
         depositSum();
     });
+
+    function valueID(id,money) {
+        deposit_list._data.did=id;
+        deposit_list._data.money=money;
+    };
+
+    function addFun() {
+        $("#add_deposit").modal("show");
+        queryprep_message();
+    }
+
+    //充值押金
+    function addMoney() {
+        $("#Money_deposit").modal("show");
+        deposit_list._data.val="充值";
+        queryprep_message();
+    }
+
+    //扣除押金
+    function reduceMoney () {
+        $("#Money_deposit").modal("show");
+        deposit_list._data.val="扣除";
+        queryprep_message();
+    }
+
 
     //查询所有+分页
     function queryAll(){

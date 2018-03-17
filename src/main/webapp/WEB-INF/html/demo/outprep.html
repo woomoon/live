@@ -22,6 +22,11 @@
                 处理结果：<input id="result" width="200px">
                 <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
             </div>
+            <div class="btn-group" role="group" style="margin-left: 390px;margin-top: -55px;">
+                <!--<button onclick="addFun()" type="button" class="btn btn-default">添加</button>-->
+                <!--<button onclick="delFun()" type="button" class="btn btn-default">删除</button>-->
+                <!--<button onclick="updFun()" type="button" class="btn btn-default">修改</button>-->
+            </div>
         </div>
         <!--table-->
         <div class="widget-content">
@@ -36,29 +41,25 @@
                     <th>处理医师</th>
                     <th>处理意见</th>
                     <th>处理结果</th>
-                    <th>操作</th>
                 </thead>
                 <!--数据行-->
                 <tbody>
                 <!--v-for="user in userName"-->
                 <tr v-for="outprep in outprep_tr" >
-                    <td>{{outprep.out_id}}</td>
+                    <td><button type="button" class="btn btn-default btn-xs" v-on:click="valueID(outprep.out_id)">
+                        {{outprep.out_id}}
+                    </button></td>
                     <td>{{outprep.prep_id}}</td>
                     <td>{{outprep.out_type}}</td>
                     <td>{{outprep.out_remark}}</td>
                     <td>{{outprep.user_name}}</td>
                     <td>{{outprep.out_word}}</td>
                     <td>{{outprep.out_result}}</td>
-                    <td><button v-on:click="updateID(outprep.out_id)">修改</button>
-                        <button v-on:click="deleteID(outprep.out_id)">删除</button></td>
                 </tr>
                 </tbody>
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -211,9 +212,10 @@
     var outprep_list=new Vue({
         el:"#outprep_list",
         data:{
+            ID:'',
             outprep_tr:{},
             update:{},     //修改的数据
-            page_num:1,  //当前每页多少条
+            page_num:3,  //当前每页多少条
             currentIndex:1, //当前在第几页
             sum:'', //最大页码
             outprep_info:0,
@@ -223,11 +225,6 @@
         },
         methods:{
             //删除
-            deleteID:function (out_id) {
-                $("#delete_outprep").modal("show");
-                outprep_list._data.delete_id=out_id;
-            },
-
             deleteOutprep:function () {
                 var out_id=outprep_list._data.delete_id;
                 $.ajax({
@@ -248,11 +245,6 @@
             },
 
             //增加
-            add:function () {
-                $("#add_outprep").modal("show");
-                queryusery();
-            },
-
             addOutprep:function () {
                 var prep_id=$("#add_prep_id").val();
                 var out_type=$("#add_type").val();
@@ -281,21 +273,6 @@
             },
 
             //修改
-            updateID:function (out_id) {
-                queryusery();
-                $.ajax({
-                    url:'../../queryOneOutprep_ID.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'out_id='+out_id,
-                    success:function (data) {
-                        outprep_list._data.update=data;
-                    }
-                })
-                $("#update_outprep").modal("show");
-            },
-
-
             updateOutprep:function () {
                 var out_id=$("#update_out_id").val();
                 var prep_id=$("#update_prep_id").val();
@@ -325,9 +302,48 @@
     });
 
     $(function () {
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=9",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
+
         queryAll();
         OutprepSum();
     });
+
+    function valueID(id) {
+        outprep_list._data.ID=id;
+    }
+
+    function addFun() {
+        $("#add_outprep").modal("show");
+        queryusery();
+    }
+
+    function updFun() {
+        queryusery();
+        $.ajax({
+            url:'../../queryOneOutprep_ID.action',
+            dataType:'JSON',
+            type:'post',
+            data:'out_id='+out_id,
+            success:function (data) {
+                outprep_list._data.update=data;
+            }
+        })
+        $("#update_outprep").modal("show");
+    }
+
+    function delFun() {
+        $("#delete_outprep").modal("show");
+        outprep_list._data.delete_id=out_id;
+    }
 
     //查询所有+分页
     function queryAll(){

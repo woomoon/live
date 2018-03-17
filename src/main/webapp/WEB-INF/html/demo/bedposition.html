@@ -49,13 +49,15 @@
                 <!--数据行-->
                 <tbody>
                 <tr v-for="bedposition in bedposition_tr">
+                    <td> <button type="button" class="btn btn-default btn-xs" v-on:click="updateID(bedposition.bed_id)">
+                        {{bedposition.bed_id}}
+                    </button></td>
                     <td>{{bedposition.bed_id}}</td>
                     <td>{{bedposition.area_id}}</td>
                     <td>{{bedposition.bed_type}}</td>
                     <td>{{bedposition.bed_grade}}</td>
                     <td>{{bedposition.bed_state}}</td>
                     <td>{{bedposition.bed_sex==1?'男':'女'}}</td>
-                    <td><button v-on:click="updateID(bedposition.bed_id)">修改</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -261,6 +263,16 @@
     });
 
     $(function () {
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=49",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
         queryAll();
         BedpositionSum();
     });

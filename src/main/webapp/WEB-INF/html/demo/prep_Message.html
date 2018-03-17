@@ -35,27 +35,25 @@
                     <th>数量</th>
                     <th>金额</th>
                     <th>费用种类</th>
-                    <th>操作</th>
                 </thead>
                 <!--数据行-->
                 <tbody>
                 <tr v-for="prem in prem_tr" >
-                    <td>{{prem.prem_id}}</td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-xs" v-on:click="valueID(prem.prep_id)">
+                            {{prem.prep_id}}
+                        </button>
+                    </td>
                     <td>{{prem.prep_id}}</td>
                     <td>{{prem.drugs_name}}</td>
                     <td>{{prem.prem_num}}</td>
                     <td>{{prem.prem_money}}</td>
                     <td>{{prem.prem_type}}</td>
-                    <td><button v-on:click="updateID(prem.prem_id)">修改</button>
-                        <button v-on:click="deleteID(prem.prem_id)">删除</button></td>
                 </tr>
                 </tbody>
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
                 <ul class="pagination pull-right">
                     <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
                     <li><a class="paging">首页</a></li>
@@ -200,6 +198,7 @@
     var prem_list=new Vue({
         el:"#prem_list",
         data:{
+            ID:'',
             prem_tr:{},
             update:{},     //修改的数据
             page_num:1,  //当前每页多少条
@@ -210,11 +209,6 @@
         },
         methods:{
             //删除
-            deleteID:function (prem_id) {
-                $("#delete_prem").modal("show");
-                prem_list._data.delete_id=prem_id;
-            },
-
             deletePrem:function () {
                 var prem_id=prem_list._data.delete_id;
                 $.ajax({
@@ -235,11 +229,6 @@
             },
 
             //增加
-            add:function () {
-                $("#add_prem").modal("show");
-                queryprep_message();
-            },
-
             addPrem:function () {
                 var prep_id=$("#add_prep_id").val();
                 var drugs_id=$("#add_drugs_id").val();
@@ -267,21 +256,6 @@
             },
 
             //修改
-            updateID:function (prem_id) {
-                queryprep_message();
-                $.ajax({
-                    url:'../../queryOnePrep_Message_ID.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'prem_id='+prem_id,
-                    success:function (data) {
-                        prem_list._data.update=data;
-                    }
-                })
-                $("#update_prem").modal("show");
-            },
-
-
             updatePrem:function () {
                 var prem_id=$("#update_prem_id").val();
                 var prep_id=$("#update_prep_id").val();
@@ -309,9 +283,47 @@
     });
 
     $(function () {
+        $.ajax({
+            url: "../../queryPowerBtn.action",
+            type: "post",
+            data: "p_pid=9",
+            success: function (msg) {
+                $.each(JSON.parse(msg), function (k, v) {
+                    $(".btn-group").prepend(v);
+                })
+            }
+        });
         queryAll();
         prep_messageSum();
     });
+
+    function valueID(id) {
+        prem_list._data.ID=id;
+    }
+
+    function addFun() {
+        $("#add_prem").modal("show");
+        queryprep_message();
+    }
+
+    function updFun() {
+        queryprep_message();
+        $.ajax({
+            url:'../../queryOnePrep_Message_ID.action',
+            dataType:'JSON',
+            type:'post',
+            data:'prem_id='+prem_list._data.ID,
+            success:function (data) {
+                prem_list._data.update=data;
+            }
+        })
+        $("#update_prem").modal("show");
+    }
+
+    function delFun() {
+        $("#delete_prem").modal("show");
+        prem_list._data.delete_id=prem_list._data.ID;
+    }
 
     //查询所有+分页
     function queryAll(){
