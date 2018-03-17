@@ -20,14 +20,21 @@
                 床位ID：<input id="bed_id" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
                 病区ID：<input id="area_id" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
                 类型：<input id="bed_type" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
-                等级：<input id="bed_grade" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
-                状态：<input id="bed_state" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
-                男女房：<select id="bed_sex" name="sex" >
+                <br/>
+                <br/>
+                等&nbsp;&nbsp;&nbsp;级：<input id="bed_grade" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                状&nbsp;&nbsp;&nbsp;&nbsp;态：<input id="bed_state" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                男女房：<select id="bed_sex" name="sex">
                 <option value="">请选择性别</option>
                 <option value="1">男</option>
                 <option value="2">女</option>
-            </select> <br><br>
-                <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
+            </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            </div>
+            <div class="btn-group" role="group" style="margin-left: 770px;margin-top: -55px;">
+                <button onclick="dimquery()" type="button" class="btn btn-default">查询</button>
+                <button onclick="addFun()" type="button" class="btn btn-default">添加</button>
+                <button onclick="updFun()" type="button" class="btn btn-default">修改</button>
             </div>
         </div>
         <!--table-->
@@ -35,7 +42,7 @@
             <!--数据内容-->
             <table class="table table-striped table-bordered table-hover">
                 <!--字段名-->
-                <thead >
+                <thead>
                 <tr>
                     <th>床位ID</th>
                     <th>病区ID</th>
@@ -43,7 +50,6 @@
                     <th>等级</th>
                     <th>状态</th>
                     <th>男女房</th>
-                    <th>操作</th>
                 </tr>
                 </thead>
                 <!--数据行-->
@@ -53,6 +59,11 @@
                         {{bedposition.bed_id}}
                     </button></td>
                     <td>{{bedposition.bed_id}}</td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-xs" v-on:click="valueID(bedposition.bed_id)">
+                            {{bedposition.bed_id}}
+                        </button>
+                    </td>
                     <td>{{bedposition.area_id}}</td>
                     <td>{{bedposition.bed_type}}</td>
                     <td>{{bedposition.bed_grade}}</td>
@@ -63,11 +74,14 @@
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
                 <ul class="pagination pull-right">
-                    <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
+                    <li><select id="page_number" class="btn btn-default" v-model="page_num">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select></li>
                     <li><a class="paging">首页</a></li>
                     <li><a class="paging">上一页</a></li>
                     <li><a>{{currentIndex}}/{{sum}}</a></li>
@@ -263,16 +277,6 @@
     });
 
     $(function () {
-        $.ajax({
-            url: "../../queryPowerBtn.action",
-            type: "post",
-            data: "p_pid=49",
-            success: function (msg) {
-                $.each(JSON.parse(msg), function (k, v) {
-                    $(".btn-group").prepend(v);
-                })
-            }
-        });
         queryAll();
         BedpositionSum();
     });

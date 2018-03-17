@@ -19,9 +19,14 @@
             <div style="margin-left: 30px;margin-top: 10px">
                 药品名称：<input id="name" width="200px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 是否是处方药：&nbsp;是：<input name="is" type="radio" value="是">&nbsp;
-                            否：<input name="is" type="radio" value="否">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                否：<input name="is" type="radio" value="否">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 药品类型：<input id="type" width="200px">
-                <button type="button" style="width: 100px" onclick="dimquery()">查询</button>
+                <div class="btn-group" role="group" style="margin-left: 760px;margin-top: -50px;">
+                    <button onclick="dimquery()" type="button" class="btn btn-default">查询</button>
+                    <button onclick="addFun()" type="button" class="btn btn-default">添加</button>
+                    <button onclick="delFun()" type="button" class="btn btn-default">删除</button>
+                    <button onclick="updFun()" type="button" class="btn btn-default">修改</button>
+                </div>
             </div>
         </div>
         <!--table-->
@@ -29,34 +34,38 @@
             <!--数据内容-->
             <table class="table table-striped table-bordered table-hover">
                 <!--字段名-->
-                <thead >
-                    <th>药品ID</th>
-                    <th>药品名称</th>
-                    <th>是否为处方药</th>
-                    <th>药品类型</th>
-                    <th>单价</th>
-                    <th>操作</th>
+                <thead>
+                <th>药品ID</th>
+                <th>药品名称</th>
+                <th>是否为处方药</th>
+                <th>药品类型</th>
+                <th>单价</th>
                 </thead>
                 <!--数据行-->
                 <tbody>
                 <tr v-for="drugs in drugs_tr">
-                    <td>{{drugs.drugs_id}}</td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-xs" v-on:click="valueID(drugs.drugs_id)">
+                            {{drugs.drugs_id}}
+                        </button>
+                    </td>
                     <td>{{drugs.drugs_name}}</td>
                     <td>{{drugs.drugs_is}}</td>
                     <td>{{drugs.drugs_type}}</td>
                     <td>{{drugs.drugs_money_one}}</td>
-                    <td><button v-on:click="updateID(drugs.drugs_id)">修改</button>
-                        <button v-on:click="deleteID(drugs.drugs_id)">删除</button></td>
                 </tr>
                 </tbody>
             </table>
             <!--数据下边框，及分页栏 控制下边宽度-->
             <div style="height: 70px;" class="widget-foot">
-                <div class="btn-group" role="group">
-                    <button type="button"  class="btn btn-default" v-on:click="add()" >增加</button>
-                </div>
                 <ul class="pagination pull-right">
-                    <li><select id="page_number"  class="btn btn-default" v-model="page_num" ><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></li>
+                    <li><select id="page_number" class="btn btn-default" v-model="page_num">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select></li>
                     <li><a class="paging">首页</a></li>
                     <li><a class="paging">上一页</a></li>
                     <li><a>{{currentIndex}}/{{sum}}</a></li>
@@ -68,18 +77,20 @@
         </div>
 
         <!--删除科室-->
-        <div class="modal fade" id="delete_drugs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+        <div class="modal fade" id="delete_drugs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             data-backdrop="false">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">系统消息</h4>
                     </div>
                     <div class="modal-body">
                         <h3>确定要删除吗？</h3>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger "  v-on:click="deleteDrugs()">确认删除</button>
+                        <button type="button" class="btn btn-danger " v-on:click="deleteDrugs()">确认删除</button>
                         <button type="button" class="btn btn-success" data-dismiss="modal">取消删除</button>
                     </div>
                 </div>
@@ -102,7 +113,7 @@
                         <form>
                             <!--disabled="disabled" 隐藏文本框-->
                             <div class="form-group">
-                                <label  class="control-label">药品名称:</label>
+                                <label class="control-label">药品名称:</label>
                                 <input type="text" class="form-control ordersId_update" id="add_name">
                             </div>
                             <div>
@@ -115,13 +126,14 @@
                                 <input id="add_type" type="text" class="form-control ordersId_update">
                             </div>
                             <div class="form-group">
-                                <label  class="control-label">单价：</label>
-                                <input type="text" class="form-control ordersPrice_update"  id="add_money_one">
+                                <label class="control-label">单价：</label>
+                                <input type="text" class="form-control ordersPrice_update" id="add_money_one">
                                 <span style="color: red;"></span></div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addDrugs()">提交增加</button>
+                        <button type="button" class="btn btn-primary submitUpdateOrder" v-on:click="addDrugs()">提交增加
+                        </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消增加</button>
                     </div>
                 </div>
@@ -174,7 +186,7 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 </div>
 
 <script src="../../../plugins/plugs/js/jquery-3.2.1.min.js"></script>
@@ -183,38 +195,34 @@
 <script src="../../../plugins/laydate/laydate.js"></script>
 
 <script>
-    var pageindex=1;
-    var drugs_list=new Vue({
-        el:"#drugs_list",
-        data:{
-            drugs_tr:[],
-            update:{},     //修改的数据
-            page_num:1,  //当前每页多少条
-            currentIndex:1, //当前在第几页
-            sum:'', //最大页码
-            drugs_info:0,
-            delete_id:'',
+    var pageindex = 1;
+    var drugs_list = new Vue({
+        el: "#drugs_list",
+        data: {
+            ID:'',
+            drugs_tr: [],
+            update: {},     //修改的数据
+            page_num: 3,  //当前每页多少条
+            currentIndex: 1, //当前在第几页
+            sum: '', //最大页码
+            drugs_info: 0,
+            delete_id: '',
         },
-        methods:{
+        methods: {
             //删除
-            deleteID:function (drugs_id) {
-                $("#delete_drugs").modal("show");
-                drugs_list._data.delete_id=drugs_id;
-            },
-
-            deleteDrugs:function () {
-                var drugs_id=drugs_list._data.delete_id;
+            deleteDrugs: function () {
+                var drugs_id = drugs_list._data.delete_id;
                 $.ajax({
-                    url:'../../deleteDrugs.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'drugs_id='+drugs_id,
-                    success:function (data) {
-                        if(data){
+                    url: '../../deleteDrugs.action',
+                    dataType: 'JSON',
+                    type: 'post',
+                    data: 'drugs_id=' + drugs_id,
+                    success: function (data) {
+                        if (data) {
                             alert("删除成功！");
                         }
                         $("#delete_drugs").find(".close").click();
-                        drugs_list._data.currentIndex=1;
+                        drugs_list._data.currentIndex = 1;
                         DeptSum();
                         queryAll();
                     }
@@ -222,29 +230,25 @@
             },
 
             //增加
-            add:function () {
-                $("#add_drugs").modal("show");
-            },
-
-            addDrugs:function () {
-                var drugs_name=$("#add_name").val();
-                var drugs_is=$("input[name='add_is']:checked").val();
-                var drugs_type=$("#add_type").val();
-                var drugs_money_one=$("#add_money_one").val();
+            addDrugs: function () {
+                var drugs_name = $("#add_name").val();
+                var drugs_is = $("input[name='add_is']:checked").val();
+                var drugs_money_one = $("#add_money_one").val();
+                var drugs_type = $("#add_type").val();
                 $.ajax({
-                    url:'../../addDrugs.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'drugs_name='+drugs_name+'&drugs_is='+drugs_is+'&drugs_type='+drugs_type+'&drugs_money_one='+drugs_money_one,
-                    success:function (data) {
-                        if(data){
+                    url: '../../addDrugs.action',
+                    dataType: 'JSON',
+                    type: 'post',
+                    data: 'drugs_name=' + drugs_name + '&drugs_is=' + drugs_is + '&drugs_type=' + drugs_type + '&drugs_money_one=' + drugs_money_one,
+                    success: function (data) {
+                        if (data) {
                             alert("增加成功！");
                         }
 //                       else{
 //                           alert("增加失败！");
 //                       }
                         $("#add_drugs").find(".close").click();
-                        drugs_list._data.currentIndex=1;
+                        drugs_list._data.currentIndex = 1;
                         DeptSum();
                         queryAll();
                     }
@@ -252,41 +256,27 @@
             },
 
             //修改
-            updateID:function (drugs_id) {
+            updateDrugs: function () {
+                var drugs_id = $("#update_id").val();
+                var drugs_name = $("#update_name").val();
+                var drugs_is = $("input[name='update_is']:checked").val();
+                var drugs_type = $("#update_type").val();
+                var drugs_money_one = $("#update_money_one").val();
                 $.ajax({
-                    url:'../../queryOneDrugs_ID.action',
-                    dataType:'JSON',
-                    type:'post',
-                    data:'drugs_id='+drugs_id,
-                    success:function (data) {
-                        drugs_list._data.update=data;
+                    url: '../../updateDrugs.action',
+                    dataType: 'JSON',
+                    type: 'post',
+                    data: 'drugs_id=' + drugs_id + '&drugs_name=' + drugs_name + '&drugs_is=' + drugs_is + '&drugs_type=' + drugs_type + '&drugs_money_one=' + drugs_money_one,
+                    success: function (data) {
+                        if (data) {
+                            alert("修改成功！");
+                        }
+                        $("#update_drugs").find(".close").click();
+                        drugs_list._data.currentIndex = 1;
+                        DeptSum();
+                        queryAll();
                     }
                 })
-                $("#update_drugs").modal("show");
-            },
-
-
-            updateDrugs:function () {
-                var drugs_id=$("#update_id").val();
-                var drugs_name=$("#update_name").val();
-                var drugs_is=$("input[name='update_is']:checked").val();
-                var drugs_type=$("#update_type").val();
-                var drugs_money_one=$("#update_money_one").val();
-                    $.ajax({
-                        url:'../../updateDrugs.action',
-                        dataType:'JSON',
-                        type:'post',
-                        data:'drugs_id='+drugs_id+'&drugs_name='+drugs_name+'&drugs_is='+drugs_is+'&drugs_type='+drugs_type+'&drugs_money_one='+drugs_money_one,
-                        success:function (data) {
-                            if(data){
-                                alert("修改成功！");
-                            }
-                            $("#update_drugs").find(".close").click();
-                            drugs_list._data.currentIndex=1;
-                            DeptSum();
-                            queryAll();
-                        }
-                    })
             }
         }
     });
@@ -297,16 +287,16 @@
     });
 
     //查询所有+分页
-    function queryAll(){
-        var current_sum=$("#page_number").val();
+    function queryAll() {
+        var current_sum = $("#page_number").val();
         $.ajax({
-            url:'../../queryAllDrugs.action',
-            dataType:'JSON',
-            type:'post',
-            data:'current_sum='+current_sum,
-            success:function (data) {
+            url: '../../queryAllDrugs.action',
+            dataType: 'JSON',
+            type: 'post',
+            data: 'current_sum=' + current_sum,
+            success: function (data) {
                 console.log(data);
-                drugs_list._data.drugs_tr=data;
+                drugs_list._data.drugs_tr = data;
                 console.log(drugs_list._data.drugs_tr);
             }
         })
@@ -314,18 +304,18 @@
 
     //模糊查询
     function dimquery() {
-        drugs_list._data.page_num=1;
-        var drugs_name=$("#name").val();
-        var drugs_is=$("input[name='is']:checked").val();
-        var drugs_type=$("#type").val();
+        drugs_list._data.page_num = 1;
+        var drugs_name = $("#name").val();
+        var drugs_is = $("input[name='is']:checked").val();
+        var drugs_type = $("#type").val();
         $.ajax({
-            url:'../../queryAllDrugs.action',
-            dataType:'JSON',
-            type:'post',
-            data:'drugs_name='+drugs_name+"&drugs_is="+drugs_is+"&drugs_type="+drugs_type,
-            success:function (data) {
-                drugs_list._data.drugs_tr=data;
-                drugs_list._data.currentIndex=1;
+            url: '../../queryAllDrugs.action',
+            dataType: 'JSON',
+            type: 'post',
+            data: 'drugs_name=' + drugs_name + "&drugs_is=" + drugs_is + "&drugs_type=" + drugs_type,
+            success: function (data) {
+                drugs_list._data.drugs_tr = data;
+                drugs_list._data.currentIndex = 1;
                 DeptSum();
             }
         })
@@ -333,17 +323,17 @@
 
     //查询总页码
     function DeptSum() {
-        var drugs_name=$("#name").val();
-        var drugs_is=$("input[name='is']:checked").val();
-        var drugs_type=$("#type").val();
-        var current_sum=$("#page_number").val();
+        var drugs_name = $("#name").val();
+        var drugs_is = $("input[name='is']:checked").val();
+        var drugs_type = $("#type").val();
+        var current_sum = $("#page_number").val();
         $.ajax({
-            url:'../../DrugsSum.action',
-            dataType:'JSON',
-            type:'post',
-            data:'drugs_name='+drugs_name+"&drugs_is="+drugs_is+"&drugs_type="+drugs_type+"&current_sum="+current_sum,
-            success:function (data) {
-                drugs_list._data.sum=data;
+            url: '../../DrugsSum.action',
+            dataType: 'JSON',
+            type: 'post',
+            data: 'drugs_name=' + drugs_name + "&drugs_is=" + drugs_is + "&drugs_type=" + drugs_type + "&current_sum=" + current_sum,
+            success: function (data) {
+                drugs_list._data.sum = data;
             }
         })
     }
@@ -353,19 +343,19 @@
 
         //下拉事件5
         $("select#page_number").change(function () {
-            var drugs_name=$("#name").val();
-            var drugs_is=$("input[name='is']:checked").val();
-            var drugs_type=$("#type").val();
-            var val=$(this).val();
-            pageindex=1;
+            var drugs_name = $("#name").val();
+            var drugs_is = $("input[name='is']:checked").val();
+            var drugs_type = $("#type").val();
+            var val = $(this).val();
+            pageindex = 1;
             $.ajax({
-                url:'../../queryAllDrugs.action',
-                dataType:'JSON',
-                type:'post',
-                data:'drugs_name='+drugs_name+"&drugs_is="+drugs_is+"&drugs_type="+drugs_type+'&current_sum='+val,
-                success:function (data) {
-                    drugs_list._data.drugs_tr=data;
-                    drugs_list._data.currentIndex=1;
+                url: '../../queryAllDrugs.action',
+                dataType: 'JSON',
+                type: 'post',
+                data: 'drugs_name=' + drugs_name + "&drugs_is=" + drugs_is + "&drugs_type=" + drugs_type + '&current_sum=' + val,
+                success: function (data) {
+                    drugs_list._data.drugs_tr = data;
+                    drugs_list._data.currentIndex = 1;
                     DeptSum();
                 }
             })
@@ -374,41 +364,70 @@
 
         //翻页
         $(".paging").click(function () {
-            var drugs_name=$("#name").val();
-            var drugs_is=$("input[name='is']:checked").val();
-            var drugs_type=$("#type").val();
-            var pageName=$(this).text();
-            var sum=drugs_list._data.sum;
-            var current_sum=$("#page_number").val();
+            var drugs_name = $("#name").val();
+            var drugs_is = $("input[name='is']:checked").val();
+            var drugs_type = $("#type").val();
+            var pageName = $(this).text();
+            var sum = drugs_list._data.sum;
+            var current_sum = $("#page_number").val();
 
-            if(pageName=="首页"){
-                pageindex=1;
+            if (pageName == "首页") {
+                pageindex = 1;
             }
-            if(pageName=="上一页"){
-                if(pageindex!=1) {
-                    pageindex=pageindex-1;
+            if (pageName == "上一页") {
+                if (pageindex != 1) {
+                    pageindex = pageindex - 1;
                 }
             }
-            if(pageName=="下一页"){
-                if(pageindex!=sum){
-                    pageindex=pageindex+1;
+            if (pageName == "下一页") {
+                if (pageindex != sum) {
+                    pageindex = pageindex + 1;
                 }
             }
-            if(pageName=="末页"){
-                pageindex=sum;
+            if (pageName == "末页") {
+                pageindex = sum;
             }
-            drugs_list._data.currentIndex=pageindex;
+            drugs_list._data.currentIndex = pageindex;
             $.ajax({
-                url:'../../queryAllDrugs.action',
-                dataType:'JSON',
-                type:'post',
-                data:'drugs_name='+drugs_name+"&drugs_is="+drugs_is+"&drugs_type="+drugs_type+'&pageIndex='+pageindex+"&current_sum="+current_sum,
-                success:function (data) {
-                    drugs_list._data.drugs_tr=data;
+                url: '../../queryAllDrugs.action',
+                dataType: 'JSON',
+                type: 'post',
+                data: 'drugs_name=' + drugs_name + "&drugs_is=" + drugs_is + "&drugs_type=" + drugs_type + '&pageIndex=' + pageindex + "&current_sum=" + current_sum,
+                success: function (data) {
+                    drugs_list._data.drugs_tr = data;
                 }
             })
         })
     })
+
+
+    function valueID(id) {
+        drugs_list._data.ID=id
+    };
+
+    function addFun() {
+        $("#add_drugs").modal("show");
+    }
+
+    function updFun() {
+        $.ajax({
+            url: '../../queryOneDrugs_ID.action',
+            dataType: 'JSON',
+            type: 'post',
+            data: 'drugs_id=' + drugs_list._data.ID,
+            success: function (data) {
+                drugs_list._data.update = data;
+            }
+        })
+        $("#update_drugs").modal("show");
+    }
+
+    function delFun() {
+        $("#delete_drugs").modal("show");
+        drugs_list._data.delete_id = drugs_list._data.ID;
+    }
+
+
 
 </script>
 </body>
